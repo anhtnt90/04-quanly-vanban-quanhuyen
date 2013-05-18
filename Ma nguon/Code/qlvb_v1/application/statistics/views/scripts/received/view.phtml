@@ -1,0 +1,178 @@
+<form action="index" method="POST" id="frmreceived">
+<?php
+	$arrReceived = $this->arrReceived;
+	$arrConst = $this->arrConst;
+	if($this->getStatusLeftMenu == 'QUAN')
+			$sUrlBack = '../index/modul/QUAN';
+	else 	$sUrlBack = '../index/';
+?>
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<!--tao tac hidden!-->
+		<tr>
+			<td>
+				<!--Sinh mot hidden luu gia tri!-->
+				<?php echo $this->formHidden("hdn_object_id",$this->sReceiveDocumentId,null); ?>	
+				<?php echo $this->formHidden("hdn_current_page",$this->currentPage,null); ?>
+				<?php echo $this->formHidden("hdn_record_number_page",$this->numRowOnPage,null); ?>
+				<?php echo $this->formHidden("fromDate",$this->fromDate,null); ?>	
+				<?php echo $this->formHidden("toDate",$this->toDate,null); ?> 
+				<?php echo $this->formHidden("FullTextSearch",$this->FullTextSearch,null); ?>
+			</td>
+		</tr>
+	</table>
+	<!--HIen thi tieu de man hinh danh sach!-->
+	<script type="text/javascript">
+		$(function(){$('#body_conten1').equalHeights();});
+	</script>
+	<div id ="content">
+		<div class="large_title" style="padding-left:1px;text-align:left;"> <?=$this->bodyTitle;?> </div>
+		<table class="table_detail_doc" border="1">
+			<col width="20" /><col width="20%" /><col width="20%" /><col width="40%" />
+			<tr>
+				<td><?=$arrConst['_SO_KY_HIEU']?></td>
+				<td><?=$arrReceived[0]['C_SYMBOL'].'&nbsp;'?></td>
+				<td><?=$arrConst['_NOI_GUI']?></td>
+				<td><?=$arrReceived[0]['C_AGENTCY_NAME'].'&nbsp;'?></td>
+			</tr>
+			<tr>
+				<td><?=$arrConst['_TRICH_YEU']?></td>
+				<td colspan="3"><?=$arrReceived[0]['C_SUBJECT'].'&nbsp;'?></td>
+			</tr>
+			<?php	
+				If ($arrReceived[0]['C_LEADER_POSITION_NAME'] != null && $arrReceived[0]['C_LEADER_POSITION_NAME'] != ''){
+					$arrLeaderPositionName		 = explode(";", substr($arrReceived[0]['C_LEADER_POSITION_NAME'],0,-1));
+					$arrLeaderIdea				 = explode("!#~$|*", substr($arrReceived[0]['C_IDEA'],6));
+					$arrAppointeDate			 = explode(";", substr($arrReceived[0]['C_APPOINTED_DATE'],0,-1));
+					echo '<tr><td rowspan="'.(sizeof($arrLeaderPositionName) + 1).'">'.$arrConst["_Y_KIEN_CHI_DAO"].'</td></tr>';
+					for( $i = 0; $i < sizeof($arrLeaderPositionName); $i++){
+						if(!is_null($arrAppointeDate[$i]) And $arrAppointeDate[$i] != '' And $arrAppointeDate[$i] != '01/01/1900')
+								echo '<tr><td colspan ="3"><i>'.$arrLeaderPositionName[$i].': '.$arrLeaderIdea[$i].'<font color ="#FF0000"> Hạn xử lý ('.$arrAppointeDate[$i].')</font>&nbsp;</i></td></tr>';
+						else	echo '<tr><td colspan ="3"><i>'.$arrLeaderPositionName[$i].': '.$arrLeaderIdea[$i].'&nbsp;</i></td></tr>';
+					}
+				}else {
+					echo '<tr><td>'.$arrConst["_Y_KIEN_CHI_DAO"].'</td>';
+					echo '<td colspan="3">&nbsp;</td></tr>';
+				}
+			?>
+			<tr>
+				<td>Ý kiến lãnh đạo văn phòng</td>
+				<td colspan="3"><?=$arrReceived[0]['C_LEADER_OFFICE_IDEA'].'&nbsp;'?></td>
+			</tr>
+			<?php	
+				If ($arrReceived[0]['C_LEADER_UNIT_POSITION_NAME'] != null && $arrReceived[0]['C_LEADER_UNIT_POSITION_NAME'] != ''){
+					$arrLeaderUnitPositionName	 = explode(";", substr($arrReceived[0]['C_LEADER_UNIT_POSITION_NAME'],0,-1));
+					$arrLeaderUnitIdea			 = explode("!#~$|*", substr($arrReceived[0]['C_LEADER_UNIT_IDEA'],0,-6));
+					$arrAppointeDateUnit		 = explode(";", substr($arrReceived[0]['C_APPOINTED_DATE_UNIT'],0,-1));
+					echo '<tr><td rowspan="'.(sizeof($arrLeaderUnitPositionName) + 1).'">Ý kiến lãnh đạo phòng ban</td></tr>';
+					for( $i = 0; $i < sizeof($arrLeaderUnitPositionName); $i++){
+						if(!is_null($arrAppointeDateUnit[$i]) And $arrAppointeDateUnit[$i] != '' And $arrAppointeDate[$i] != '01/01/1900')
+								echo '<tr><td colspan ="3"><i>'.$arrLeaderUnitPositionName[$i].': '.$arrLeaderUnitIdea[$i].'<font color ="#FF0000"> Hạn xử lý ('.$arrAppointeDateUnit[$i].')</font>&nbsp;</i></td></tr>';
+						else	echo '<tr><td colspan ="3"><i>'.$arrLeaderUnitPositionName[$i].': '.$arrLeaderUnitIdea[$i].'&nbsp;</i></td></tr>';
+					}
+				}else {
+					echo '<tr><td>Ý kiến lãnh đạo phòng ban</td>';
+					echo '<td colspan="3">&nbsp;</td></tr>';
+				}
+			?>
+			<?php
+				$strFileName 	= $arrReceived[0]['C_FILE_NAME'];
+				$sFile 			= Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+				if($strFileName != '' || $strFileName != null){?>
+					<tr>
+						<td><?=$arrConst['_FILE_DINH_KEM'].'&nbsp;'?></td>
+						<td colspan="3"><?=$sFile.'&nbsp;'?></td>
+					</tr>
+		  <?php }?>
+		</table>
+		<?php 
+			$sarrAppointedUnitList = explode('!~!',$arrReceived[0]['C_APPOINTED_DATE_UNIT_LIST']);
+			//var_dump($sarrAppointedUnitList);
+			
+		?>	
+		<div class="large_title" style="padding-left:1px;text-align:left;"> <?=$this->WorkTitle;?> </div>
+		<table cellpadding="0" cellspacing="0" border="0" width="100%" align="center" class="list_table2" id="table1">
+			<?php			
+			$delimitor = $this->delimitor;//Lay ky tu phan cach giua cac phan tu
+			//Hien thi cac cot cua bang hien thi du lieu
+			$StrHeader = explode("!~~!",$this->GenerateHeaderTable("5%" . $delimitor . "15%" . $delimitor . "50%" . $delimitor . "30%" 
+										,$arrConst['_STT'] . $delimitor . $arrConst['_NGAY_THUC_HIEN'] . $delimitor . $arrConst['_KET_QUA_XU_LY']. $delimitor . $arrConst['_CAN_BO_XU_LY'] 
+										,$delimitor));
+			echo $StrHeader[0];						
+			echo $StrHeader[1]; //Hien thi <col width = 'xx'>
+				$v_current_style_name = "round_row";
+				$arrWorkAll = $this->arrWorkAll;
+				$sUnitNameGroup = '';		
+				$icount			= 0;
+				for($index = 0;$index < sizeof($arrWorkAll);$index++){
+					//Lay file dinh kem
+					$strFileName 				= $arrWorkAll[$index]['C_FILE_NAME'];
+					$sFile 	= Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+					//ID CONG VIEC
+					$sPkDocWorkId 				= $arrWorkAll[$index]['PK_DOC_WORK'];	
+					//Noi xu ly 
+					//echo  $sUnitName;
+					for($i = 0; $i< sizeof($sarrAppointedUnitList); $i++){
+						$sarrAppointedUnit = explode(':',$sarrAppointedUnitList[$i]);
+						if($arrWorkAll[$index]['FK_UNIT'] == ($sarrAppointedUnit[0])){
+							$sUnitName = $arrWorkAll[$index]['C_UNIT_NAME'].'&nbsp;'.$sarrAppointedUnit[1];
+						}
+					}			
+					//echo $index;
+					//Ngay thuc hien
+					$dImplementationDate		= $arrWorkAll[$index]['C_WORK_DATE'].'&nbsp;';								
+					//Ket qua xu ly
+					if($strFileName == '' || $strFileName == null){
+						$sResult				= $arrWorkAll[$index]['C_RESULT'].'&nbsp;';
+					}else {
+						$sResult				= $arrWorkAll[$index]['C_RESULT'] .'<br>'. $sFile;
+						$sFile = "";
+					}
+					//Can bo xu ly
+					$sStaffPositionName 		= $arrWorkAll[$index]['C_STAFF_POSITION_NAME'] .'&nbsp;';				
+					//Disable doi vs nhung cong viec khong phai do can bo dang nhap hien thoi tao lap ra
+					$sDisable = "";
+					if($arrWorkAll[$index]['FK_STAFF'] != $_SESSION['staff_id']){
+						$sDisable = "disabled";
+					}
+					if ($v_current_style_name == "odd_row"){
+						$v_current_style_name = "round_row";
+					}else{
+						$v_current_style_name = "odd_row";					
+					}
+					if ($sUnitName != $sUnitNameGroup){?>
+						<tr style="background:#DBDEE9">					
+						<td colspan="5" align="left" style="padding-left:3px;padding-right:3px;" class="normal_label"><b><?=$sUnitName?></b></td>													
+						</tr><?php
+						$sUnitNameGroup = $sUnitName;
+						$icount         = 0;
+					}?>				
+					<tr class="<?=$v_current_style_name?>">		
+						<td align="center" style="padding-left:3px;padding-right:3px;" class="normal_label">
+							<?=$icount + 1?>			
+						</td>													
+						<td  onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_work_id'),'<?=$sPkDocWorkId?>');" align="center"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$dImplementationDate;?></td>
+						<td  onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_work_id'),'<?=$sPkDocWorkId?>');" align="left"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sResult;?></td>
+						<td  onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_work_id'),'<?=$sPkDocWorkId?>');" align="left" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sStaffPositionName?></td>		
+					</tr><?php	$icount++;
+				}
+				//onclick = "getSingleWorkValue('<?=$sPkDocWorkId						
+				//Tu dien cac dong trang trong truong hop du lieu tra ve < so row _CONST_NUMBER_OF_ROW_PER_LIST		
+				if(sizeof($arrWorkAll) < 7){	
+					echo $this->addEmptyRow($this->iCountElement,7 - sizeof($arrWorkAll),$v_current_style_name,4);		
+				}	
+			?>			
+	</table>
+	</div>	
+	<!--Hien thi nut!-->		
+	<table width='99%'  border='0' cellspacing='0' cellpadding='0' align='center' class='normal_label'>
+		<tr><td> &nbsp; </td></tr>		
+		<tr>
+			<td align="center" style="padding-bottom:10px;">	
+				<input type="submit" name="quaylai" id="quaylai" value="<?=$arrConst['_QUAY_LAI'] ?>" onClick="btn_back_onclick('<?=$sUrlBack?>')" class="add_large_button">
+			</td>
+		</tr>			
+	</table>	
+</form>
+
+
+

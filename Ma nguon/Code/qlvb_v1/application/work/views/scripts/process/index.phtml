@@ -1,0 +1,224 @@
+<form action="index" method="POST" id="frmReceived" autocomplete="off">
+	<?php echo $this->formHidden("hdn_type","",null); ?>
+	<!--Cac doi tuong hidden tren form-->
+	<?php echo $this->formHidden("hdn_current_page",$this->currentPage,null); ?>
+	<?php echo $this->formHidden("cbo_nuber_record_page",$this->numRowOnPage,null); ?>
+	<?php echo $this->formHidden("hdn_record_number_page",$this->numRowOnPage,null); ?>
+	<?php echo $this->formHidden("hdn_object_id_list","",null); ?>
+	<?php echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); ?>
+	<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+	<?php echo $this->formHidden("hdn_object_id",$this->pSendReceiveDocumentId,null); ?>
+	<?php echo $this->formHidden("hdn_doc_id",$this->pDocId,null); ?>
+	<?php echo $this->formHidden("hdn_XmlTagValueList",$this->XmlTagValueList,null); ?>
+	<?php echo $this->formHidden("hdn_status",'',null); ?>
+	<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+	<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+	<?php echo $this->formHidden("hdn_left_status",$this->getStatusLeftMenu,null); ?>	
+	<?php echo $this->formHidden("status","",null); ?>	
+	<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+	<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null);?>
+	<?php
+		$arrCount = $this->arrCount;
+		$sUrlEdit  = "../edit/";
+		$arrPermission = $_SESSION['arrStaffPermission'];
+	?>
+	<table>
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<?=$this->bodyTitle;?>				
+			</td>
+		</tr>
+	</table>
+	<div class="box container c1">
+		<div class="pad">			
+			<table cellpadding="0" cellspacing="0" width="100%" border="0" style="padding-left:0%;">
+				<col width="18%"/><col width="12%"/><col width="10%"/><col width="12%"/><col width="10%"/><col width="23%"/><col width="15%"/>	
+				<tr>
+					<td class="normal_label"><?=$arrCount['_LANH_DAO_GIAO_VIEC']?></td>
+					<td class="normal_label" colspan="3"><input style="width:90%;" type="text" id="C_LEADER" name="C_LEADER" class="textbox" size="40%" value="<?= $this->iLeaderId ?>" /></td>
+				</tr>		
+				<tr>
+					<td class="normal_label"><?=$arrCount['_TU_NGAY']?></td>
+					<td class="normal_label">
+						<input style="width:70%;" id="fromDate" name="txtfromDate" type="text" isdate="true" value="<?=$this->fromDate?>" option = "false" message="<?php echo "NGAY THANG NAM khong dung dinh dang";?>" onKeyDown="change_focus(document.forms[0],this)">						
+					</td>
+					<td class="normal_label" align="center"><?=$arrCount['_DEN_NGAY']?></td>
+					<td class="normal_label">
+						<input style="width:70%;" id ="toDate" name="txttoDate" type="text" isdate="true" value="<?=$this->toDate?>" option = "false" message="<?php echo "NGAY THANG NAM khong dung dinh dang";?>" onKeyDown="change_focus(document.forms[0],this)">											
+					</td>
+					<td class="normal_label"  colspan="2">
+						<input style="width:98%;" type="text" id="txtfullTextSearch" name="txtfullTextSearch" class="textbox" size="40%" value="<?= $this->sFullTextSearch ?>" />
+					</td>
+					<td class="normal_label" align="center" rowspan="2"><input type="button" value="<?=$arrCount['_TIM_KIEM']?>" class="add_large_button"  onclick="checkvalue();">	</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<table width='99%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+		<col width="85%" align="left"/><col width="15%" align="right"/>
+		<tr>
+			<td align="right" colspan="2">
+				<div style="text-align:right; width:98%;">
+					<label><?php
+					if($this->getStatusLeftMenu == 'CAN_XU_LY'){?>
+						<a class="small_link" onclick="btn_update_work_process_onclick(document.getElementsByName('chk_item_id'),'<?=$this->getStatusLeftMenu?>','../../process/');"><?=$arrCount['_KET_QUA_XU_LY'].'  '?></a> 
+						<a class="small_link" onclick="btn_update_work_process_onclick(document.getElementsByName('chk_item_id'),'<?=$this->getStatusLeftMenu?>','../../../../sent/draff/add');"><?=$arrCount['_VB_DU_THAO'].'  '?></a><?php
+					}else {?>
+						<a class="small_link" onclick="btn_update_work_process_onclick(document.getElementsByName('chk_item_id'),'<?=$this->getStatusLeftMenu?>','../../process/');"><?=$arrCount['_KHOI_PHUC_XU_LY'].'  '?></a><?php
+					}?>
+						<a class="small_link" onclick="btn_print_processGetAll('../../print/','<?=$this->fromDate?>','<?=$this->toDate?>','<?=$this->iLeaderId?>','<?=$this->getStatusLeftMenu?>','<?=$this->sFullTextSearch?>');"><?=$arrCount['_IN']?></a> 
+					</label>
+				</div>	
+			</td>
+		</tr>
+	</table>
+	<table cellpadding="0" cellspacing="0" border="0" width="98%" align="center" class="list_table2" id="table1">
+		<?php			
+		$delimitor = $this->delimitor;//Lay ky tu phan cach giua cac phan tu
+		//Hien thi cac cot cua bang hien thi du lieu
+		if($this->getStatusLeftMenu == 'CAN_XU_LY'){
+			$StrHeader = explode("!~~!",$this->GenerateHeaderTable("3%" . $delimitor ."11%". $delimitor . "14%" . $delimitor . "35%" . $delimitor . "27%" . $delimitor . "10%"
+										,'<input type="checkbox" name="chk_all_item_id" value="" onclick="checkbox_all_item_id(document.forms[0].chk_item_id);">' . $delimitor . $arrCount['_NGAY_GIAO_VIEC']. $delimitor . $arrCount['_LANH_DAO_GIAO_VIEC'] . $delimitor . $arrCount['_NOI_DUNG_CONG_VIEC'] . $delimitor . $arrCount['_Y_KIEN_LD_PHONG_BAN'] . $delimitor . $arrCount['_HAN_XU_LY']
+										,$delimitor));
+		}else {
+			$StrHeader = explode("!~~!",$this->GenerateHeaderTable("3%" . $delimitor ."11%". $delimitor . "14%" . $delimitor . "35%" . $delimitor . "27%" . $delimitor . "10%"
+										,'<input type="checkbox" name="chk_all_item_id" value="" onclick="checkbox_all_item_id(document.forms[0].chk_item_id);">' . $delimitor . $arrCount['_NGAY_GIAO_VIEC']. $delimitor . $arrCount['_LANH_DAO_GIAO_VIEC'] . $delimitor . $arrCount['_NOI_DUNG_CONG_VIEC'] . $delimitor . $arrCount['_KET_QUA_XU_LY'] . $delimitor . $arrCount['_HAN_XU_LY']
+										,$delimitor));
+		}
+		echo $StrHeader[0];					
+		echo $StrHeader[1]; //Hien thi <col width = 'xx'><...		
+			//Dinh nghia URL
+			$sUrlView  = "../../view/";
+			$v_current_style_name = "round_row";
+			$arrResul = $this->arrResul;
+			$objFunction =	new	Sys_Function_DocFunctions()	;	
+			for($index = 0;$index < sizeof($arrResul);$index++){
+				$sapproveDate				= $objFunction->searchCharColor($this->sFullTextSearch,$arrResul[$index]['C_APPROVE_DATE']) .'&nbsp;';		
+			
+				$sleaderPositionName		= $objFunction->searchStringColor($this->sFullTextSearch,$arrResul[$index]['C_LEADER_POSITION_NAME']) .'&nbsp;';	
+				
+				$strFileName 				= $arrResul[$index]['C_FILE_NAME'];
+				$sFile 						= Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+				
+				$sworkId 					= $arrResul[$index]['PK_WORK_MANAGE'];		
+				$sStaffNameList 			= $arrResul[$index]['C_STAFF_NAME_LIST'];	
+				$sUnitNameList 				= $arrResul[$index]['C_UNIT_NAME_LIST'];	
+				$ProcessResult 				= $arrResul[$index]['C_PROCESS_RESUL'];
+				if($this->getStatusLeftMenu == 'CAN_XU_LY'){
+					$ProcessResult 			= $arrResul[$index]['C_UNIT_LEADER_IDEA'].'&nbsp;';		
+				}else{
+					$arrProcessResult		= explode('@^END^@',$ProcessResult);
+					$ProcessResult			='';
+					if($arrResul[$index]['C_UNIT_LEADER_IDEA'] != '')
+						$ProcessResult		.= $arrResul[$index]['C_UNIT_LEADER_IDEA'].'<br>';
+					for($i = 0; $i < sizeof($arrProcessResult); $i++){
+						$arrStaffProcessResult	 = explode('|!#~$|*',$arrProcessResult[$i]);
+						$ProcessResult 		.= $arrStaffProcessResult[0].': '.$arrStaffProcessResult[1];
+						$strFileNameStaff	= $arrStaffProcessResult[2];
+						if($strFileNameStaff == '' || $strFileNameStaff == null){
+							$ProcessResult	.= ' (<font color="#FF0000">'.$arrStaffProcessResult[3].'</font>)<br>';
+						}else {
+							$sFileStaff		= Sys_Library::_getAllFileAttach($strFileNameStaff,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+							$ProcessResult  .= $sFileStaff.' (<font color="#FF0000">'.$arrStaffProcessResult[3].'</font>)<br>';
+							$sFileStaff 	= "";
+						}
+					}
+				}
+				$ProcessResult = $objFunction->searchStringColor($this->sFullTextSearch,$ProcessResult);
+				if($strFileName == '' || $strFileName == null){
+					$sworkContent			= $objFunction->searchStringColor($this->sFullTextSearch,$arrResul[$index]['C_WORK_CONTENT']) .'&nbsp;';	
+				}else {
+					$sworkContent			= $objFunction->searchStringColor($this->sFullTextSearch,$arrResul[$index]['C_WORK_CONTENT']) .'<br>'. $sFile;
+					$sFile 					= "";
+				}
+				$sAppointedDate 			= $arrResul[$index]['C_APPOINTED_DATE'].'&nbsp;';	
+				if ($v_current_style_name == "odd_row"){
+					$v_current_style_name = "round_row";
+				}else{
+					$v_current_style_name = "odd_row";					
+				}?>
+				<tr class="<?=$v_current_style_name?>">	
+					<td align="center" style="padding-left:3px;padding-right:3px;" class="normal_label">						
+						<?=$this->formCheckbox('chk_item_id',$sworkId.':'.$arrResul[$index]['C_WORK_STATUS'], array('checked' => false,'onclick' =>'selectrow(this)'))?>					
+					</td>
+					<td ondblclick="item_onclick('<?=$sworkId?>','<?=$sUrlView?>')" onclick="document.getElementById('hdn_status').value ='<?$arrResul[$index]['C_WORK_STATUS']?>';set_hidden_work(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sworkId?>');" align="center"  style="padding-left:3px;padding-right:3px;" class="normal_label" ><?=$sapproveDate?></td>													
+					<td ondblclick="item_onclick('<?=$sworkId?>','<?=$sUrlView?>')" onclick="document.getElementById('hdn_status').value ='<?$arrResul[$index]['C_WORK_STATUS']?>';set_hidden_work(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sworkId?>');" align="center" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sleaderPositionName?></td>
+					<td ondblclick="item_onclick('<?=$sworkId?>','<?=$sUrlView?>')" onclick="document.getElementById('hdn_status').value ='<?$arrResul[$index]['C_WORK_STATUS']?>';set_hidden_work(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sworkId?>');" align="left" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sworkContent?></td>
+					<td ondblclick="item_onclick('<?=$sworkId?>','<?=$sUrlView?>')" onclick="document.getElementById('hdn_status').value ='<?$arrResul[$index]['C_WORK_STATUS']?>';set_hidden_work(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sworkId?>');" align="left" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$ProcessResult?></td>	
+					<td ondblclick="item_onclick('<?=$sworkId?>','<?=$sUrlView?>')" onclick="document.getElementById('hdn_status').value ='<?$arrResul[$index]['C_WORK_STATUS']?>';set_hidden_work(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sworkId?>');" align="center" valign="middle" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sAppointedDate?></td>	
+				</tr><?php
+			}					
+			//Tu dien cac dong trang trong truong hop du lieu tra ve < so row _CONST_NUMBER_OF_ROW_PER_LIST		
+			if(sizeof($arrResul) < 15){	
+				echo $this->addEmptyRow($this->iCountElement,15 - sizeof($arrResul),$v_current_style_name,6);		
+			}	
+		?>			
+	</table>	
+	<!--Hien thi trang can xem!-->
+	<table width="100%" cellpadding="0" cellspacing="0" border="0">
+		<tr>
+			<td style="color:red;width:30%;padding-left:1%;" class="small_label">
+				<small class="small_starmark"><?=$this->sdocpertotal;?></small>
+			</td>
+			<td align="center" style="width="50%">
+				<table width="10%"><?php
+					//Hien thi danh sach so trang
+					echo $this->generateStringNumberPage;?>
+				</table>
+			</td>
+			<td width="30%" align="right" style="font-size:13px; padding-right:1%; font:tahoma" class="normal_label"><?php
+				//Hien thi so trang
+				echo $this->generateHtmlSelectBoxPage;?>
+			</td>
+		</tr>
+	</table>
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' align="center">
+		<tr>
+			<td style="padding-top: 10px; padding-bottom: 10px;" align="center" valign="middle"><?php
+			if($this->getStatusLeftMenu == 'CAN_XU_LY'){?>
+				<input type="button" class="add_large_button" value="<?=$arrCount['_KET_QUA_XU_LY']?>" onclick="btn_update_work_process_onclick(document.getElementsByName('chk_item_id'),'<?=$this->getStatusLeftMenu?>','../../process/');">
+				<input type="button" class="add_large_button" value="<?=$arrCount['_VB_DU_THAO']?>" onclick="btn_update_work_process_onclick(document.getElementsByName('chk_item_id'),'<?=$this->getStatusLeftMenu?>','../../../../sent/draff/add')"><?php
+			}else {?>
+				<input type="button" class="add_large_button" value="<?=$arrCount['_KHOI_PHUC_XU_LY']?>" onclick="btn_update_work_process_onclick(document.getElementsByName('chk_item_id'),'<?=$this->getStatusLeftMenu?>','../../process/');"><?php
+			}?>
+				<input type="button" class="add_large_button" value="&nbsp;&nbsp;&nbsp;<?=$arrCount['_IN']?>&nbsp;&nbsp;&nbsp;" onclick="btn_print_processGetAll('../../print/','<?=$this->fromDate?>','<?=$this->toDate?>','<?=$this->iLeaderId?>','<?=$this->getStatusLeftMenu?>','<?=$this->sFullTextSearch?>');">
+			</td>	
+		</tr>
+	</table>
+</div>
+</form>
+<?php  echo $this->search_textselectbox_leader; ?>
+<script type="text/javascript">
+shortcut.add("Ctrl+K",function() {
+	document.getElementById('txtfullTextSearch').focus();
+	document.getElementById('txtfullTextSearch').select();
+});
+shortcut.add("Enter",function() {
+	checkvalue();
+});
+//Ham them khoang trang neu NSD khong nhap gia tri trong o tim kiem
+function checkvalue(){
+	if(document.getElementById('txtfullTextSearch').value == ""){
+		
+		document.getElementById('txtfullTextSearch').value = " ";
+	}
+	actionUrl('');
+}
+</script>
+<script type = "text/javascript">
+$(function() {
+	$( "#fromDate" ).datepicker({
+		changeMonth: true,
+		gotoCurrent: true,
+		maxDate: '+1m +1w',
+		minDate: new Date(1945, 1 - 1, 1),
+		changeYear: true
+	});
+	$( "#toDate" ).datepicker({
+		changeMonth: true,
+		gotoCurrent: true,
+		maxDate: '+1m +1w',
+		minDate: new Date(1945, 1 - 1, 1),
+		changeYear: true
+	});
+});</script>

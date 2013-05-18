@@ -1,0 +1,198 @@
+<form action="index" method="POST" id="frmAddReceived" enctype="multipart/form-data"><?php 	
+	$urlCalendar = $this->urlCalendar; 
+	$arrRecordArchive = $this->arrRecordArchive;
+	$arrConst  = $this->arrConst;
+	$arrRecordArchive = $this->arrRecordArchive;
+	$sRecordArchivedId = $this->sRecordArchivedId;
+	$StaffId           = $this->StaffId;
+	$iCreater		   = $arrRecordArchive[0]['FK_STAFF'];
+?>
+	<!--tao tac hidden!-->
+				<?php echo $this->formHidden("hdnCode","",null); ?>
+				<!--Sinh mot hidden luu ID loai danh muc!-->
+				<?php echo $this->formHidden("hdn_object_id",$this->sRecordArchivedId,null); ?>		
+				<!--Bien hdn_xml_tag_list dung de luu danh sach cac THE XML tuong ung voi cac THUOC TINH cua mot doi tuong dang duoc cap nhat-->			
+				<?php echo $this->formHidden("hdn_xml_tag_list",'',null); ?>			
+				<!--Bien hdn_xml_value_list dung de luu danh sach cac gia tri cua cac THE XML tuong ung voi cac THUOC TINH cua mot doi tuong-->			
+				<?php echo $this->formHidden("hdn_xml_value_list",'',null); ?>			
+				<!--Sinh mot hidden luu list ID ma NSD chon!-->
+				<?php echo $this->formHidden("hdn_object_id_list","",null); ?>	
+				<!--Hidden luu gia tri cua list tag va list value (TagList|{*^*}|ValueList) -->
+				<?php echo $this->formHidden("hdn_XmlTagValueList",$this->XmlTagValueList,null); ?>
+				<!--Bien hdn_page dung de luu chi so trang hien thi hien thoi-->			
+				<?php echo $this->formHidden("hdn_current_page",$this->currentPage,null); ?>	
+				<!--Sinh mot hidden luu gia tri xac dinh so ban ghi / 1 trang!-->	
+				<?php echo $this->formHidden("hdn_record_number_page",$this->numRowOnPage,null); ?>	
+				<!--Bien hdn_filter_xml_tag_list dung de luu danh sach cac THE XML tuong ung voi cac tieu thuc loc tren giao dien DANH SACH DOI TUONG-->
+				<?php echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); ?>
+				<!--Bien hdn_filter_xml_tag_list dung de luu gia tri cua cac THE XML tuong ung voi cac tieu thuc loc tren giao dien DANH SACH DOI TUONG-->	
+				<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+				<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+				<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>	
+				<?php echo $this->formHidden("hdh_option",$this->option,null); ?>	
+				<?php echo $this->formHidden("hdn_type","",null); ?>
+				<?php echo $this->formHidden("hdn_doc_id","",null); ?>
+				<?php echo $this->formHidden("hdn_signer_position_name","",null); ?>
+				<?php echo $this->formHidden("hdn_staff_id_list","",null); ?>
+				<?php echo $this->formHidden("hdn_unit_id_list","",null); ?>
+				<?php echo $this->formHidden("showModalDialog","",null); ?>
+				<?php echo $this->formHidden("htn_leftModule",$this->currentModulCodeForLeft,null); ?>
+	<?php if ($this->currentModulCodeForLeft == 'DOCUMENT-RECORD-DOC')
+				$UrlBack = '../index/';
+		  else 	$UrlBack = '../findrecord/';	
+	?>
+	<!--HIen thi tieu de man hinh danh sach!-->
+	<script type="text/javascript">
+		//$(function(){$('#body_conten1').equalHeights();});
+	</script>
+	<div id ="content">
+		<div>
+			<h1 class="large_label1">THÔNG TIN HỒ SƠ</h1>
+		</div>
+		<table class="table_detail_doc" border="1">
+			<col width="15%"><col width="85%">
+			<tr>
+				<td><?=$arrConst['_NGAY_THUC_HIEN']?></td>
+				<td><?=$arrRecordArchive[0]['C_CREATE_DATE'].'&nbsp;'?></td>
+			</tr>
+			<tr>
+				<td><?=$arrConst['_MA_HO_SO']?></td>
+				<td><?=$arrRecordArchive[0]['C_RECORD_ID'].'&nbsp;'?></td>
+			</tr>
+			<tr>
+				<td ><?=$arrConst['_TEN_HO_SO']?></td>
+				<td><?=$arrRecordArchive[0]['C_RECORD_NAME'].'&nbsp;'?></td>
+			</tr>
+			<tr>
+				<td><?=$arrConst['_NGUOI_TAO_LAP']?></td>
+				<td><?=$arrRecordArchive[0]['C_STAFF_POSITION_NAME'].', '.$arrRecordArchive[0]['C_UNIT_NAME'].'&nbsp;'?></td>
+			</tr>
+			<tr>
+				<td><?=$arrConst['_GHI_CHU']?></td>
+				<td><?=$arrRecordArchive[0]['C_NOTES'].'&nbsp;'?></td>
+			</tr>
+		</table>	
+	</div><!-- End #content-->	
+	<div style="height:30px;width:98%;padding:0 10px;">
+		<div style="float:left;"><h1 class="large_label1">DANH SÁCH VĂN BẢN</h1></div>
+	
+			<div style="float:right;line-height:29px;">
+			<?php if($StaffId == $iCreater){ ?>
+				<!-- <a class="small_link" onclick="btn_print_record_onclick('../print/','<?=$sRecordArchivedId?>');"><?=$arrConst['_IN']?> </a> --> 
+				<!--<a class="small_link" onclick="btn_add_record_onclick('../getreceived/','<?=$sRecordArchivedId?>','VB_DEN','<?=$this->UrlAjax?>');"><?=$arrConst['_LAY_VB_DEN']?> </a> -->
+				<!--<a class="small_link" onclick="btn_add_record_onclick('../getsend/','<?=$sRecordArchivedId?>','VB_DI');"><?=$arrConst['_LAY_VB_DI']?> </a>-->
+				<!--<a class="small_link" onclick="btn_add_docother_onclick('../adddocother/','<?=$sRecordArchivedId?>','VB_KHAC');"><?=$arrConst['_THEM_VB_KHAC']?> </a>-->
+				<!--<a class="small_link" onclick="btn_update_docother_onclick(document.getElementsByName('chk_item_id'),'../editdocother/','<?=$sRecordArchivedId?>',document.getElementById('hdn_type').value,document.getElementById('hdn_doc_id').value);"><?=$arrConst['_SUA']?> </a>-->
+				<!--<a class="small_link" onClick="btn_delete_docrelate_onclick('<?=$this->UrlAjax;?>',document.getElementsByName('chk_item_id'),'<?=$sRecordArchivedId?>')"><?=$arrConst['_XOA']?> </a> -->
+			<?php } ?>
+				<!--<a class="small_link" onClick="btn_back_onclick('<?=$UrlBack?>')"><?=$arrConst['_QUAY_LAI']?></a> -->
+			</div>
+	</div>
+	<div style="width:100%;">
+		<table cellpadding="0" cellspacing="0" border="0" width="98%%" align="center" class="list_table2" style="border-bottom:none;">
+				<col width='4%'><col width='5%'><col width='15%'><col width='15%'><col width='40%'><col width='20%'>
+				<tr class='header'>
+					<td class = 'title' style = 'text-align:center;'><input type="checkbox" name="chk_all_item_id" value="" onclick="checkbox_all_item_id(document.forms[0].chk_item_id);"></td>
+					<td class = 'title' style = 'text-align:center;'><?=$arrConst['_STT']?></td>
+					<td class = 'title' style = 'text-align:center;'><?=$arrConst['_NGAY_BAN_HANH']?></td>
+					<td class = 'title' style = 'text-align:center;'><?=$arrConst['_SO_KY_HIEU']?></td>
+					<td class = 'title' style = 'text-align:center;'><?=$arrConst['_TRICH_YEU']?></td>
+					<td class = 'title' style = 'text-align:center;'><?=$arrConst['_NOI_BAN_HANH']?></td>
+				</tr>
+		</table>
+	</div>
+	<div style="display:none;" id="file_name"></div>
+	<div id="divtable">
+		<div style="border-bottom:1px solid black;margin-left:1%;width:98%;">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%" align="center" class="list_table2" id="table1">
+				
+				<?php			
+				$delimitor = $this->delimitor;//Lay ky tu phan cach giua cac phan tu
+				//Hien thi cac cot cua bang hien thi du lieu
+				$StrHeader = explode("!~~!",$this->GenerateHeaderTable("4%" . $delimitor ."5%". $delimitor . "15%" . $delimitor . "15%" . $delimitor . "40%" . $delimitor . "20%"
+												,'<input type="checkbox" name="chk_all_item_id" value="" onclick="checkbox_all_item_id(document.forms[0].chk_item_id);">' . $delimitor .$arrConst['_SO_DEN']. $delimitor . $arrConst['_NGAY_DEN'] . $delimitor . $arrConst['_TRICH_YEU'] . $delimitor . $arrConst['_DO_KHAN'] . $delimitor . $arrConst['_THONG_TIN_KHAC']
+												,$delimitor));										
+				echo $StrHeader[1]; //Hien thi <col width = 'xx'><...		
+					//Dinh nghia URL
+					$sUrlEdit  = "../edit/";
+					$sUrlView  = "../view/";
+					$v_current_style_name = "round_row";
+					$arrResul = $this->arrResul;
+					$objFunction =	new	Sys_Function_DocFunctions()	;	
+						
+					//Tu dien cac dong trang trong truong hop du lieu tra ve < so row _CONST_NUMBER_OF_ROW_PER_LIST		
+					if(sizeof($arrResul) < 15){	
+						echo $this->addEmptyRow($this->iCountElement,15 - sizeof($arrResul),$v_current_style_name,6);		
+					}	
+				?>			
+			</table>	
+		</div>
+		<div>
+			<table width="98%" style="margin-left:1%;">
+				<col width="30%" align="left"></col><col width="10%"></col><col width="30%" align="right"></col>
+				<tr>
+					<td class="normal_label"><small class="small_starmark">Danh sách này không có văn bản nào</small></td>
+					<td></td>
+					<td class="normal_label" align="right">Hiển thị <select id="cboRowOnPage" onchange="shownumberpage()">
+							<option value="15">15</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+						</select> Văn bản/Trang
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<!--Hien thi nut!-->		
+	<div class="divButton" style="margin-top:10px;text-align:center;margin-bottom:10px;clear:both;">
+	<?php if($StaffId == $iCreater){ ?>
+		<!-- <input type="button" class="add_large_button" value="<?=$arrConst['_IN']?>" onclick="btn_print_record_onclick('../print/','<?=$sRecordArchivedId?>');"> -->
+		<input id="btn_getreceived" name="btn_getreceived" type="button" class="add_large_button" value="<?=$arrConst['_LAY_VB_DEN']?>" onclick="btn_add_record_onclick('../getreceived/','<?=$sRecordArchivedId?>','VB_DEN','<?=$this->UrlAjax?>');">
+		<input type="button" class="add_large_button" value="<?=$arrConst['_LAY_VB_DI']?>" onclick="btn_add_record_onclick('../getsend/','<?=$sRecordArchivedId?>','VB_DI');">
+		<input type="button" class="add_large_button" value="<?=$arrConst['_THEM_VB_KHAC']?>" onclick="btn_add_docother_onclick('../adddocother/','<?=$sRecordArchivedId?>','VB_KHAC');">
+		<input type="button" class="add_large_button" value="<?=$arrConst['_SUA']?>" onclick="btn_update_docother_onclick(document.getElementsByName('chk_item_id'),'../editdocother/','<?=$sRecordArchivedId?>',document.getElementById('hdn_type').value,document.getElementById('hdn_doc_id').value);">
+		<input type="button" class="add_large_button" value="<?=$arrConst['_XOA']?>" onclick="btn_delete_docrelate_onclick('<?=$this->UrlAjax;?>',document.getElementsByName('chk_item_id'),'<?=$sRecordArchivedId?>')">
+	<?php } ?>
+		<input type="submit" name="quaylai" id="quaylai" value="Quay lại" onClick="btn_back_onclick('<?=$UrlBack?>')" class="add_large_button">
+	</div>
+</form>
+<style>
+	#content div label{
+		font-family:Tahoma;
+		font-size:13px;
+		line-height:25px;
+		display:block;
+		width:12%;
+	}
+	h1.large_label1{
+		font-weight:bold;
+		vertical-align:middle;
+		color:#CA1010;
+		font-family:Tahoma,Arial,Helvetica,sans-serif;
+		font-size:14px;
+		padding:0px 0px;
+		margin:5px 0px;
+	}
+	
+</style>
+<script type="text/javascript">
+	$(document).ready(function() {
+		getrelatedoc();
+	});
+	function getrelatedoc(){
+		//alert('her')
+		var key = 'RecordArchivedId=' + '<?=$sRecordArchivedId?>' + '&curentPage=1' + '&rowOnPage=' + document.getElementById('cboRowOnPage').value;
+	 	postAJAXHTTPText('<?=$this->UrlAjax?>' + 'Record/generatehtml/archives/getrelatedoc.php',key, document.getElementById('divtable'), null);
+	}
+	function gotopage(page){
+		var key = 'RecordArchivedId=' + '<?=$sRecordArchivedId?>' + '&curentPage=' + page + '&rowOnPage=' + document.getElementById('cboRowOnPage').value;
+		postAJAXHTTPText('<?=$this->UrlAjax;?>' + '/Record/generatehtml/archives/getrelatedoc.php',key, document.getElementById('divtable'), null);	
+	}
+	function shownumberpage(){
+		page = 1;
+		var key = 'RecordArchivedId=' + '<?=$sRecordArchivedId?>' + '&curentPage=' + page + '&rowOnPage=' + document.getElementById('cboRowOnPage').value;
+		postAJAXHTTPText('<?=$this->UrlAjax;?>' + '/Record/generatehtml/archives/getrelatedoc.php',key, document.getElementById('divtable'), null);	
+	}
+</script>

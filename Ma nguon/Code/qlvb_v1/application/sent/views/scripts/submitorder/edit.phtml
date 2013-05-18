@@ -1,0 +1,429 @@
+<form action="index" method="POST" id="frmAddSent" enctype="multipart/form-data" autocomplete="off">
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<!--tao tac hidden!-->
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>
+				<?php echo $this->formHidden("hdnCode","",null); ?>
+				<?php echo $this->formHidden("hdn_object_id_list","",null); ?>
+				<?php echo $this->formHidden("hdn_xml_tag_list","",null); ?>
+				<?php echo $this->formHidden("hdn_xml_value_list","",null); ?>
+				<?php echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); ?>
+				<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+				<?php echo $this->formHidden("hdn_XmlTagValueList","",null); ?>
+				<?php echo $this->formHidden("hdh_option",$this->option,null); ?>
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>	
+				<?php echo $this->formHidden("hdnListId","",null); ?>	
+				<?php echo $this->formHidden("number",'',null); ?>
+				<?php echo $this->formHidden("hdn_object_id",$this->sentID,null); ?>		
+				<?php echo $this->formHidden("hdn_work_id",$this->workID,null); ?>		
+				<?php echo $this->formHidden("hdn_received_place","",null); ?>
+				<?php echo $this->formHidden("hdn_function_modul",$this->getModulLeft,null);?>
+				<?php echo $this->formHidden("hdn_list_id","",null); ?>
+				<?php echo $this->formHidden("hdn_pb_name","",null); ?>
+				<?php echo $this->formHidden("hdn_ub_name","",null); ?>
+				<?php echo $this->formHidden("hdn_vp_name","",null); ?>			
+				<?php echo $this->formHidden("hdn_px_name","",null); ?>
+				<?php echo $this->formHidden("hdn_ivalue",$this->iValue,null); ?>
+				<?=$this->bodyTitle1?>
+			</td>
+		</tr>
+	</table>
+	<?php  
+		$arrSent = $this->arrSent;
+		$arrConst = $this->arrConst;
+		$urlCalendar = $this->urlCalendar;
+		$arrWork = $this->arrWork;
+	?>
+	<!-- Thong tin co ban cua VB du thao -->
+	<table class="table_detail_doc" border="1" width="100%">
+	<col width="25%" align="left"/><col width="75%" align="left"/>
+		<tr>
+			<td style="border-right:1px solid #CCC">
+				<?=$arrConst['_LOAI_VAN_BAN'] ?>
+			</td>
+				
+			<td>
+				<?= $arrSent[0]['C_DOC_TYPE'] ?>
+			</td>
+		</tr>	
+		<tr>
+			<td style="border-right:1px solid #CCC">
+				<?=$arrConst['_PHONG_BAN_DU_THAO'] ?>
+			</td>
+				
+			<td>
+				<?= $arrSent[0]['C_UNIT_NAME'] ?>
+			</td>
+		</tr>
+		<tr>
+			<td style="border-right:1px solid #CCC">
+				<?=$arrConst['_TRICH_YEU'] ?>
+			</td>
+				
+			<td>
+				<?= $arrSent[0]['C_SUBJECT'] ?>
+			</td>
+		</tr>
+		<tr>
+			<td style="border-right:1px solid #CCC">
+				<?=$arrConst['_NOI_DUNG_TRINH'] ?>
+			</td>
+				
+			<td>
+				<?= $arrSent[0]['C_SUBMIT_CONTENT'] ?>
+			</td>
+		</tr>
+		<?php
+			$strFileName = $arrSent[0]['C_FILE_NAME'];
+			if($strFileName != ''){
+				$sFile = Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+			}	
+		?>
+		<tr>
+			<td style="border-right:1px solid #CCC">
+				<?=$arrConst['_FILE_DINH_KEM'] ?>
+			</td>
+				
+			<td>
+				<?= $sFile ?>
+			</td>
+		</tr>
+	</table>
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+			<?= $this->bodyTitle2 ; ?>
+			</td>
+		</tr>
+	</table>
+
+	<div id="body_conten1" style="padding-top:5px;">
+			<div>
+				<label>1.&nbsp;<?php if($this->iValue==1){echo $arrConst['_NGAY_TRINH'];}else{echo $arrConst['_NGAY_THUC_HIEN']; }?><span class="requiein">*</span></label> 
+				<input id ="C_WORK_DATE" name="C_WORK_DATE" type="text" isdate="true" value="<?= $arrWork[0]['C_WORK_DATE']?>" option = "true"  xml_tag_in_db="" xml_data="false" column_name="C_WORK_DATE" message="NGAY TRINH khong dung dinh dang ngay/thang/nam!" onKeyDown="change_focus(document.forms[0],this)">
+				<img src="<?= $this->baseUrl?>images/calendar.gif" border="0" onclick="DoCal('<?= $urlCalendar;?>',document.getElementById('C_WORK_DATE'));" style="cursor:pointer">	 						
+			</div>				
+			<div>
+				<label>2.&nbsp;<?php if($this->iValue==1){echo $arrConst['_VAN_DE_TRINH'];}else{echo $arrConst['_Y_KIEN'];}?><span class="requiein">*</span></label>
+				<textarea  class="textbox normal_textarea" id="C_SUBMIT_CONTENT" name="C_SUBMIT_CONTENT"  option = "true" rows="2" message="Phai xac dinh noi dung VAN DE TRINH KY!" ><?= $arrWork[0]['C_RESULT']?></textarea>
+			</div>
+			<div>
+				<label style="width:31%">3. &nbsp;<?=$arrConst['_FILE_DINH_KEM'] ?></label>
+				<?=$this->AttachFile2;?>
+			</div>		
+			<div>
+				<label style="width:31%">4. &nbsp;<?php if($this->iValue==1){echo $arrConst['_TRINH_KY'] ;}else{echo $arrConst['_TRANG_THAI_TRINH_DUYET'];}?></label>				
+				<?php if($this->iValue == 1 and $this->IdDistrict == $_SESSION['OWNER_ID']){?>
+					<input type="radio"     name= 'C_STATUS'     id ='C_STATUS'  value = 'TRINH_LDPB' onclick='getLeader(this,<?=$this->iValue ?>)' ><span class="normal_label"> <?=$arrConst['_LANH_DAO_PHONG'] ?> </span>
+					<div id='ld_pb' style="display:none;"><textarea class="normal_textarea" id="C_PB_NAME"   rows="1" name="C_PB_NAME" message="Phai xac dinh LANH DAO de trinh ky"><?= $arrSent[0]['C_LEADER_DEPARTMENT_POSITION_NAME'] ?></textarea></div><br clear="all"> 
+					<input style="margin-left:32%" type="radio" name= 'C_STATUS'     id ='C_STATUS'  value = 'TRINH_LDUB'  onclick='getLeader(this,<?=$this->iValue ?>)' ><span class="normal_label">  <?=$arrConst['_LANH_DAO_UB'] ?></span>
+					<br><div id='ld_ub' style="display:none;margin-left:32%"><textarea class="normal_textarea" id="C_UB_NAME"   rows="1" name="C_UB_NAME" message="Phai xac dinh LANH DAO de trinh ky"><?= $arrSent[0]['C_SIGNER_POSITION_NAME'] ?></textarea></div>
+				<?php }elseif ($this->iValue == 1 and $this->IdDistrict != $_SESSION['OWNER_ID']){ ?> <!-- Van thu cap xa -->
+					<input type="radio"   checked  name= 'C_STATUS'     id ='C_STATUS'  value = 'TRINH_LDPX' onclick='getLeader(this,<?=$this->iValue ?>)' ><span class="normal_label"> <?=$arrConst['_LANH_DAO_PHUONG_XA'] ?> </span>
+					<br><div id='ld_px' style="display:block;"><textarea class="normal_textarea" id="C_PX_NAME"   rows="1" name="C_PX_NAME" message="Phai xac dinh LANH DAO de trinh ky"><?= $arrSent[0]['C_SIGNER_POSITION_NAME'] ?></textarea></div><br clear="all"> 
+				<?php }elseif ($this->iValue == 5){ ?> <!-- lanh dao phuong, xa -->
+					<input type="radio"     name= 'C_STATUS'     id ='C_STATUS'  value = 'CHO_DANG_KY' ><span class="normal_label"> <?=$arrConst['_DUYET_VAN_BAN'] ?> </span><br>
+					<input type="radio"     name= 'C_STATUS'     id ='C_STATUS'  value = 'LDPX_TRALAI'  ><span class="normal_label"> <?=$arrConst['_TRA_LAI'] ?> </span>
+				<?php }elseif ($this->iValue == 2){ ?>
+					<input type="radio"     name= 'C_STATUS'     id ='C_STATUS'  value = 'CHO_DANG_KY' onclick='getLeader(this,<?=$this->iValue ?>)' "><span class="normal_label"> <?=$arrConst['_DUYET_VAN_BAN'] ?> </span><br>
+					<input   type="radio" name= 'C_STATUS'     id ='C_STATUS'  value = 'TRINH_LDUB'  onclick='getLeader(this,<?=$this->iValue ?>)' "><span class="normal_label">  <?=$arrConst['_TRINH_LANH_DAO_UB'] ?></span>
+					<div id='ld_ub' style="display:none;margin-left:32%"><textarea class="normal_textarea" id="C_UB_NAME"   rows="1" name="C_UB_NAME" message="Phai xac dinh LANH DAO de trinh ky"><?= $arrSent[0]['C_SIGNER_POSITION_NAME'] ?></textarea></div><br clear="all"> 
+					<input style="margin-left:32%" type="radio" name= 'C_STATUS'     id ='C_STATUS'  value = 'CHUYEN_LDVP'  onclick='getLeader(this,<?=$this->iValue ?>)' ><span class="normal_label">  <?=$arrConst['_LANH_DAO_VP'] ?></span>
+					<div id='ld_vp' style="display:none;margin-left:32%"><textarea class="normal_textarea" id="C_VP_NAME"   rows="1" name="C_VP_NAME" message="Phai xac dinh LANH DAO de trinh ky"><?= $arrSent[0]['C_LEADER_OFFICE_POSITION_NAME'] ?></textarea></div><br clear="all">
+					<input type="radio"    style="margin-left:32%"  name= 'C_STATUS'     id ='C_STATUS'  value = 'LDPB_TRALAI' onclick='getLeader(this,<?=$this->iValue ?>)' "><span class="normal_label"> <?=$arrConst['_TRA_LAI'] ?> </span>
+				<?php }elseif ($this->iValue == 3){ ?>
+					<input type="radio"     name= 'C_STATUS'     id ='C_STATUS'  value = 'CHO_DANG_KY' onclick='getLeader(this,<?=$this->iValue ?>)' ><span class="normal_label"> <?=$arrConst['_DUYET_VAN_BAN'] ?> </span><br>
+					<input    type="radio" name= 'C_STATUS'     id ='C_STATUS'  value = 'TRINH_LDUB'  onclick='getLeader(this,<?=$this->iValue ?>)' ><span class="normal_label">  <?=$arrConst['_TRINH_LANH_DAO_UB'] ?></span>
+					<div id='ld_ub' style="display:none;margin-left:32%"><textarea class="normal_textarea" id="C_UB_NAME"   rows="1" name="C_UB_NAME" message="Phai xac dinh LANH DAO de trinh ky"><?= $arrSent[0]['C_SIGNER_POSITION_NAME'] ?></textarea></div><br clear="all"> 
+					<input type="radio"    style="margin-left:32%"  name= 'C_STATUS'     id ='C_STATUS'  value = 'LDVP_TRALAI' onclick='getLeader(this,<?=$this->iValue ?>)' "><span class="normal_label"> <?=$arrConst['_TRA_LAI'] ?> </span>
+				<?php }elseif ($this->iValue == 4){ ?>
+					<input type="radio"     name= 'C_STATUS'     id ='C_STATUS'  value = 'CHO_DANG_KY' ><span class="normal_label"> <?=$arrConst['_DUYET_VAN_BAN'] ?> </span><br>
+					<input type="radio"     name= 'C_STATUS'     id ='C_STATUS'  value = 'LDUB_TRALAI'  ><span class="normal_label"> <?=$arrConst['_TRA_LAI'] ?> </span>
+				<?php } ?>
+			</div>		
+	</div>	
+	<table 	width='99%'  border='0' cellspacing='0' cellpadding='0' align="center" class="table_title">
+		<tr><td style="height:20px;"><hr width='100%' color='#fffffff' size='1'></td></tr>			
+		<tr>
+			<td align="center" style="padding-bottom:1px;">				
+				<button name="btn_ghivaquaylai" id="btn_ghivaquaylai" type="button" value="" class="add_large_button" onClick="document.getElementById('hdh_option').value='GHI';submitorder_save_period(document.getElementById('C_WORK_DATE'),'<?=date("d/m/Y" )?>',document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'');"><?=$arrConst['_GHI'] ?></button>
+				<?=$this->formsubmit('button','Quay lại',array("onClick"=>"actionUrl('../../index/modul/".$this->getModulLeft."');","class"=>"add_large_button"))?>
+			</td>
+		</tr>			
+	</table>	
+	<?php
+		$arrProcessNew = $this->arrProcessNew ;
+		$arrProcessOld = $this->arrProcessOld ;
+	If(sizeof($arrProcessNew) > 0){	
+	?>
+		<table cellpadding="0" cellspacing="0" width="100%" border="0">
+			<tr>
+				<td class="large_title" style="padding-left:7px;text-align:left;">
+				<?= $this->bodyTitle3	 ; ?>
+				</td>
+				<td style="text-align:right;" valign="bottom">
+					<a style="cursor:pointer; color:#0000FF;" onclick="submitorder_update_onclick(document.getElementsByName('chk_item_id'),'../../edit/modul/<?=$this->getModulLeft ?>');"><?=$arrConst['_SUA'] ?>&nbsp;|</a> 	
+					<a style="cursor:pointer;color:#0000FF;" onclick="btn_sent_delete_onclick(document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id_list'),'../../delete/modul/<?=$this->getModulLeft?>');">&nbsp;<?=$arrConst['_XOA'] ?>&nbsp;</a>
+				</td>
+			</tr>
+		</table>	
+	<div id="viewAllSentDocument">
+		<table cellpadding="0" cellspacing="0" border="0" width="98%" align="center" class="list_table2" id="table1">
+			<?php			
+			$delimitor = $this->delimitor;//Lay ky tu phan cach giua cac phan tu
+			//Hien thi cac cot cua bang hien thi du lieu
+			$StrHeader = explode("!~~!",$this->GenerateHeaderTable("3%" . $delimitor . "15%" . $delimitor . "20%" . $delimitor . "25%" . $delimitor . "35%"
+												,'<input type="checkbox" name="chk_all_item_id" value="" optional="true" onclick="checkbox_all_item_id(document.forms[0].chk_item_id);">' . $delimitor .$arrConst['_NGAY_THUC_HIEN']  . $delimitor . $arrConst['_CAN_BO_XU_LY'] . $delimitor . $arrConst['_DON_VI_TRINH'] . $delimitor . $arrConst['_Y_KIEN'] 
+												,$delimitor));
+			echo $StrHeader[0];				
+			echo $StrHeader[1]; //Hien thi <col width = 'xx'><...		
+			//Dinh nghia URL
+			//$sUrView  = "../../view";
+			$sCurrentStyleName = "round_row";
+			$objFunction =	new	Sys_Function_DocFunctions()	;	
+			function work_date($in_bike1, $in_bike2) 
+		    { 
+		        if ($in_bike1["C_WORK_DATE"] < $in_bike2["C_WORK_DATE"]) 
+		        { 
+		            return 1; 
+		        } 
+		        else if ($in_bike1["C_WORK_DATE"] == $in_bike2["C_WORK_DATE"]) 
+		        { 
+		            return 0; 
+		        } 
+		        else 
+		        { 
+		            return -1; 
+		        } 
+		    } 		
+		    uasort($arrProcessNew, "work_date"); 
+		    ?>		
+				<!--  CAC CONG VIEC MOI THUC HIEN    !-->
+				<tr class="<?=$sCurrentStyleName?>"    >	
+					<td colspan="5" align="left" style="padding: 3px 3px 3px 3px; font-weight:normal;font-size:16px;" class="normal_label">
+						<span class="normal_label" style="font-weight:bold;">Công việc thực hiện gần đây </span>
+					</td>
+				</tr>
+			    <?php	
+			    foreach ($arrProcessNew as $bike){ 
+			        //lay file dinh kem
+					$strFileName 				= $bike['C_FILE_NAME'];
+					$sFile = Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+					$sWorkId 					= $bike['PK_DOC_WORK'];				
+					$sDraffName					= $bike['C_STAFF_POSITION_NAME']  ;		
+					$sUnitName					= $bike['C_UNIT_NAME'] ;						
+					$dDateProcess				= Sys_Library::_yyyymmddToDDmmyyyyhhmmss($bike['C_WORK_DATE']).'&nbsp;';	
+					$sResult					= $bike['C_RESULT'] ;	
+					//Disable doi vs nhung cong viec khong phai do can bo dang nhap hien thoi tao lap ra:
+					if($bike['FK_STAFF'] != $this->iUserId){
+						$sDisable = "disabled";
+					}
+					//Tai lieu kem theo ho so
+					if($strFileName == '' || $strFileName == null){
+						$sResult				= $sResult;
+					}else {
+						$sResult				= $sResult . '<br>'.$sFile;
+						$sFile = "";
+					}
+					if ($sCurrentStyleName == "odd_row"){
+						$sCurrentStyleName = "round_row";
+					}else{
+						$sCurrentStyleName = "odd_row";					
+					}?>					
+					<tr class="<?=$sCurrentStyleName?>" >	
+						<td align="center" style="padding-left:3px;padding-right:3px;" class="normal_label">					
+							<?=$this->formCheckbox('chk_item_id',$sWorkId, array('checked' => false,'optional'=>true,'onclick' =>'selectrow(this)',$sDisable=>true) );?>					
+						</td>
+						<td align="center"   onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_work_id'),'<?=$sWorkId?>');"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$dDateProcess ?></td>
+						<td align="left"  onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_work_id'),'<?=$sWorkId?>');" style="padding-left:3px;padding-right:3px;" class="normal_label">
+							<?=$sDraffName?>
+						</td>												
+						<td align="left"  onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_work_id'),'<?=$sWorkId?>');" style="padding-left:3px;padding-right:3px;" class="normal_label">
+							<?=$sUnitName?>
+						</td>		
+						<td align="left"  onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_work_id'),'<?=$sWorkId?>');"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=  $sResult?></td>
+					</tr><?php
+					$sDisable = "";
+				}
+	 }	
+	 if(sizeof($arrProcessOld) > 0){
+		    uasort($arrProcessOld, "work_date");	
+				?>
+			<!--  CAC CONG VIEC XU LY TRUOC   !-->
+			<tr class="<?=$sCurrentStyleName?>"    >	
+				<td colspan="5" align="left" style="padding: 3px 3px 3px 3px; font-weight:normal;font-size:16px;" class="normal_label">
+					<span class="normal_label" style="font-weight:bold;">Công việc xử lý trước </span>
+				</td>
+			</tr>
+			<?php
+			foreach ($arrProcessOld as $bike) { 
+		        //lay file dinh kem
+					$strFileName 				= $bike['C_FILE_NAME'];
+					$sFile = Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+					$sWorkId 					= $bike['PK_DOC_WORK'];				
+					$sDraffName					= $bike['C_STAFF_POSITION_NAME']  ;		
+					$sUnitName					= $bike['C_UNIT_NAME'] ;						
+					$dDateProcess				= Sys_Library::_yyyymmddToDDmmyyyyhhmmss($bike['C_WORK_DATE']).'&nbsp;';		
+					$sResult					= $bike['C_RESULT'] ;	
+				//Disable doi vs nhung cong viec khong phai do can bo dang nhap hien thoi tao lap ra:
+				if($bike['FK_STAFF'] != $this->iUserId){
+					$sDisable = "disabled";
+				}
+				//Tai lieu kem theo ho so
+				if($strFileName == '' || $strFileName == null){
+					$sResult				= $sResult;
+				}else {
+					$sResult				= $sResult . '<br>'.$sFile;
+					$sFile = "";
+				}
+				if ($sCurrentStyleName == "odd_row"){
+					$sCurrentStyleName = "round_row";
+				}else{
+					$sCurrentStyleName = "odd_row";					
+				}?>					
+				<tr class="<?=$sCurrentStyleName?>" >	
+						<td align="center" style="padding-left:3px;padding-right:3px;" class="normal_label">					
+							<?=$this->formCheckbox('chk_item_id',$sWorkId, array('checked' => false,'optional'=>true,'onclick' =>'selectrow(this)',$sDisable=>true) );?>					
+						</td>
+						<td align="center"   onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_work_id'),'<?=$sWorkId?>');"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$dDateProcess ?></td>
+						<td align="left"  onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_work_id'),'<?=$sWorkId?>');" style="padding-left:3px;padding-right:3px;" class="normal_label">
+							<?=$sDraffName?>
+						</td>												
+						<td align="left"  onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_work_id'),'<?=$sWorkId?>');" style="padding-left:3px;padding-right:3px;" class="normal_label">
+							<?=$sUnitName?>
+						</td>		
+						<td align="left"  onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_work_id'),'<?=$sWorkId?>');"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=  $sResult?></td>
+				</tr><?php
+				$sDisable = "";
+		}	
+	}	
+			//Tu dien cac dong trang trong truong hop du lieu tra ve < so row _CONST_NUMBER_OF_ROW_PER_LIST	
+			//		echo $this->addEmptyRow($this->iCountElement,15 -sizeof($arrProcessNew),$sCurrentStyleName,4);
+			?>
+		</table>	
+	</div>	
+	<?php If(sizeof($arrProcessNew) > 0){ ?>
+	<!--Hien thi nut!-->			
+	<table 	width='99%'  border='0' cellspacing='0' cellpadding='0' align="center" class="table_title">
+		<tr><td style="height:20px;"><hr width='100%' color='#ffffff' size='1'></td></tr>			
+		<tr>
+			<td align="center" style="padding-bottom:10px;">	
+				<input type="button" class="add_large_button" value="Sửa" onclick="submitorder_update_onclick(document.getElementsByName('chk_item_id'),'../../edit/modul/<?=$this->getModulLeft ?>');">
+				<input type="button" class="add_large_button" value="Xóa" onclick="btn_sent_delete_onclick(document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id_list'),'../../delete/modul/<?=$this->getModulLeft?>');"> 
+			</td>
+		</tr>			
+	</table>
+	<?php } ?>
+	<div id="getSysbolforNowYear" style="display:none;"></div>
+</div>	
+<?php
+		echo $this->search_doc_lanh_dao_pb;
+		echo $this->search_doc_lanh_dao_ub;
+		echo $this->search_doc_lanh_dao_vp;
+		echo $this->search_doc_lanh_dao_px ;
+		
+?>	
+</form>
+<script type="text/javascript">
+	var	code = '<?=$arrSent[0]['C_STATUS']?>';
+	var	value = '<?=$this->iValue ?>';
+	var arrStatus = document.getElementsByName('C_STATUS');
+	try{
+		
+		if(code == 'TRINH_LDUB' || code =='LDUB_TRALAI' && value == 1){
+			for(i =0; i < arrStatus.length; i ++){
+				if(arrStatus[i].value == 'TRINH_LDUB'){
+					arrStatus[i].checked = true;
+				}
+			}
+			document.getElementById('ld_pb').style.display = "none"; 
+			document.getElementById('ld_ub').style.display = "block";
+			document.getElementById('C_PB_NAME').value ='';
+			document.getElementById('C_UB_NAME').setAttribute("option","false");
+			document.getElementById('C_UB_NAME').setAttribute("optional","");
+			document.getElementById('C_PB_NAME').setAttribute("option","");
+			document.getElementById('C_PB_NAME').setAttribute("optional","true");
+		}
+	}catch(e){;}	
+	try{
+		if(code == 'TRINH_LDPB' || code =='LDPB_TRALAI' && value == 1){
+			for(i =0; i < arrStatus.length; i ++){
+				if(arrStatus[i].value == 'TRINH_LDPB'){
+					arrStatus[i].checked = true;
+				}
+			}
+			document.getElementById('ld_pb').style.display = "block"; 
+			document.getElementById('ld_ub').style.display = "none"; 
+			document.getElementById('C_UB_NAME').value ='';
+			document.getElementById('C_PB_NAME').setAttribute("option","false");
+			document.getElementById('C_PB_NAME').setAttribute("optional","");
+			document.getElementById('C_UB_NAME').setAttribute("option","");
+			document.getElementById('C_UB_NAME').setAttribute("optional","true");
+		}
+	}catch(e){;}
+	try{
+		if(code == 'TRINH_LDUB' || code =='LDUB_TRALAI' && value == 2){
+			for(i =0; i < arrStatus.length; i ++){
+				if(arrStatus[i].value == 'TRINH_LDUB'){
+					arrStatus[i].checked = true;
+				}
+			}
+			document.getElementById('ld_vp').style.display = "none"; 
+			document.getElementById('ld_ub').style.display = "block";
+			document.getElementById('C_VP_NAME').value ='';
+			document.getElementById('C_UB_NAME').setAttribute("option","false");
+			document.getElementById('C_UB_NAME').setAttribute("optional","");
+			document.getElementById('C_VP_NAME').setAttribute("option","");
+			document.getElementById('C_VP_NAME').setAttribute("optional","true");
+		}
+	}catch(e){;}	
+	try{
+		if(code == 'CHUYEN_LDVP' || code == 'LDVP_TRALAI' && value == 2){
+			for(i =0; i < arrStatus.length; i ++){
+				if(arrStatus[i].value == 'CHUYEN_LDVP'){
+					arrStatus[i].checked = true;
+				}
+			}
+			document.getElementById('ld_vp').style.display = "block"; 
+			document.getElementById('ld_ub').style.display = "none"; 
+			document.getElementById('C_UB_NAME').value ='';
+			document.getElementById('C_VP_NAME').setAttribute("option","false");
+			document.getElementById('C_VP_NAME').setAttribute("optional","");
+			document.getElementById('C_UB_NAME').setAttribute("option","");
+			document.getElementById('C_UB_NAME').setAttribute("optional","true");
+		}
+	}catch(e){;}
+	try{
+		if(code != 'CHUYEN_LDVP' && code.value != 'TRINH_LDUB' && code == 'LDVP_TRALAI' && code =='LDUB_TRALAI' && value == 2){
+			document.getElementById('C_VP_NAME').setAttribute("option","");
+			document.getElementById('C_VP_NAME').setAttribute("optional","true");
+			document.getElementById('C_UB_NAME').setAttribute("option","");
+			document.getElementById('C_UB_NAME').setAttribute("optional","true");
+		}
+	}catch(e){;}
+	try{
+		if(code== 'TRINH_LDUB' || code =='LDUB_TRALAI' && value == 3){
+			for(i =0; i < arrStatus.length; i ++){
+				if(arrStatus[i].value == 'TRINH_LDUB'){
+					arrStatus[i].checked = true;
+				}
+			}
+			document.getElementById('ld_ub').style.display = "block";
+			//document.getElementById('C_VP_NAME').value ='';
+			document.getElementById('C_UB_NAME').setAttribute("option","false");
+			document.getElementById('C_UB_NAME').setAttribute("optional","");
+		}
+	}catch(e){;}	
+	try{
+		if(code == 'LDVP_TRALAI' || code.value == 'CHO_DANG_KY' && value == 3){
+			document.getElementById('ld_ub').style.display = "none";
+			document.getElementById('C_UB_NAME').value ='';
+			document.getElementById('C_UB_NAME').setAttribute("option","");
+			document.getElementById('C_UB_NAME').setAttribute("optional","true");
+		}
+	}catch(e){;}	
+</script>
+

@@ -1,0 +1,225 @@
+
+<form action="index" method="POST" id="frmReceived" autocomplete="off">
+	<?php echo $this->formHidden("hdn_type","",null); ?>
+	<!--Cac doi tuong hidden tren form-->
+	<?php echo $this->formHidden("hdn_current_page",$this->currentPage,null); ?>
+	<?php echo $this->formHidden("cbo_nuber_record_page",$this->numRowOnPage,null); ?>
+	<?php echo $this->formHidden("hdn_record_number_page",$this->numRowOnPage,null); ?>
+	<?php echo $this->formHidden("hdn_object_id_list","",null); ?>
+	<?php echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); ?>
+	<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+	<?php echo $this->formHidden("hdn_object_id","",null); ?>
+	<?php echo $this->formHidden("hdn_getreceivedinfor","",null); ?>
+	<?php echo $this->formHidden("hdn_doc_id",$this->pDocId,null); ?>
+	<?php echo $this->formHidden("hdn_XmlTagValueList",$this->XmlTagValueList,null); ?>
+	<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+	<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+	<?php echo $this->formHidden("htn_leftModule",$this->currentModulCodeForLeft,null); ?>	
+	<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+	<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null);?>
+	<?php
+		$arrCount = $this->arrCount;
+		$sUrlEdit  = "../edit/";
+		$arrPermission = $_SESSION['arrStaffPermission'];
+	?>
+	<table>
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<?=$this->bodyTitle;?>				
+			</td>
+		</tr>
+	</table>
+	<div class="box container c1">
+		<div class="pad">			
+			<table cellpadding="0" cellspacing="0" width="98%" border="0" style="padding-left:0%;">
+				<col width="45%" align="left"/><col width="55%" align="left"/>			
+				<tr>
+					<td class="normal_label" valign="top">
+						&nbsp;<?=$arrCount['_TU_NGAY']?>&nbsp;&nbsp;
+						<input style="width:20%;" id="fromDate" name="txtfromDate" type="text" isdate="true" value="<?=$this->fromDate?>" option = "false" message="<?php echo "NGAY THANG NAM khong dung dinh dang";?>" onKeyDown="change_focus(document.forms[0],this)">						
+						&nbsp;<?=$arrCount['_DEN_NGAY']?> &nbsp;&nbsp;
+						<input style="width:20%;" id ="toDate" name="txttoDate" type="text" isdate="true" value="<?=$this->toDate?>" option = "false" message="<?php echo "NGAY THANG NAM khong dung dinh dang";?>" onKeyDown="change_focus(document.forms[0],this)">						
+					</td>
+					<td  style="padding-left:10px;">
+						<input type="text" id="txtfullTextSearch" name="txtfullTextSearch" class="textbox" size="40%" value="<?= $this->sfullTextSearch ?>" />
+						<input type="button" value="<?=$arrCount['_TIM_KIEM']?>" class="add_large_button"  onclick="checkvalue();">
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<table width='99%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+		<col width="85%" align="left"/><col width="15%" align="right"/>
+		<tr>
+			<td align="right" colspan="2" >
+				<div style="text-align:right; width:98%; height:17px; margin-top:3px; ">
+					<label>	<?php 
+					if($arrPermission['CHUYEN_VBDIENTU_THANH_VBDEN'])
+					{?>
+						<a class="small_link" onclick="document.getElementById('htn_leftModule').value='RECEIVED-DOCUMENT';actionUrl('../addreceived/');">Vào sổ VB đến </a> <?php
+					}?>
+					</label>
+				</div>	
+			</td>
+		</tr>
+	</table>
+	<table cellpadding="0" cellspacing="0" border="0" width="98%" align="center" class="list_table2" id="table1">
+		<?php			
+		$delimitor = $this->delimitor;//Lay ky tu phan cach giua cac phan tu
+		//Hien thi cac cot cua bang hien thi du lieu
+		$StrHeader = explode("!~~!",$this->GenerateHeaderTable("3%" . $delimitor ."15%". $delimitor . "11%" . $delimitor . "9%" . $delimitor . "34%" . $delimitor . "20%" . $delimitor . "18%"
+										,'<input type="checkbox" name="chk_all_item_id" value="" onclick="checkbox_all_item_id(document.forms[0].chk_item_id);">' . $delimitor . $arrCount['_NOI_GUI']. $delimitor . $arrCount['_THOI_GIAN_GUI'] . $delimitor . $arrCount['_SO_KY_HIEU'] . $delimitor . $arrCount['_TRICH_YEU'] . $delimitor . $arrCount['_THONG_TIN_KHAC'] . $delimitor. $arrCount['_TINH_TRANG']
+										,$delimitor));
+		echo $StrHeader[0];					
+		echo $StrHeader[1]; //Hien thi <col width = 'xx'><...		
+			//Dinh nghia URL
+			$sUrlView  = "../view/";
+			$v_current_style_name = "round_row";
+			$arrResul = $this->arrResul;
+			//var_dump($arrResul);
+			$objFunction =	new	Sys_Function_DocFunctions()	;	
+			for($index = 0;$index < sizeof($arrResul);$index++){
+				//Noi gui
+				$iunitId					= Sys_Publib_Library ::_getItemAttrById($_SESSION['arr_all_staff_keep'],$arrResul[$index]['FK_CREATER'],'unit_id');
+				$iunitName					= Sys_Publib_Library ::_getItemAttrById($_SESSION['arr_all_unit_keep'],$iunitId,'name');
+				$spositionNameStaff			= $arrResul[$index]['FK_CREATER_POSITION_NAME'];
+				$sSendPlace = $objFunction->searchStringColor($this->sfullTextSearch,$spositionNameStaff . ' -> '.$iunitName) .'&nbsp;';
+				//thoi gian gui
+				$ssendDate					= $objFunction->searchCharColor($this->sfullTextSearch,$arrResul[$index]['C_SEND_DATE']) .'&nbsp;';		
+				//so ky hieu
+				$sSymbol					= $objFunction->searchCharColor($this->sfullTextSearch,$arrResul[$index]['C_SYMBOL']) .'&nbsp;';	
+				//thong tin khac
+				$sother 			 		= $objFunction->searchStringColor($this->sfullTextSearch,$arrResul[$index]['C_OTHER']) .'&nbsp;';
+				
+				$documentId 				= $arrResul[$index]['PK_SEND_RECEIVE'];	
+				//Lay file dinh kem
+				$strFileName 				= $arrResul[$index]['C_FILE_NAME'];
+				//echo $strFileName.'<br>';
+				//$sFile 						= Sys_Library::_getAllFileAttachAndSubmit($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+				$sFile 						= Sys_Library::_getAllFileAttachAndSubmit($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/",'getreceivedinfor("'.$documentId.'")');															
+				//tinh trang
+				if($arrResul[$index]['C_RECEIVE_STATUS'] == 'CHUA_XEM')	$sStatus = '<font color=red>Chưa xem</font>';
+				else 													$sStatus = 'Đã xem';
+		 
+				if($strFileName == '' || $strFileName == null){
+					$ssubject				= $objFunction->searchStringColor($this->sfullTextSearch,$arrResul[$index]['C_SUBJECT']) .'&nbsp;';	
+				}else {
+					$ssubject				= $objFunction->searchStringColor($this->sfullTextSearch,$arrResul[$index]['C_SUBJECT']) .'<br>'. $sFile;
+					$sFile 					= "";
+				}
+				// Thong tin khac
+				$ssignerPositionName		= $objFunction->searchStringColor($this->sfullTextSearch,$arrResul[$index]['C_SIGNER_POSITION_NAME']) .'&nbsp;';
+				$shours						= $objFunction->searchStringColor($this->sfullTextSearch,$arrResul[$index]['C_HOURS']) .'&nbsp;';
+				$sdate						= $objFunction->searchCharColor($this->sfullTextSearch,$arrResul[$index]['C_DATE']) .'&nbsp;';
+				$saddress					= $objFunction->searchStringColor($this->sfullTextSearch,$arrResul[$index]['C_ADDRESS']) .'&nbsp;';
+				$stype						= $arrResul[$index]['C_TYPE'];	
+				$sdocId						= $arrResul[$index]['FK_DOC'];	
+				$sdocType					= $arrResul[$index]['C_DOC_TYPE'];	
+				if ($v_current_style_name == "odd_row"){
+					$v_current_style_name = "round_row";
+				}else{
+					$v_current_style_name = "odd_row";					
+				}?>
+				<tr class="<?=$v_current_style_name?>">	
+					<td align="center" style="padding-left:3px;padding-right:3px;" class="normal_label">						
+						<?=$this->formCheckbox('chk_item_id',$arrResul[$index]['PK_SEND_RECEIVE'], array('checked' => false,'onclick' =>'selectrow_send_received(this,\''.$stype.'\',document.getElementById(\'hdn_type\'),\''.$sdocId.'\',document.getElementById(\'hdn_doc_id\'))'))?>					
+					</td>
+					<td ondblclick="item_onclick('<?=$documentId?>','<?=$sUrlView?>')" onclick="set_hidden_send_receidved(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$documentId?>','<?=$stype?>',document.getElementById('hdn_type'),'<?=$sdocId?>',document.getElementById('hdn_doc_id'));" align="left"  style="padding-left:3px;padding-right:3px;" class="normal_label" >
+					<?=$sSendPlace?>
+					</td>													
+					<td ondblclick="item_onclick('<?=$documentId?>','<?=$sUrlView?>')" onclick="set_hidden_send_receidved(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$documentId?>','<?=$stype?>',document.getElementById('hdn_type'),'<?=$sdocId?>',document.getElementById('hdn_doc_id'));" align="center"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$objFunction->searchStringColor($this->sfullTextSearch,$ssendDate).'&nbsp;';?></td>
+					<td ondblclick="item_onclick('<?=$documentId?>','<?=$sUrlView?>')" onclick="set_hidden_send_receidved(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$documentId?>','<?=$stype?>',document.getElementById('hdn_type'),'<?=$sdocId?>',document.getElementById('hdn_doc_id'));" align="left" valign="middle"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sSymbol;?></td>
+					<td ondblclick="item_onclick('<?=$documentId?>','<?=$sUrlView?>')" onclick="set_hidden_send_receidved(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$documentId?>','<?=$stype?>',document.getElementById('hdn_type'),'<?=$sdocId?>',document.getElementById('hdn_doc_id'));" align="left" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$ssubject?></td>	
+					<td ondblclick="item_onclick('<?=$documentId?>','<?=$sUrlView?>')" onclick="set_hidden_send_receidved(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$documentId?>','<?=$stype?>',document.getElementById('hdn_type'),'<?=$sdocId?>',document.getElementById('hdn_doc_id'));" align="left" valign="middle" style="padding-left:3px;padding-right:3px;" class="normal_label"><?php
+						if($sdocType == 'Giấy mời'){
+							echo '<b>Thời gian họp:</b> '.$shours.' ngày '.$sdate.'<br><b>Địa điểm:</b> '.$saddress.'<br>';
+						}
+						if ($stype != 'VB_DEN' && $stype != 'VB_DI')
+							echo '<b>Người ký:</b> '.$ssignerPositionName.'<br>';
+						echo '<p class="red">'.$sother.'</p>';
+					?></td>	
+					<td ondblclick="item_onclick('<?=$documentId?>','<?=$sUrlView?>')" onclick="set_hidden_send_receidved(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$documentId?>','<?=$stype?>',document.getElementById('hdn_type'),'<?=$sdocId?>',document.getElementById('hdn_doc_id'));" align="center" valign="middle" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sStatus?></td>	
+				</tr><?php
+			}					
+			//Tu dien cac dong trang trong truong hop du lieu tra ve < so row _CONST_NUMBER_OF_ROW_PER_LIST		
+			if(sizeof($arrResul) < 15){	
+				echo $this->addEmptyRow($this->iCountElement,15 - sizeof($arrResul),$v_current_style_name,7);		
+			}	
+		?>			
+	</table>	
+	<!--Hien thi trang can xem!-->
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' align="center">
+		<tr>
+			<td style="padding-top: 10px; padding-bottom: 10px;" align="center" valign="middle"><?php
+			if($arrPermission['CHUYEN_VBDIENTU_THANH_VBDEN']){?>
+				<input id="btn_sentreceived" name="btn_sentreceived" type="button" class="add_large_button" value="Vào sổ VB đến" onclick="document.getElementById('htn_leftModule').value='RECEIVED-DOCUMENT';actionUrl('../addreceived/');"><?php
+			}?>
+			</td>	
+		</tr>
+	</table>
+	<table width="100%" cellpadding="0" cellspacing="0" border="0">
+		<tr>
+			<td style="color:red;width:30%;padding-left:1%;" class="small_label">
+				<small class="small_starmark"><?=$this->sdocpertotal;?></small>
+			</td>
+			<td align="center" style="width="50%">
+				<table width="10%"><?php
+					//Hien thi danh sach so trang
+					echo $this->generateStringNumberPage;?>
+				</table>
+			</td>
+			<td width="30%" align="right" style="font-size:13px; padding-right:1%; font:tahoma" class="normal_label"><?php
+				//Hien thi so trang
+				echo $this->generateHtmlSelectBoxPage;?>
+			</td>
+		</tr>
+	</table>
+	
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' align="center">
+		<tr>
+			<td style="padding-top: 10px; padding-bottom: 10px;" align="center" valign="middle">
+				
+			</td>	
+		</tr>
+	</table>
+</div>
+</form>
+<script type="text/javascript">
+shortcut.add("Ctrl+K",function() {
+	document.getElementById('txtfullTextSearch').focus();
+	document.getElementById('txtfullTextSearch').select();
+});
+shortcut.add("Enter",function() {
+	checkvalue();
+});
+//Ham them khoang trang neu NSD khong nhap gia tri trong o tim kiem
+function checkvalue(){
+	if(document.getElementById('txtfullTextSearch').value == ""){
+		
+		document.getElementById('txtfullTextSearch').value = " ";
+	}
+	actionUrl('');
+}
+function getreceivedinfor(idvalue){
+	document.getElementById('hdn_getreceivedinfor').value = idvalue;
+	actionUrl('');
+}
+</script>
+<script type = "text/javascript">
+$(function() {
+	$( "#fromDate" ).datepicker({
+		changeMonth: true,
+		gotoCurrent: true,
+		maxDate: '+1m +1w',
+		minDate: new Date(1945, 1 - 1, 1),
+		changeYear: true
+	});	
+	$( "#toDate" ).datepicker({
+		changeMonth: true,
+		gotoCurrent: true,
+		maxDate: '+1m +1w',
+		minDate: new Date(1945, 1 - 1, 1),
+		changeYear: true
+	});
+});
+</script>

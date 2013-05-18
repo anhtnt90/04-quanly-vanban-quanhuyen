@@ -1,0 +1,171 @@
+<?php	
+	$arrPermission = $_SESSION['arrStaffPermission'];
+	$sIdStaff = $_SESSION['staff_id'];
+	$leftmenuvisit = $this->sleftmenu;
+	$arrleftmenuvisit = explode('_',$leftmenuvisit);
+	$mmlv0 = 'mn_'.$arrleftmenuvisit[1].'_0_0';
+	$mmlv1 = 'mn_'.$arrleftmenuvisit[1].'_'.$arrleftmenuvisit[2].'_0';
+	$mmlv2 = 'mn_'.$arrleftmenuvisit[1].'_'.$arrleftmenuvisit[2].'_'.$arrleftmenuvisit[3];
+	$dividvisit = 'div'.$arrleftmenuvisit[1].'_'.$arrleftmenuvisit[2];
+	$baseUrl = Sys_Init_Config::_getCurrentHttpAndHost();							
+?>
+<div id="Iddiv_leftmenu">		
+	<div id ="Iddiv_WebMenu" style="margin-top: 5px;">
+		<table width="100%" cellpadding="0"  cellspacing="0" border="0" class="body3">
+			<tr>
+				<td valign="top">
+					<table width="98%" cellpadding="0"  cellspacing="0" align="center"  class="left_menu_table">
+						<?php
+							$arrMenu = $this->arrMenu;																					
+							$html = '';
+							$iMenuLeve2Top = 0;
+							for($i=0;$i<sizeof($arrMenu);$i++){								
+									if($arrMenu[$i][C_POSITION]=='0'){
+										$MenuName = $arrMenu[$i][C_NAME];									
+									if($arrMenu[$i][C_URL]==''){
+										$urlRe = $baseUrl .'web/home/getarticle/?menuid='.$arrMenu[$i][PK_WEB_MENU].'&parent_menuid='.$arrMenu[$i][FK_WEB_MENU].'&articleid='.$arrMenu[$i][FK_WEB_ARTICLE].'&menuname='.Sys_Publib_Library::_convertUnicodeToETX($arrMenu[$i][C_NAME]);
+									}else{
+										if((substr_count($arrMenu[$i][C_URL],'http://')>0)||($arrMenu[$i][C_URL]=='#')){
+											$urlRe = $arrMenu[$i][C_URL];
+										}else{
+											$urlRe = $baseUrl . $arrMenu[$i][C_URL];
+											if(substr_count($urlRe,'?')>0){
+													$urlRe = $urlRe.'&menuid='.$arrMenu[$i][PK_WEB_MENU].'&parent_menuid='.$arrMenu[$i][FK_WEB_MENU].'&articleid='.$arrMenu[$i][FK_WEB_ARTICLE].'&menuname='.Sys_Publib_Library::_convertUnicodeToETX($arrMenu[$i][C_NAME]);
+											}else{
+													$urlRe = $urlRe.'?menuid='.$arrMenu[$i][PK_WEB_MENU].'&parent_menuid='.$arrMenu[$i][FK_WEB_MENU].'&articleid='.$arrMenu[$i][FK_WEB_ARTICLE].'&menuname='.Sys_Publib_Library::_convertUnicodeToETX($arrMenu[$i][C_NAME]);
+											}
+										}		
+									}	
+
+									$sleftmenu = 'mn_'.$arrMenu[$i][C_ORDER_LEVER1].'_'.$arrMenu[$i][C_ORDER_LEVER2].'_'.$arrMenu[$i][C_ORDER_LEVER3];	
+									if(substr_count($urlRe,'?')>0){
+											$urlRe = $urlRe.'&sleftmenu='.$sleftmenu;
+									}else{
+											$urlRe = $urlRe.'?sleftmenu='.$sleftmenu;
+									}
+
+									$iOpenNewWin = 0;
+									if($arrMenu[$i][C_WINDOWS_OPEN]=='1'){
+										$iOpenNewWin = 3;
+									}
+									$urlRe = "javaScript:goto_url('".$urlRe."',".$iOpenNewWin.")";	
+									//echo $urlRe;						
+									if($arrMenu[$i][C_LEVEL]=='0'){
+										if($iMenuLeve2Top == 1){
+											$iMenuLeve2Top = 0;
+											$html = $html.'</table></div></td></tr>';
+										}
+										$html = $html.'<tr>';
+										$html = $html.'<td id ="'.$sleftmenu.'" class="level0">';
+										$html = $html.'<a href="'.$urlRe.'">'.$MenuName.'</a>';																		
+										$html = $html.'</td>';		
+										$html = $html.'</tr>';								
+									}
+									if($arrMenu[$i][C_LEVEL]=='1'){
+										if($iMenuLeve2Top == 1){
+											$iMenuLeve2Top = 0;
+											$html = $html.'</table></div></td></tr>';
+										}	
+										if($arrMenu[$i][CHECKPARENT] > 0){
+											$iMenuLeve2Top = 1;
+											$divID = 'div'.$arrMenu[$i][C_ORDER_LEVER1].'_'.$arrMenu[$i][C_ORDER_LEVER2];
+											
+											$html = $html.'<tr>';
+											$html = $html.'<td id ="'.$sleftmenu.'" class="level1">';
+											$html = $html.'<a href="'.$urlRe.'">'.$MenuName.'</a>';																		
+											$html = $html.'</td>';		
+											$html = $html.'</tr>';	
+											$html = $html.'<tr><td>';
+											$html = $html.'<div id="'.$divID.'" style="display:none;"  value="true">';
+											$html = $html.'<table border="0" class="menu_level2" cellpadding="0" cellspacing="0">';
+										}else{
+											$html = $html.'<tr>';
+											$html = $html.'<td id ="'.$sleftmenu.'" class="level1">';											
+											$html = $html.'<a href="'.$urlRe.'">'.$MenuName.'</a>';																													
+											$html = $html.'</td>';		
+											$html = $html.'</tr>';	
+										}
+									}
+									if($arrMenu[$i][C_LEVEL]=='2'){
+										$html = $html.'<tr>';
+										$html = $html.'<td id ="'.$sleftmenu.'" class="level2"><img src="'.$this->baseUrl.'images/icon_td_level2.gif">&nbsp;<a href="'.$urlRe.'">'.$MenuName.'</a></td>';																			
+										$html = $html.'</tr>';				
+										}
+									}
+								}
+							//}
+							echo $html;
+						?>
+					</table> 
+				</td>
+			</tr>
+		</table>
+	</div>	
+</div>	
+<script type="text/javascript">
+try {
+	showHideMenu('<?=$dividvisit?>');
+	<? if($mmlv0 == $mmlv1){?>
+			document.getElementById('<?=$mmlv0?>').className="level0_visited";
+	<? }
+	   if(($mmlv0 != $mmlv1)&&($mmlv1 == $mmlv2)){ ?>
+	   		document.getElementById('<?=$mmlv0?>').className="level0_visited";
+			document.getElementById('<?=$mmlv1?>').className="level1_visited";
+	<? }
+	   if(($mmlv0 != $mmlv1)&&($mmlv1 != $mmlv2)){ 
+	?>
+			document.getElementById('<?=$mmlv0?>').className="level0_visited";
+			document.getElementById('<?=$mmlv1?>').className="level1_visited";
+			document.getElementById('<?=$mmlv2?>').className="level2_visited";
+	<? }?>
+}catch(e){;}	
+
+ function showHideMenu(p_id){	 	
+	var objfrm = document.getElementsByTagName('div');
+	for(i=0; i<objfrm.length; i++){
+		e = objfrm[i].getAttribute('id');
+		if (objfrm[i].getAttribute('value') == "true"){
+	 		if(e == p_id){		
+	 			var pStyle	= eval("document.getElementById('" + p_id + "').style.display");	 			
+	 			if (pStyle == "none"){
+	 				eval("document.getElementById('" + p_id + "').style.display = '" + "block'"); 
+	 			}else{
+	 				eval("document.getElementById('" + p_id + "').style.display = '" + "none'"); 
+	 			}				 						 			
+	 		}
+ 		}	
+ 	}
+ } 
+</script>
+<script type="text/javascript">
+	shortcut.add("Enter",function() {
+		if(document.activeElement.name == 'FullTextSearchLeft'){
+			checkvalue1();
+		}else{
+			var scriptFileName = '<?=$_SERVER['REQUEST_URI']?>';
+			if(scriptFileName.search('index') >= 0){
+				checkvalue();
+			}else
+				shortcut.remove("Enter");
+		}
+	});
+	function addEnter(){
+		shortcut.add("Enter",function() {
+			if(document.activeElement.name == 'FullTextSearchLeft'){
+				checkvalue1();
+			}else{
+				var scriptFileName = '<?=$_SERVER['REQUEST_URI']?>';
+				if(scriptFileName.search('index') >= 0)
+					checkvalue();
+				else
+					shortcut.remove("Enter");
+			}
+		});
+	}
+	function checkvalue1(){
+		if(document.getElementById('FullTextSearchLeft').value != ''){
+			var p_Url = '<?=$this->baseUrl?>' + '../fulltextsearch/fulltextsearch/index/?FullTextSearch=' + document.getElementById('FullTextSearchLeft').value;
+			actionUrl(p_Url);
+		}
+	}
+</script>

@@ -1,0 +1,23 @@
+<?php echo $this->formHidden("hdn_leader_list_1","",null); ?>
+<?php echo $this->formHidden("hdn_leader_list_2","",null); ?>
+<?php echo $this->formHidden("hdn_leader_list_3","",null);
+	  $sApproveLevel = $this->sApproveLevel ;			   ?>
+<?php if($sApproveLevel == "DUYET_CAP_MOT" or $sApproveLevel == "DUYET_CAP_HAI" or $sApproveLevel == "DUYET_CAP_BA"){ ?>
+	<div>
+		<label>Lãnh đạo duyệt lần một</label>
+		<input style="width:65%;margin-bottom:2px;"  type="text"  id ="C_LEADER_LIST_1" name="C_LEADER_LIST_1"  optional="true" >			
+	</div>
+<?php echo $this->arr_autocomplete_leader_1 ; } ?>	
+<?php if($sApproveLevel == "DUYET_CAP_HAI" or $sApproveLevel == "DUYET_CAP_BA"){ ?>
+	<div>
+		<label>Lãnh đạo duyệt lần hai</label>
+		<input style="width:65%;margin-bottom:2px;"  type="text"  id ="C_LEADER_LIST_2" name="C_LEADER_LIST_2"  optional="true" >			
+	</div>
+<?php echo $this->arr_autocomplete_leader_2 ; } ?>	
+<?php if($sApproveLevel == "DUYET_CAP_BA"){ ?>
+	<div>
+		<label>Lãnh đạo duyệt lần ba</label>
+		<input style="width:65%;margin-bottom:2px;" type="text"  id ="C_LEADER_LIST_3" name="C_LEADER_LIST_3"  optional="true" >			
+	</div>
+<?php echo $this->arr_autocomplete_leader_3 ; } ?>	
+<?php exit; ?>

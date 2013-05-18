@@ -1,0 +1,203 @@
+<script src="/Sys-doc-boxd/public/Sys-js/jquery-1.4.2.min.js" type="text/javascript"></script>
+<base target=_self>
+<form action="index" method="POST" id="frmReceived" autocomplete="off">
+
+	<!--Cac doi tuong hidden tren form-->
+	<?php echo $this->formHidden("hdn_docrelate_id_list","",null); ?>
+	<?php echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); ?>
+	<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+	<?php echo $this->formHidden("hdn_object_id",$this->sReceiveDocumentId,null); ?>
+	<?php echo $this->formHidden("hdn_status",$this->sStatus,null); ?>
+	<?php echo $this->formHidden("hdn_XmlTagValueList",$this->XmlTagValueList,null); ?>
+	<?php echo $this->formHidden("hdn_current_page",$this->iCurrentPage,null); ?>
+	<?php echo $this->formHidden("cbo_nuber_record_page",$this->iNumRowOnPage,null); ?>
+	<?php echo $this->formHidden("hdn_record_number_page",$this->iNumRowOnPage,null); ?>
+	<?php echo $this->formHidden("hdn_unit_id",$this->iUnitId,null); ?>
+	<?php echo $this->formHidden("hdn_subModulLeft",$this->getStatusLeftMenu,null); ?>
+	<?php echo $this->formHidden("fromDate",$this->fromDate,null); ?>
+	<?php echo $this->formHidden("toDate",$this->toDate,null); ?>
+	<?php
+		$sUrlBack				= '../index/';
+		$arrConst 				= $this->arrConst;
+		$arrResul 				= $this->arrResul;
+		$objFunction 			= new Sys_Function_DocFunctions();
+		$iLeaderId 				= $this->iLeaderId;
+		if ($iLeaderId != '')
+			$sLeaderPositionName	= Sys_Publib_Library::_getItemAttrById($_SESSION['arr_all_staff'],$iLeaderId,'position_code').' - '.Sys_Publib_Library::_getItemAttrById($_SESSION['arr_all_staff'],$iLeaderId,'name');
+		else $sLeaderPositionName = '';
+		if ($_SESSION['arrStaffPermission']['THEO_DOI_KQXL_VB_DEN_PB'] != 1 && $_SESSION['arrStaffPermission']['THEODOI_XLVBDEN_PX'] !=1 && $_SESSION['arrStaffPermission']['THEO_DOI_KQXL_VBDEN'] != 1)
+				$disablebtn = 'disabled ="true"';
+		else 	$disablebtn = "";
+	?>
+	<div id="content">
+		<div class="large_title" style="padding-left:1px;text-align:left;"> <?=$this->unitInfo;?> </div>
+		<table class="table_detail_doc" border="1">
+			<tr>
+				<td><?=$arrConst['_DON_VI_XU_LY']?></td>
+				<td><?=$objFunction->getNameUnitByIdUnitList($this->iUnitId,'')?></td>
+				<td><?=$arrConst['_TRANG_THAI']?></td>
+				<td><?=$arrConst['_'.$this->sStatus]?></td>
+			</tr>
+			<tr>
+				<td><?=$arrConst['_TU_NGAY']?></td>
+				<td><?=$this->fromDate?></td>
+				<td><?=$arrConst['_DEN_NGAY']?></td>
+				<td><?=$this->toDate?></td>
+			</tr>
+		</table>
+		<div class="box container c1" style="width:100%;margin-top:5px;margin-bottom:5px;">
+			<div class="pad" style="padding:4px;">			
+					<table align="center" cellpadding="0" cellspacing="0" width="100%" border="0" style="padding-left:0%;">
+						<col width="40%" /><col width="60%" />
+						<tr>
+							<td><input tabindex ="7" style="width:97%;" type="text" id="txtfullTextSearch" name="txtfullTextSearch" size="40%" value="<?= $this->sfullTextSearch ?>" /></td>
+							<td align="left"><input tabindex ="9" <?=$disablebtn?> style="margin-top:-2px;" tabindex ="6" type="button" name="timkiem" id="timkiem" value="Tìm Kiếm" class="add_large_button"  onclick="actionUrl('');"></td>
+						</tr>
+					</table>
+				</div>
+		</div>
+		<div class="large_title" style="padding-left:1px;text-align:left;"> <?=$this->resultProcess;?> </div>
+		<table cellpadding="0" cellspacing="0" border="0" width="100%" align="center" class="list_table2" id="table1">
+			<?php			
+			$delimitor = $this->delimitor;//Lay ky tu phan cach giua cac phan tu
+			//Hien thi cac cot cua bang hien thi du lieu
+			$StrHeader = explode("!~~!",$this->GenerateHeaderTable("10%". $delimitor ."10%". $delimitor . "20%" . $delimitor . "20%" . $delimitor . "30%" . $delimitor . "10%"
+											,$arrConst['_NGAY_DEN']. $delimitor . $arrConst['_SO_KY_HIEU'] . $delimitor . $arrConst['_TRICH_YEU'] . $delimitor . $arrConst['_Y_KIEN_CHI_DAO'] . $delimitor . $arrConst['_KET_QUA_XU_LY'] . $delimitor . $arrConst['_HAN_XU_LY']
+											,$delimitor));
+			echo $StrHeader[0];					
+			echo $StrHeader[1]; //Hien thi <col width = 'xx'><...		
+				//Dinh nghia URL
+				$sUrlView  = "../view/";
+				$v_current_style_name = "round_row";
+				$arrResul = $this->arrResul;	
+				for($index = 0;$index < sizeof($arrResul);$index++){
+					$sDocumentId 		= $arrResul[$index]['PK_RECEIVED_DOC'];		
+					$sreceivedDate		= $objFunction->searchCharColor($this->sfullTextSearch,$arrResul[$index]['C_RECEIVED_DATE']) .'&nbsp;';								
+					$sSymbol			= $objFunction->searchCharColor($this->sfullTextSearch,$arrResul[$index]['C_SYMBOL']) .'&nbsp;';			
+					$strFileName 		= $arrResul[$index]['C_FILE_NAME'];
+					$sFile 				= Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+					if($strFileName == '' || $strFileName == null){
+						$sSubject		= $objFunction->searchStringColor($this->sfullTextSearch,$arrResul[$index]['C_SUBJECT']) .'&nbsp;';	
+					}else {
+						$sSubject		= $objFunction->searchStringColor($this->sfullTextSearch,$arrResul[$index]['C_SUBJECT']) .'<br>'. $sFile;
+						$sFile 			= "";
+					}
+					$ssLeaderUnitIdea 	= $objFunction->searchStringColor($this->sfullTextSearch,$arrResul[$index]['C_LEADER_UNIT_IDEA']) .'&nbsp;';	
+					$arrResulProcess	= $objFunction->searchStringColor($this->sfullTextSearch,$arrResul[$index]['C_RESULT_PROCESS']) .'&nbsp;';
+					$arrResulProcess	= explode('#!@#$',$arrResulProcess);
+					$sResult			= '';
+					for($i = 0; $i < sizeof($arrResulProcess); $i++){
+						$sResulProcess 		= explode('#!~',$arrResulProcess[$i]);
+						$strFileName	 	= $sResulProcess[1];
+						$sFile				= '';
+						if($strFileName != '' && $strFileName != null)
+							$sFile 			= Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+						$sResult		   .= $sResulProcess[0].$sFile.$sResulProcess[2];
+					}
+					$sAppointedDate 	= $objFunction->searchStringColor($this->sfullTextSearch,$arrResul[$index]['C_APPOINTED_DATE']) .'&nbsp;';
+					
+					if ($v_current_style_name == "odd_row"){
+						$v_current_style_name = "round_row";
+					}else{
+						$v_current_style_name = "odd_row";					
+					}?>
+					<tr class="<?=$v_current_style_name?>">	
+						<td style="display:none;" align="center" style="padding-left:3px;padding-right:3px;" class="normal_label">
+							<?=$this->formCheckbox('chk_item_id',$arrResul[$index]['PK_RECEIVED_DOC'], array('checked' => false,'onclick' =>'selectrow(this)'));?>					
+						</td>
+						<td onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="center" valign="middle"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sreceivedDate;?></td>
+						<td onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="center" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sSymbol?></td>	
+						<td onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="left" valign="middle" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sSubject?></td>	
+						<td onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="left" valign="middle" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$ssLeaderUnitIdea?></td>	
+						<td onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="left" valign="middle" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sResult?></td>	
+						<td onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="center" valign="middle" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sAppointedDate?></td>	
+					</tr><?php
+				}					
+				//Tu dien cac dong trang trong truong hop du lieu tra ve < so row _CONST_NUMBER_OF_ROW_PER_LIST		
+				if(sizeof($arrResul) < 15){	
+					echo $this->addEmptyRow($this->iCountElement,15 - sizeof($arrResul),$v_current_style_name,6);		
+				}	
+			?>			
+		</table>	
+		<!--Hien thi trang can xem!-->
+		
+		<table width="100%" cellpadding="0" cellspacing="0" border="0">
+			<tr>
+				<td style="color:red;width:30%;padding-left:1%;" class="small_label">
+					<small class="small_starmark"><?=$this->sdocpertotal;?></small>
+				</td>
+				<td align="center" style="width="50%">
+					<table width="10%"><?php
+						//Hien thi danh sach so trang
+						echo $this->generateStringNumberPage;?>
+					</table>
+				</td>
+				<td width="30%" align="right" style="font-size:13px; padding-right:1%; font:tahoma" class="normal_label"><?php
+					//Hien thi so trang
+					echo $this->generateHtmlSelectBoxPage;?>
+				</td>
+			</tr>
+		</table>
+		<table width='100%'  border='0' cellspacing='0' cellpadding='0' align="center">
+			<tr>
+				<td style="padding-top: 10px; padding-bottom: 10px;" align="center" valign="middle">
+					<?php 
+						$iLeaderId	 = $objFunction->convertStaffNameToStaffId($sLeaderPositionName);
+						$iUnitId 	 = $objFunction->convertUnitNameListToUnitIdList($this->iUnitId);
+					?>
+					<input type="button" class="add_large_button" value="&nbsp;&nbsp;&nbsp;<?=$arrConst['_IN']?>&nbsp;&nbsp;&nbsp;" onclick="btn_printresultunit_rop_onclick('../printresultunit/','<?=$this->sStatus?>','<?=$this->fromDate?>','<?=$this->toDate?>','<?=$this->iUnitId?>','<?=$this->sfullTextSearch?>');">
+					<input type="submit" name="quaylai" id="quaylai" value="<?=$arrConst['_QUAY_LAI'] ?>" onClick="btn_back_onclick('<?=$sUrlBack?>')" class="add_large_button">
+				</td>	
+			</tr>
+		</table>
+</div>
+</form>
+<?php echo $this->search_textselectbox_doc_type;?>
+<?php echo $this->search_textselectbox_doc_cate;?>
+<?php echo $this->search_textselectbox_leader;?>
+<?php
+	if($_SESSION['arrStaffPermission']['THEO_DOI_KQXL_VBDEN'] == 1)
+		echo $this->search_textselectbox_unit;
+?>
+<script type="text/javascript">
+$(document).ready(function() {
+	document.getElementById('C_STATUS').value = '<?=$this->sStatus?>';
+	if(document.getElementById('hdn_advande_search').value == 'yes'){
+		$('tr#1').removeClass('dspnone');
+		$('tr#2').removeClass('dspnone');
+		document.getElementById('chkadvan').checked = true;
+	}else{
+		$('tr#1').addClass('dspnone');
+		$('tr#2').addClass('dspnone');
+		document.getElementById('hdn_advande_search').value = 'no';
+		document.getElementById('chkadvan').checked = false;
+	}
+});
+function advandSearch(obj){
+	if(obj.checked){
+		$('tr#1').removeClass('dspnone');
+		$('tr#2').removeClass('dspnone');
+		document.getElementById('hdn_advande_search').value = 'yes';
+	}else{
+		$('tr#1').addClass('dspnone');
+		$('tr#2').addClass('dspnone');
+		document.getElementById('hdn_advande_search').value = 'no';
+	}
+}
+shortcut.add("Ctrl+K",function() {
+	document.getElementById('txtfullTextSearch').focus();
+	document.getElementById('txtfullTextSearch').select();
+});
+shortcut.add("Enter",function() {
+	document.getElementById('timkiem').focus();
+	actionUrl('');
+});
+function ResetSearch(){
+	document.getElementById('hdn_current_page').value = "1";
+}
+</script>
+<style>
+	.dspnone{
+		display:none;
+	}
+</style>

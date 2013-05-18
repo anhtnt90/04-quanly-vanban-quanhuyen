@@ -1,0 +1,174 @@
+<form action="index" method="POST" id="frmReceived" autocomplete="off">
+	<?php echo $this->formHidden("hdn_type","",null); ?>
+	<!--Cac doi tuong hidden tren form-->
+	<?php echo $this->formHidden("hdn_current_page",$this->iCurrentPage,null); ?>
+	<?php echo $this->formHidden("cbo_nuber_record_page",$this->iNumRowOnPage,null); ?>
+	<?php echo $this->formHidden("hdn_record_number_page",$this->iNumRowOnPage,null); ?>
+	<?php echo $this->formHidden("hdn_object_id_list","",null); ?>
+	<?php echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); ?>
+	<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+	<?php echo $this->formHidden("hdn_object_id",$this->sRecordArchivedId,null); ?>
+	<?php echo $this->formHidden("hdn_XmlTagValueList",$this->XmlTagValueList,null); ?>
+	<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+	<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+	<?php echo $this->formHidden("htn_leftModule",$this->currentModulCodeForLeft,null); ?>	
+	<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+	<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null);?>
+	<?php
+		$arrConst = $this->arrConst;
+		$sUrlEdit  = "../edit/";
+	?>
+	<table>
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<?=$this->bodyTitle;?>				
+			</td>
+		</tr>
+	</table>
+	<div class="box container c1">
+		<div class="pad">			
+			<table cellpadding="0" cellspacing="0" width="98%" border="0" style="padding-left:0%;">
+				<col width="45%" align="left"/><col width="55%" align="left"/>			
+				<tr>
+					<td class="normal_label" valign="top">
+						&nbsp;<?=$arrConst['_TU_NGAY']?>&nbsp;&nbsp;
+						<input onchange="ResetSearch();" style="width:20%;" id="fromDate" name="txtfromDate" type="text" isdate="true" value="<?=$this->fromDate?>" option = "false" message="<?php echo "NGAY THANG NAM khong dung dinh dang";?>" onKeyDown="change_focus(document.forms[0],this)">						
+						&nbsp;&nbsp;<?=$arrConst['_DEN_NGAY']?> &nbsp;&nbsp;
+						<input onchange="ResetSearch();" style="width:20%;" id ="toDate" name="txttoDate" type="text" isdate="true" value="<?=$this->toDate?>" option = "false" message="<?php echo "NGAY THANG NAM khong dung dinh dang";?>" onKeyDown="change_focus(document.forms[0],this)">						
+					</td>
+					<td  style="padding-left:10px;">
+						<input onchange="ResetSearch();" type="text" id="txtfullTextSearch" name="txtfullTextSearch" class="textbox" size="40%" value="<?= $this->sFullTextSearch ?>" />
+						<input type="button" value="<?=$arrConst['_TIM_KIEM']?>" class="add_large_button"  onclick="checkvalue();">
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<!-- 
+	<table width='99%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+		<col width="85%" align="left"/><col width="15%" align="right"/>
+		<tr>
+			<td align="right" colspan="2">
+				<div style="text-align:right; width:98%;">
+					<label>
+						<a class="small_link" onclick="actionUrl('../add/');"><?=$arrConst['_THEM']?></a> 
+						<a class="small_link" onclick="btn_update_onclick(document.getElementsByName('chk_item_id'),'../edit/')"><?=$arrConst['_SUA']?></a> 
+						<a class="small_link" onclick="btn_delete_record_onclick('<?=$this->UrlAjax?>',document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id_list'),'../delete');"><?=$arrConst['_XOA']?></a> 
+						<a class="small_link" onclick="btn_update_onclick(document.getElementsByName('chk_item_id'),'../docrelate/');"><?=$arrConst['_LAY_VB_LIEN_QUAN']?></a> 
+					</label>
+				</div>	
+			</td>
+		</tr>
+	</table>
+	 -->
+	<table cellpadding="0" cellspacing="0" border="0" width="98%" align="center" class="list_table2" id="table1">
+		<?php			
+		$delimitor = $this->delimitor;//Lay ky tu phan cach giua cac phan tu
+		//Hien thi cac cot cua bang hien thi du lieu
+		$StrHeader = explode("!~~!",$this->GenerateHeaderTable("3%" . $delimitor ."20%". $delimitor . "37%" . $delimitor . "30%" . $delimitor . "10%"
+										,'<input type="checkbox" name="chk_all_item_id" value="" onclick="checkbox_all_item_id(document.forms[0].chk_item_id);">' . $delimitor . $arrConst['_MA_HO_SO']. $delimitor . $arrConst['_TEN_HO_SO'] . $delimitor . $arrConst['_NGUOI_TAO'] . $delimitor . $arrConst['_NGAY_TAO']
+										,$delimitor));
+		echo $StrHeader[0];					
+		echo $StrHeader[1]; //Hien thi <col width = 'xx'><...		
+			//Dinh nghia URL
+			$sUrlView  = "../docrelate/";
+			$v_current_style_name = "round_row";
+			$arrResul = $this->arrResul;
+			$objFunction =	new	Sys_Function_DocFunctions()	;	
+			for($index = 0;$index < sizeof($arrResul);$index++){
+				//ID ho so
+				$sRecordArchiveId 			= $arrResul[$index]['PK_RECORD'];				
+				//Ma ho so
+				$sRecordId					= $objFunction->searchCharColor($this->sFullTextSearch,$arrResul[$index]['C_RECORD_ID']) .'&nbsp;';								
+				//Ten ho so
+				$sRecordName				= $objFunction->searchStringColor($this->sFullTextSearch,$arrResul[$index]['C_RECORD_NAME']) .'&nbsp;';			
+				//Chuc vu + ten + phong ban can bo tao ho so
+				$sCreaterPositionName		= $objFunction->searchStringColor($this->sFullTextSearch,$arrResul[$index]['C_STAFF_POSITION_NAME']) .'->'. $objFunction->searchStringColor($this->sFullTextSearch,$arrResul[$index]['C_UNIT_NAME']).'&nbsp;';
+				//Ngay tao ho so
+				$sCreateDate 		 		= $objFunction->searchCharColor($this->sFullTextSearch,$arrResul[$index]['C_CREATE_DATE']) .'&nbsp;';	
+				if ($v_current_style_name == "odd_row"){
+					$v_current_style_name = "round_row";
+				}else{
+					$v_current_style_name = "odd_row";					
+				}?>
+				<tr class="<?=$v_current_style_name?>">	
+					<td align="center" style="padding-left:3px;padding-right:3px;" class="normal_label">						
+						<?=$this->formCheckbox('chk_item_id',$arrResul[$index]['PK_RECORD'], array('checked' => false,'onclick' =>'selectrow(this)'))?>					
+					</td>
+					<td ondblclick="item_onclick('<?=$sRecordArchiveId?>','<?=$sUrlView?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sRecordArchiveId?>')" align="center"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sRecordId?></td>
+					<td ondblclick="item_onclick('<?=$sRecordArchiveId?>','<?=$sUrlView?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sRecordArchiveId?>')" align="left" valign="middle"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sRecordName;?></td>
+					<td ondblclick="item_onclick('<?=$sRecordArchiveId?>','<?=$sUrlView?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sRecordArchiveId?>')" align="left" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sCreaterPositionName?></td>	
+					<td ondblclick="item_onclick('<?=$sRecordArchiveId?>','<?=$sUrlView?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sRecordArchiveId?>')" align="center" valign="middle" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sCreateDate?></td>	
+				</tr><?php
+			}					
+			//Tu dien cac dong trang trong truong hop du lieu tra ve < so row _CONST_NUMBER_OF_ROW_PER_LIST		
+			if(sizeof($arrResul) < 15){	
+				echo $this->addEmptyRow($this->iCountElement,15 - sizeof($arrResul),$v_current_style_name,5);		
+			}	
+		?>			
+	</table>	
+	<!--Hien thi trang can xem!-->
+	
+	<table width="100%" cellpadding="0" cellspacing="0" border="0">
+		<tr>
+			<td style="color:red;width:30%;padding-left:1%;" class="small_label">
+				<small class="small_starmark"><?=$this->sdocpertotal;?></small>
+			</td>
+			<td align="center" style="width="50%">
+				<table width="10%"><?php
+					//Hien thi danh sach so trang
+					echo $this->generateStringNumberPage;?>
+				</table>
+			</td>
+			<td width="30%" align="right" style="font-size:13px; padding-right:1%; font:tahoma" class="normal_label"><?php
+				//Hien thi so trang
+				echo $this->generateHtmlSelectBoxPage;?>
+			</td>
+		</tr>
+	</table>
+	
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' align="center">
+		<tr>
+			<td style="padding-top: 10px; padding-bottom: 10px;" align="center" valign="middle">				
+				<input id="btn_received" name="btn_received" type="button" class="add_large_button" value="<?=$arrConst['_THEM']?>" onclick="actionUrl('../add/');">
+				<input type="button" class="add_large_button" value="<?=$arrConst['_SUA']?>" onclick="btn_update_onclick(document.getElementsByName('chk_item_id'),'../edit/')">
+				<input id="btn_received" name="btn_received" type="button" class="add_large_button" value="<?=$arrConst['_XOA']?>" onclick="btn_delete_record_onclick('<?=$this->UrlAjax?>',document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id_list'),'../delete');">
+				<input id="btn_received" name="btn_received" type="button" class="add_large_button" value="<?=$arrConst['_LAY_VB_LIEN_QUAN']?>" onclick="btn_update_onclick(document.getElementsByName('chk_item_id'),'../docrelate/');">
+			</td>	
+		</tr>
+	</table>
+	<div style="display:block;" id="doc_id"></div>
+</div>
+</form>
+<script type="text/javascript">
+shortcut.add("Ctrl+K",function() {
+	document.getElementById('txtfullTextSearch').focus();
+	document.getElementById('txtfullTextSearch').select();
+});
+//Ham them khoang trang neu NSD khong nhap gia tri trong o tim kiem
+function checkvalue(){
+	if(document.getElementById('txtfullTextSearch').value != "")
+		actionUrl('');
+}
+function ResetSearch(){
+	document.getElementById('hdn_current_page').value = "1";
+}
+</script>
+<script type = "text/javascript">
+$(function() {
+	$( "#fromDate" ).datepicker({
+		changeMonth: true,
+		gotoCurrent: true,
+		maxDate: '+1m +1w',
+		minDate: new Date(1945, 1 - 1, 1),
+		changeYear: true
+	});
+	$( "#toDate" ).datepicker({
+		changeMonth: true,
+		gotoCurrent: true,
+		maxDate: '+1m +1w',
+		minDate: new Date(1945, 1 - 1, 1),
+		changeYear: true
+	});
+});
+</script>

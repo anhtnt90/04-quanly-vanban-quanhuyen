@@ -1,0 +1,101 @@
+<?php 
+	//$arrAllAuthorized = $this->arrAllAuthorized; 
+	//var_dump($arrAllAuthorized);
+	$arrAllAuthorized = $this->arrAllAuthorized; 
+?>
+
+<form action="index" method="POST" id="frmReceived">
+	<?php echo $this->formHidden("hdn_object_id","",null); ?>	
+	<table>
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<?=$this->bodyTitle;?>				
+			</td>
+		</tr>
+</table>
+
+<table cellpadding="0" cellspacing="0" border="0" width="20%" align="left" class="list_table2" id="table1">
+		<?php			
+		$delimitor = $this->delimitor;
+		$StrHeader = explode("!~~!",$this->GenerateHeaderTable("5%" . $delimitor ."100%"
+										,'<input type="checkbox" name="chk_all_item_id" value="" onclick="checkbox_all_item_id(document.forms[0].chk_item_id);">' . $delimitor .'Tên cán bộ' 
+										,$delimitor));
+		echo $StrHeader[0];	
+		echo $StrHeader[1];
+		$sUrlView  = "../view/";
+		$v_current_style_name = "round_row";
+		$arrUathorized = $this->arrUathorized;
+		
+			for($index = 0;$index < sizeof($arrUathorized);$index++){	
+				$staftID = $arrUathorized[$index]['C_CODE'];
+				$staftName = $arrUathorized[$index]['C_NAME'];					
+				if ($v_current_style_name == "odd_row"){
+					$v_current_style_name = "round_row";
+				}else{
+					$v_current_style_name = "odd_row";					
+				}?>
+				
+				<tr class="<?=$v_current_style_name?>">	
+					<td align="center"  style="padding-left:3px; padding-right:3px;"  class="normal_label">
+							<?=$this->formCheckbox('chk_item_id',$arrUathorized[$index]['C_CODE'], array('checked' => false,'onclick' =>'selectrow(this)'));?>					
+					</td>
+					<td align="center"  style="padding-left:3px;padding-right:3px;" class="normal_label" ><?=$staftName?></td>																		
+				</tr>								
+			<?php } ?>			
+	</table>		
+	<?php if($arrAllAuthorized){?>	
+	<table cellpadding="0" cellspacing="0" border="0" width="78%" align="right" class="list_table2" id="table1" style="margin-right: 10px;">
+		<?php			
+		$delimitor = $this->delimitor;
+		$StrHeader = explode("!~~!",$this->GenerateHeaderTable("5%" . $delimitor ."30%". $delimitor ."20%". $delimitor ."20%". $delimitor ."25%"
+										,'<input type="checkbox" name="chk_all_item_id" value="" onclick="checkbox_all_item_id(document.forms[0].chk_item_id_2);">' . $delimitor .'Tên cán bộ' . $delimitor .'Ngày bắt đầu ủy quyền' . $delimitor .'Ngày kết thúc'. $delimitor .'Trạng thái'
+										,$delimitor));
+		echo $StrHeader[0];	
+		echo $StrHeader[1];
+		$sUrlView  = "../view/";
+		$v_current_style_name = "round_row";
+		//$arrUathorized = $this->arrUathorized;
+		
+			for($index = 0;$index < sizeof($arrAllAuthorized);$index++){	
+				$staftName = $arrAllAuthorized[$index]['C_NAME'];
+				$startDate = $arrAllAuthorized[$index]['C_START_DATE'];
+				$endDate = $arrAllAuthorized[$index]['C_END_DATE'];	
+				$status = $arrAllAuthorized[$index]['C_STATUS'];	
+				if($status == 1){
+					$status = '<font color="#FF0000">Đã được ủy quyền</font>';					
+				}else{
+					$status = 'Chưa được ủy quyền';
+				}							
+				if ($v_current_style_name == "odd_row"){
+					$v_current_style_name = "round_row";
+				}else{
+					$v_current_style_name = "odd_row";					
+				}?>
+				
+				<tr class="<?=$v_current_style_name?>">	
+					<td align="center" style="padding-left:3px;padding-right:3px;" class="normal_label">
+						<?=$this->formCheckbox('chk_item_id_2',$arrUathorized[$index]['C_CODE'], array('checked' => false,'onclick' =>'selectrow(this)'));?>					
+					</td>
+						<td align="center"  style="padding-left:3px;padding-right:3px;" class="normal_label" ><?=$staftName?></td>	
+						<td align="center"  style="padding-left:3px;padding-right:3px;" class="normal_label" ><?=$startDate?></td>
+						<td align="center"  style="padding-left:3px;padding-right:3px;" class="normal_label" ><?=$endDate?></td>
+						<td align="center"  style="padding-left:3px;padding-right:3px;" class="normal_label" ><?=$status?></td>																	
+				</tr>								
+			<?php } ?>			
+	</table>	
+<?php } ?>		
+		
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' align="center">
+		<tr>		
+			<td style="padding-top: 5px; padding-bottom: 5px;" align="center" valign="middle">
+				<input id="btn_add" name="btn_add" type="button" class="add_large_button" value="Ủy quyền" onclick="btn_update_onclick(document.getElementById('chk_item_id'),'../add/');">
+				
+				<input id="btn_add" name="btn_add" type="button" class="add_large_button" value="Xóa Ủy quyền" onclick="btn_update_onclick(document.getElementById('chk_item_id_2'),'../delete/');">
+			</td>	
+		</tr>
+	</table>				
+	<br/>
+	
+</form>
+
+

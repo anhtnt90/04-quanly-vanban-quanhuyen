@@ -1,0 +1,334 @@
+<form action="index" method="POST" id="frmSent">
+	<?php echo $this->formHidden("txtSubject",$this->txtSubject,null);?>
+	<?php echo $this->formHidden("yearDoc",$this->yearDoc,null);?>
+	<?php echo $this->formHidden("monthDoc",$this->monthDoc,null);?>
+	<?php echo $this->formHidden("docCate",$this->docCate,null);?>
+	<?php echo $this->formHidden("unitName",$this->unitName,null);?>
+	<?php echo $this->formHidden("docType",$this->docType,null);?>
+	<?php echo $this->formHidden("cbo_nuber_record_page",$this->numRowOnPage,null); ?>
+	<?php echo $this->formHidden("hdn_current_page",$this->currentPage,null); ?>
+	<?php echo $this->formHidden("dayDoc",$this->dayDoc,null);?>	
+	<?php echo $this->formHidden("sendingPlace",$this->sendingPlace,null);?>
+	<?php echo $this->formHidden("handlerName",$this->handlerName,null);?>
+<div><?php
+	$arrResul = $this->arrReceived;?>
+	<div style="padding-top:5px;padding-bottom:5px;"></div>
+	<div>
+		<div style="padding-top:5px;padding-bottom:5px;padding-left:10px;" align="center">			
+			<label class="normal_label">
+				<b>VĂN BẢN ĐẾN</b><br>
+			 	(Tính chất: <font color="Red"><?=Sys_Publib_Library ::_getNameByCode($this->arrSel, $arrResul[0]['C_TC_VB'], 'C_NAME');?></font>)&nbsp;
+			</label>
+		</div>
+	</div>
+	<div style="padding-top:5px;padding-bottom:5px;"></div>
+	<table width='98%'  border='0' cellspacing='0' cellpadding='0' align="center">	 	
+		<col width="50%"><col width="50%">
+	 	<tr>
+	 		<td class="box normal_label" valign="top">
+	 			<table width="100%" class="normal_label">
+	 				<col width="50%"><col width="50%">
+	 				<tr width="100%">
+	 					<td>
+	 						<label>1. Số công văn đến: </label>
+	 					</td>
+	 					<td align="left">
+							<?=$arrResul[0]['C_SYMBOL'];?>&nbsp;
+	 					</td>
+	 				</tr>
+	 				<tr width="100%">
+	 					<td>
+	 						<label>2. Ngày phát hành: </label>
+	 					</td>
+	 					<td>
+	 						<?=$arrResul[0]['C_SEN_DATE'];?>&nbsp;	 						
+	 					</td>
+	 				</tr>
+	 				<tr width="100%">
+	 					<td colspan="2">
+	 						<label>3. Cơ quan ban hành văn bản: </label>
+	 					</td>
+	 					<td>&nbsp;</td>
+	 				</tr>
+	 				<tr width="100%">
+	 					<td>
+	 						<label style="padding-left:20px;">- Nhóm cơ quan: </label>
+	 					</td>
+	 					<td><?php
+	 						$placeCode = $arrResul[0]['C_SEND_LEVEL'];
+	 						if($placeCode != ""){
+	 							echo Sys_Publib_Library ::_getNameByCode($this->arrPlace, $placeCode,'C_NAME');
+	 						}else {
+	 							echo $arrResul[0]['NHOM_CO_QUAN'];
+	 						}?>&nbsp;
+	 					</td>
+	 				</tr>
+	 				<tr width="100%">
+	 					<td>
+	 						<label style="padding-left:20px;">- Tên cơ quan: </label>
+	 					</td>
+	 					<td><?php
+	 						$sendingPlaceCode = $arrResul[0]['C_SENDING_PLACE'];
+	 						if($sendingPlaceCode != ""){
+		 						echo Sys_Publib_Library ::_getNameByCode($this->arrSentPlace, $sendingPlaceCode,'C_NAME');
+	 						}else{
+	 							echo $arrResul[0]['TEN_CO_QUAN'];
+	 						}?>&nbsp;
+						</td>
+	 				</tr>
+	 				<tr width="100%">
+	 					<td colspan="2">
+	 						<label>4. Phân loại: </label>
+	 					</td>
+	 					<td></td>
+	 				</tr>
+	 				<tr width="100%">
+	 					<td>
+	 						<label style="padding-left:20px;">- Nhóm chính: </label>
+	 					</td>
+	 					<td>
+	 						<?=Sys_Publib_Library ::_getNameByCode($this->arrNhomVB, $arrResul[0]['C_DOC_CATE'],'C_NAME');?></b>&nbsp;
+	 					</td>
+	 				</tr>
+	 				<tr width="100%">
+	 					<td>
+	 						<label style="padding-left:20px;">- Chi tiết: </label>
+	 					</td>
+	 					<td>
+		 					<?=Sys_Publib_Library ::_getNameByCode($this->arrLoaiVB, $arrResul[0]['C_DOC_TYPE'],'C_NAME');?></b>&nbsp;
+						</td>
+	 				</tr>
+	 			</table>
+	 		</td>
+	 		<td class="box normal_label" valign="top" style="width:100%;">
+	 			<table width="100%" class="normal_label">
+	 			<col width="50%"><col width="50%">
+	 				<tr style="width:100%"><?php
+	 					if($this->getModulLeft == "BXD"){?>
+		 					<td>
+		 						<label>5. Số TT công văn đến Bộ: </label>
+		 					</td>
+		 				<?}else {?>
+		 					<td>
+		 						<label>5. Số TT công văn đến Đơn vị: </label>
+		 					</td><?
+		 				}?>
+	 					<td>
+	 						<?=$arrResul[0]['C_NUM_DOCUMENT']?>&nbsp;
+	 					</td>
+	 				</tr>
+	 				<tr style="width:100%">
+	 					<td>
+	 						<label>6. Ngày nhận: </label>
+	 					</td>
+	 					<td>
+	 						<?=$arrResul[0]['C_RECEIVED_DATE']?>&nbsp;
+	 					</td>
+	 				</tr>
+	 				<tr style="width:100%">
+	 					<td>
+	 						<label>7. Hạn trả lời: </label>
+	 					</td>
+	 					<td><?php
+	 						if($arrResul[0]['C_APPOITED_DATE'] != "" && $arrResul[0]['C_APPOITED_DATE'] != "01/01/1900"){
+	 							echo $arrResul[0]['C_APPOITED_DATE'];
+	 						}?>&nbsp;
+	 					</td>
+	 				</tr>
+	 				<tr style="width:100%">
+	 					<td>
+	 						<label>8. Ngày trả lời: </label>
+	 					</td>
+	 					<td>
+	 						<?=$arrResul[0]['C_REPLY_DATE']?>&nbsp;
+	 					</td>
+	 				</tr>
+	 				<tr style="width:100%">
+	 					<td>
+	 						<label>9. Công văn trả lời: </label>
+	 					</td>
+	 					<td>
+	 						<?=$arrResul[0]['C_DOC_REPLY']?>&nbsp;
+	 					</td>
+	 				</tr>
+	 				<tr>
+	 					<td colspan="2">
+	 						<div id="divMoiHop" style="display:none;">
+	 							<br>
+	 							<div align="center"><b>MỜI HỌP</b></div>
+	 							<table width="100%">
+	 								<col width="20%"><col width="80%">		
+	 								<tr>
+	 									<td>
+	 										<label>Ngày họp: </label>
+	 									</td>
+	 									<td style="color:red">
+	 										<?=$arrResul[0]['C_MEETING_DATE']?>
+	 									</td>
+	 								</tr>
+	 								<tr>
+	 									<td>
+	 										<label>Thời gian: </label>
+	 									</td>
+	 									<td style="color:red">
+	 										<?=$arrResul[0]['C_TIME']?>
+	 									</td>
+	 								</tr>
+	 								<tr>
+	 									<td>
+	 										<label>Địa điểm: </label>
+	 									</td>
+	 									<td style="color:red">
+	 										<?=$arrResul[0]['C_ADDRESS']?>
+	 									</td>
+	 								</tr>
+	 								<tr>
+	 									<td>
+	 										<label>Người họp: </label>
+	 									</td>
+	 									<td>
+	 										<?=$arrResul[0]['C_MEETING_PEOPLE']?>
+	 									</td>
+	 								</tr>					 				
+	 							</table>
+	 						</div>
+	 					</td>
+	 					<td>&nbsp;</td>
+	 				</tr>
+	 				<tr style="width:100%">
+	 					<td>
+	 						<label>9.2. Trả lời: </label>
+	 					</td>
+	 					<td><?php
+	 						if($arrResul[0]['C_PROCESSING_TYPE'] == "VB_PHAI_TRA_LOI"){?>
+	 							<input type="checkbox" checked>&nbsp;Phải trả lời
+							<?}if($arrResul[0]['C_PROCESSING_TYPE'] == "VB_XEM_DE_BIET"){?>
+								<input type="checkbox">&nbsp;Phải trả lời
+							<?}?>	
+	 					</td>
+	 				</tr>	
+	 			</table>
+	 		</td>
+	 	</tr>
+	</table>
+	<table border="0" width="98%" align="center" style="padding-top:10px;">
+		<col width="20%"><col width="80%">
+		<tr style="width:100%" class="normal_label">
+			<td>
+				<label>Ý kiến chỉ đạo: </label>
+			</td>
+			<td>
+				<?=Sys_Function_DocFunctions::GetAllIdeaLeader($arrResul[0]['C_IDEA_LEADER_LIST'])?>&nbsp;	
+			</td>
+		</tr>
+		<tr style="width:100%" class="normal_label">
+			<td>
+				<label>10. Tóm tắt nội dung: </label>
+			</td>
+			<td>
+				<?=$arrResul[0]['C_SUBJECT']?>&nbsp;	
+			</td>
+		</tr>
+		<tr style="width:100%" class="normal_label">
+			<td>
+				<label>11. Nơi nhận văn bản: </label>
+			</td>
+			<td>
+				<?=$arrResul[0]['C_RECEIVED_PLACE']?>&nbsp;	
+			</td>
+		</tr>
+		<tr style="width:100%" class="normal_label">
+			<td>
+				<b>Tệp đính kèm:</b>
+			</td>
+			<td><?php
+				$strFileName = $arrResul[0]['C_FILE_NAME'];
+				$sFile 		 = Sys_Library::_getAllFileAttach($strFileName,"@!~!@","!~!",$this->baseUrl . "attach-file/");
+				if($arrResul[0]['C_FILE_NAME'] != ''){
+					echo $sFile;
+				}?>
+				&nbsp;			
+			</td>
+		</tr>
+		<tr style="width:100%" class="normal_label">
+			<td>
+				<label>12. Người xử lý: </label>
+			</td>
+			<td><?php
+				if($arrResul[0]['FK_LEADER_ID_LIST'] != '' && $arrResul[0]['FK_LEADER_ID_LIST'] != '0'){
+					$arrLeader = explode(',' ,$arrResul[0]['FK_LEADER_ID_LIST']);
+					for($i =0; $i < sizeof($arrLeader); $i ++){
+						if(Sys_Publib_Library ::_getItemAttrById($_SESSION['arr_all_staff'], $arrLeader[$i], 'position_group_code') == "LANH_DAO_BO"){
+							echo Sys_Publib_Library ::_getItemAttrById($_SESSION['arr_all_staff'], $arrLeader[$i], 'position_code') . ' - ' . Sys_Publib_Library ::_getItemAttrById($_SESSION['arr_all_staff'], $arrLeader[$i], 'name') . '; ';
+						}
+					}
+				}else {
+					echo $arrResul[0]['C_LEADER_POSITION_NAME_LIST'];
+				}?>&nbsp;
+			</td>
+		</tr>
+		<tr style="width:100%" class="normal_label">
+			<td>
+				<label>13. Người xử lý chính: </label>
+			</td>
+			<td><?php
+				if($arrResul[0]['CV_XULYCHINH'] != ''){				
+				 	echo Sys_Publib_Library ::_getItemAttrById($_SESSION['arr_all_staff'], $arrResul[0]['CV_XULYCHINH'], 'name');
+				}else {
+					echo $arrResul[0]['C_PROCESSOR_POSITION_NAME'];
+				}?>&nbsp;	
+			</td>
+		</tr>
+		<tr style="width:100%" class="normal_label">
+			<td>
+				<label>14. Sao chuyển: </label>
+			</td>
+			<td>
+				&nbsp;	
+			</td>
+		</tr>
+		<tr style="width:100%" class="normal_label">
+			<td style="padding-left:15px;">
+				<label>Đơn vị chủ trì: </label>
+			</td>
+			<td><?php
+				$unitProcess = Sys_Publib_Library ::_getItemAttrById($_SESSION['arr_all_unit'], $arrResul[0]['FK_PROCESS_UNIT'], 'name');
+				if($arrResul[0]['FK_PROCESS_UNIT'] != "" && $arrResul[0]['FK_PROCESS_UNIT'] != "0"){
+					echo $unitProcess;
+				}else {
+					echo $arrResul[0]['C_PROCESS_UNIT_NAME'];
+				}
+				if($arrResul[0]['CV_XULYCHINH'] != ''){
+					echo '(' . Sys_Publib_Library ::_getItemAttrById($_SESSION['arr_all_staff'], $arrResul[0]['CV_XULYCHINH'], 'name') . ')';
+				}?>&nbsp;
+			</td>
+		</tr>
+		<tr style="width:100%;" class="normal_label">
+			<td style="padding-left:15px;">
+				<label>Đơn vị phối hợp: </label>
+			</td>
+			<td><?php
+				if($arrResul[0]['FK_UNIT_ID_LIST'] != '' && $arrResul[0]['FK_UNIT_ID_LIST'] != '0'){
+					$arrUnit = explode(',', $arrResul[0]['FK_UNIT_ID_LIST']);
+					for($i =0; $i < sizeof($arrUnit); $i ++){
+						echo Sys_Publib_Library ::_getItemAttrById($_SESSION['arr_all_unit'], $arrUnit[$i], 'name') . '; ';
+					}
+				}else {
+					echo $arrResul[0]['C_UNIT_NAME_LIST'];
+				}
+				?>&nbsp;	
+			</td>
+		</tr>
+		<tr>
+			<td style="padding-top: 5px; padding-bottom: 5px;" align="center" valign="middle" colspan="2">
+				<?=$this->formsubmit('button','Quay lại',array("onClick"=>"actionUrl('../../index/modul/" . $this->getModulLeft . "');","class"=>"back_large_button"))?>
+			</td>	
+		</tr>
+	</table>
+</div>
+<script type="text/javascript">
+if("<?=$arrResul[0]['C_DOC_TYPE']?>" == "GM"){
+	document.getElementById('divMoiHop').style.display = "block";
+}
+</script>
+</form>

@@ -1,0 +1,162 @@
+<form action="index" method="POST" id="frmAddSent" enctype="multipart/form-data" autocomplete="off">
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<!--tao tac hidden!-->
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>
+				<?php echo $this->formHidden("hdnCode","",null); ?>
+				<?php echo $this->formHidden("hdn_xml_tag_list","",null); ?>
+				<?php echo $this->formHidden("hdn_xml_value_list","",null); ?>
+				<?php echo $this->formHidden("hdn_XmlTagValueList","",null); ?>
+				<?php echo $this->formHidden("hdh_option",$this->option,null); ?>
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>	
+				<?php echo $this->formHidden("hdnListId","",null); ?>	
+				<?php echo $this->formHidden("number",'',null); ?>
+				<?php echo $this->formHidden("hdn_object_id",$this->sentID,null); ?>			
+				<?php echo $this->formHidden("hdn_received_place","",null); ?>
+				<?php echo $this->formHidden("hdn_function_modul",$this->getModulLeft,null);?>
+				<?php echo $this->formHidden("hdn_idea_staft_name","",null); ?>
+				<?php echo $this->formHidden("hdn_idea_staft_name_phxl","",null); ?>
+				<?php echo $this->formHidden("hdn_idea_unit_name","",null); ?>
+				<?php echo $this->formHidden("hdn_list_id","",null); ?>
+				<?php echo $this->formHidden("so_ban","",null); ?>
+				<?php echo $this->formHidden("so_trang","",null); ?>
+				<?= $this->bodyTitle ;?>
+			</td>
+		</tr>
+	</table>
+	<?php
+		$arrSent = $this->arrSent;
+		$arrConst = $this->arrConst;
+		$urlCalendar = $this->urlCalendar;
+	?>
+	<table class="table_detail_doc" border="1" width="100%">
+	<col width="25%" align="left"/><col width="75%" align="left"/>
+		<tr>
+			<td style="border-right:1px solid #CCC">
+				<?=$arrConst['_LOAI_VAN_BAN'] ?>
+			</td>
+				
+			<td>
+				<?= $arrSent[0]['C_DOC_TYPE'] ?>
+			</td>
+		</tr>	
+		<tr>
+			<td style="border-right:1px solid #CCC">
+				<?=$arrConst['_PHONG_BAN_DU_THAO'] ?>
+			</td>
+				
+			<td>
+				<?= $arrSent[0]['C_UNIT_NAME'] ?>
+			</td>
+		</tr>
+		<tr>
+			<td style="border-right:1px solid #CCC">
+				<?=$arrConst['_TRICH_YEU'] ?>
+			</td>
+				
+			<td>
+				<?= $arrSent[0]['C_SUBJECT'] ?>
+			</td>
+		</tr>
+		<?php
+			$strFileName = $arrSent[0]['C_FILE_NAME'];
+			if($strFileName != ''){
+				$sFile = Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+			}
+		?>
+		<tr>
+			<td style="border-right:1px solid #CCC">
+				<?=$arrConst['_FILE_DINH_KEM'] ?>
+			</td>
+				
+			<td>
+				<?= $sFile ?>
+			</td>
+		</tr>
+		<?php
+		$sIdeaNameUnit = explode('!#~$|*',$arrSent[0]['C_IDEA_NAME']);
+		?>
+		<tr>
+			<td style="border-right:1px solid #CCC">
+				<?=$arrConst['_DON_VI_CHO_Y_KIEN'] ?>
+			</td>
+				
+			<td>
+				<?= $sIdeaNameUnit[0] ?>
+			</td>
+		</tr>
+		<tr>
+			<td style="border-right:1px solid #CCC">
+				<?=$arrConst['_HAN_TRA_LOI'] ?>
+			</td>
+				
+			<td>
+				<?php If($arrSent[0]['C_APPOINTED_DATE'] != '01/01/1900') {
+				 		echo	$arrSent[0]['C_APPOINTED_DATE'] ;
+					  } ?>
+			</td>
+		</tr>
+	</table>
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+			<?= $this->bodyTitle2 ; ?>
+			</td>
+			<td style="text-align:right;" valign="bottom">
+				<a style="cursor:pointer;" onClick="document.getElementById('hdh_option').value='GHI_QUAYLAI';btn_save_period(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'');">&nbsp;<?=$arrConst['_GHI'] ?>&nbsp;|</a> 
+				<a style="cursor:pointer;" onclick="actionUrl('../../index/modul/<?=$this->getModulLeft?>');">&nbsp;<?=$arrConst['_QUAY_LAI'] ?>&nbsp;</a>
+			</td>
+		</tr>
+	</table>
+	<?php $arrAssign = $this->arrAssign  ;?>
+	<div id="body_conten1" style="padding-top:5px;">
+			<div>
+				<label>1.&nbsp;<?=$arrConst['_NGAY_PHAN_CONG']?><span class="requiein">*</span></label> 
+				<input id ="C_ASSIGNED_DATE" name="C_ASSIGNED_DATE" type="text" isdate="true" value="<?=$arrAssign[0]['C_ASSIGNED_DATE'];?>" option = "true"  xml_tag_in_db="" xml_data="false" column_name="C_ASSIGNED_DATE" message="NGAY PHAN CONG khong dung dinh dang ngay/thang/nam!" onKeyDown="change_focus(document.forms[0],this)">
+				<img src="<?= $this->baseUrl?>images/calendar.gif" border="0" onclick="DoCal('<?= $urlCalendar;?>',document.getElementById('C_ASSIGNED_DATE'));" style="cursor:pointer">	 						
+			</div>				
+			<div>
+				<label>2.&nbsp;<?=$arrConst['_Y_KIEN_CHI_DAO'] ?><span class="requiein">*</span></label>
+				<textarea  class="textbox normal_textarea" id="C_ASSIGNED_IDEA" name="C_ASSIGNED_IDEA"  option = "true" rows="2" message="Phai xac dinh Y KIEN CHI DAO!" ><?= $arrAssign[0]['C_ASSIGNED_IDEA'];?></textarea>
+			</div>
+			<div id = "StaffMainProcess">
+				<label>3.&nbsp;<?=$arrConst['_CAN_BO_XLC']?><span class="requiein">*</span></label>
+				<textarea class="normal_textarea" id="C_STAFF_PROCESS_MAIN_NAME"   rows="2" name="C_STAFF_PROCESS_MAIN_NAME" message="Phai xac dinh thong tin CAN BO XU LY CHINH!"><?=$arrAssign[0]['C_STAFF_PROCESS_MAIN_NAME'];?></textarea>
+			</div>
+			<div id = "StaffCoordinateProcess">
+				<label>4.&nbsp;<?=$arrConst['_CAN_BO_PHXL']?></span></label>
+				<textarea class="normal_textarea" id="C_STAFF_PROCESS_COORDINATE_NAME_LIST"  optional = "true"  rows="2" name="C_STAFF_PROCESS_COORDINATE_NAME_LIST" message="Phai xac dinh thong tin CAN BO PHOI HOP XU LY!"><?=$arrAssign[0]['C_STAFF_PROCESS_COORDINATE_NAME_LIST'];?></textarea>
+			</div>	
+			<div id = "AppointedDate">
+				<label style="float:none; clear:right;display:inline;">5.&nbsp;<?=$arrConst['_HAN_XU_LY']?></label> 
+				<label style="float:none; clear:none;display:inline;margin-left:21.7%"><?=$arrConst['_SO_NGAY']?></label>
+				<input class="textbox c3" type="text" id="limit_date" name="limit_date" value="<?=$arrAssign[0]['C_LIMIT_DATE'];?>" align="right" optional = "true" xml_tag_in_db="limit_date" xml_data="true" column_name="" message="SO NGAY phai la so nguyen duong (1, 2, ...)!" onblur="appointed_date(document.getElementById('C_ASSIGNED_DATE').value,document.getElementById('limit_date'),document.getElementById('C_APPOINTED_DATE'));">														
+				<label style="float:none; clear:none;display:inline;margin-left:0%"><?=$arrConst['_NGAY']?></label>				
+				<input class="textbox c3" id ="C_APPOINTED_DATE" name="C_APPOINTED_DATE" type="text" isdate="true" value="<?php if($arrAssign[0]['C_APPOINTED_DATE'] != '01/01/1900'){ echo $arrAssign[0]['C_APPOINTED_DATE'] ; }?>" optional = "true" message="HAN XU LY khong dung dinh dang ngay/thang/nam!" onKeyDown="change_focus(document.forms[0],this)">
+				<img src="<?= $this->baseUrl?>images/calendar.gif" border="0" onclick="DoCal('<?= $urlCalendar;?>',document.getElementById('C_APPOINTED_DATE'));" style="cursor:pointer">	 										
+			</div>
+	</div>
+	<!--Hien thi nut!-->			
+	<table 	width='99%'  border='0' cellspacing='0' cellpadding='0' align="center" class="table_title">
+		<tr><td style="height:20px;"><hr width='100%' color='#3399FF' size='1'></td></tr>			
+		<tr>
+			<td align="center" style="padding-bottom:10px;">	
+				
+				<button name="btn_ghivaquaylai" id="btn_ghivaquaylai" type="button" value="<?=$arrConst['_GHI_QUAY_LAI'] ?>" class="add_large_button" onClick="document.getElementById('hdh_option').value='GHI_QUAYLAI';btn_save_period(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'');"><?=$arrConst['_GHI'] ?></button>
+				<?=$this->formsubmit('button','Quay lại',array("onClick"=>"actionUrl('../../index/modul/".$this->getModulLeft."');","class"=>"add_large_button"))?>
+			</td>
+		</tr>			
+	</table>
+	<div id="getSysbolforNowYear" style="display:none;"></div>
+</div>		
+</form>
+<?php
+	echo $this->StaffMainProcess	;
+	echo $this->StaffCoordinateProcess;
+?>
+<script type="text/javascript">
+	document.getElementById('C_ASSIGNED_DATE').value = '<?=date("d/m/Y" ) ;?>';
+</script>

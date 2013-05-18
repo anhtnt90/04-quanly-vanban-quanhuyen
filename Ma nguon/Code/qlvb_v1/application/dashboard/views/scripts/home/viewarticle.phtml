@@ -1,0 +1,64 @@
+<form action="index" method="POST" id="frmRecord">	
+	<div style="height:300px; width: 15%; border-right: 1px solid #c1c1c1;   float: left;">
+	
+			
+	
+	</div>
+	
+	<div style="float: left; width:80%; margin-left: 5px;" >
+	
+	<table width='100%' border='0' cellspacing='0' cellpadding='0' style=" float:right; border-right:#000E7B; margin-top:5px;  padding:0 12px;" align="center">
+		<?php 
+		$arrResul = $this->arrResul;	
+		$sImageName = $arrResul[0]['C_IMAGE_NAME']; 	
+		?>
+			<tr>
+			<?php if($sImageName <> ''){?>	
+				<td class="content_article"  style='height:100px; width:140px; '>
+				<?php					
+					// Tach ten file ra
+					if(strpos($sImageName,"!~!") == 0){
+						$file_name = $sImageName;
+					}else{
+						$arrFilename = explode('!~!',$sImageName);					
+						$file_name = $arrFilename[1];
+						$file_id   = explode("_", $arrFilename[0]);
+					} 
+					$sImageUrl = $this->baseUrl.'attach-file/article/image-upload/'. $file_id[0] . "/" . $file_id[1] . "/" . $file_id[2] . "/" . $sImageName;	
+				?>																
+				<?php if($arrResul[0]['C_IMAGE_TITLE']){ ?>
+					<div style='height:120px; width:140px; float:left; margin-bottom:1px;'>																
+				<?php }else{ ?>	
+					<div style='height:100px; width:140px; float:left; margin-bottom:1px;'>
+				<?php } ?>								
+				<img  align="left" style='border: solid 1px #CCCCCC;'  src="<?=$sImageUrl?>" onload="javaScript:resizeImageWithoutLink(130,100, this)">
+							<br clear="all" />  							                                                                      
+                              <?php if($arrResul[0]['C_IMAGE_TITLE']){ ?>														
+								<div style="height:auto; width:135px;text-align:center; margin-top:3px; margin-bottom:2px;">
+									<span style="font-family:Tahoma; font-size:11px;">
+										<?=$arrResul[0]['C_IMAGE_TITLE']?>
+									</span>
+								</div>																			
+						<?php } ?>	                                            
+				</div>
+				<?php } ?>					
+					<p class="title_article" ><a><?=$arrResul[0]['C_TITLE']?></a></p>				
+					<p class="short_content_article" style='margin-top:-15px;'><?=$arrResul[0]['C_SHORT_CONTENT']?></p>						
+				</td>								
+			</tr>				
+			<tr>
+				<td><p class="short_content_article" style='margin-top:-10px;'><?=html_entity_decode($arrResul[0]['C_DETAIL_CONTENT'])?></p></td>
+			</tr>			
+			<?php if($arrResul[0]['C_FILE_NAME']!=''){
+				$strFileName 	= $arrResul[0]['C_FILE_NAME'];
+				$sFile = Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/article/file-upload/");
+			?>
+			<tr>
+				<td colspan="2">
+					<span class="short_content_article"><?='<br>Đính kèm:'.$sFile?></span>
+				</td>
+			</tr>
+			<?php }?>
+	</table>
+</form>
+</div>

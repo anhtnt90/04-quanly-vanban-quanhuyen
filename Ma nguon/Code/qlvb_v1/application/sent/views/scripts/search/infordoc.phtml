@@ -1,0 +1,195 @@
+<form action="index" method="POST" id="frmSent">
+	<?php echo $this->formHidden("cbo_nuber_record_page",$this->numRowOnPage,null); ?>
+	<?php echo $this->formHidden("hdn_current_page",$this->currentPage,null); ?>
+	<?php echo $this->formHidden("txtSubject",$this->txtSubject,null);?>
+	<?php echo $this->formHidden("yearDoc",$this->yearDoc,null);?>
+	<?php echo $this->formHidden("monthDoc",$this->monthDoc,null);?>
+	<?php echo $this->formHidden("docCate",$this->docCate,null);?>
+	<?php echo $this->formHidden("unitName",$this->unitName,null);?>
+	<?php echo $this->formHidden("docType",$this->docType,null);?>
+	<?php echo $this->formHidden("Doc_linhvuc",$this->Doc_linhvuc,null);?>
+	<?php echo $this->formHidden("dayDoc",$this->dayDoc,null);?>
+	<?php echo $this->formHidden("signerName",$this->signerName,null);?>
+<div><?php
+	$arrResul = $this->arrSent;?>
+	<div style="padding-top:5px;padding-bottom:5px;"></div>
+	<div class="box container c1">
+		<div style="padding-top:5px;padding-bottom:5px;padding-left:10px;">			
+			<label class="normal_label"><b>CHI TIẾT VĂN BẢN ĐI</b> (Tính chất: <?=Sys_Publib_Library ::_getNameByCode($this->arrSel, $arrResul[0]['DO_MAT'], 'C_NAME');?>)&nbsp;</label>
+		</div>
+	</div>
+	<div style="padding-top:5px;padding-bottom:5px;"></div>
+	<table width='98%'  border='0' cellspacing='0' cellpadding='0' align="center">	 	
+		<col width="40%"><col width="60%">
+	 	<tr>
+	 		<td class="box normal_label" valign="top">
+	 			<table width="100%" class="normal_label">
+	 				<col width="40%"><col width="60%">
+	 				<tr width="100%">
+	 					<td>
+	 						<label>1. Số: </label>
+	 					</td>
+	 					<td align="left">
+							<?=$arrResul[0]['NUMBER_SYSBOL'];?>&nbsp;
+	 					</td>
+	 				</tr>
+	 				<tr width="100%">
+	 					<td>
+	 						<label>2. Ký hiệu: </label>
+	 					</td>
+	 					<td align="left">
+							<?=$arrResul[0]['KY_HIEU_VB'];?>&nbsp;
+	 					</td>
+	 				</tr>
+	 				<tr width="100%">
+	 					<td>
+	 						<label>3. Ngày phát hành: </label>
+	 					</td>
+	 					<td>
+	 						<?=$arrResul[0]['C_SENT_DATE'];?>&nbsp;						
+	 					</td>
+	 				</tr>
+	 				<tr width="100%">
+	 					<td colspan="2">
+	 						<label>4. Phân loại: </label>
+	 					</td>
+	 					<td>&nbsp;</td>
+	 				</tr>
+	 				<tr width="100%">
+	 					<td>
+	 						<label style="padding-left:20px;">4.1. Nhóm chính: </label>
+	 					</td>
+	 					<td>
+	 						<?=Sys_Publib_Library ::_getNameByCode($this->arrNhomVB, $arrResul[0]['C_DOC_TYPE'],'C_NAME');?>&nbsp;
+	 					</td>
+	 				</tr>
+	 				<tr width="100%">
+	 					<td>
+	 						<label style="padding-left:20px;">4.2. Chi tiết: </label>
+	 					</td>
+	 					<td>
+		 					<?=Sys_Publib_Library ::_getNameByCode($this->arrLoaiVB, $arrResul[0]['CHI_TIET_LOAI'],'C_NAME');?>&nbsp;
+						</td>
+	 				</tr>
+	 			</table>
+	 		</td>
+	 		<td class="box normal_label" valign="top" style="width:100%;">
+	 			<table width="100%" class="normal_label">
+	 			<col width="30%"><col width="70%">
+	 				<tr style="width:100%">
+	 					<td>
+	 						<label>5. Tóm tắt nội dung phát hành: </label>
+	 					</td>
+	 					<td valign="top">
+	 						<?=$arrResul[0]['C_SUBJECT']?>&nbsp;
+	 					</td>
+	 				</tr>
+	 				<tr style="width:100%" class="normal_label">
+						<td>
+							<label> Tệp đính kèm: </label>
+						</td>
+						<td><?php
+							$strFileName = $arrResul[0]['C_FILE_NAME'];
+							$sFile 		 = Sys_Library::_getAllFileAttach($strFileName,"@!~!@","!~!",$this->baseUrl . "attach-file/");
+							if($arrResul[0]['C_FILE_NAME'] != ''){
+								echo $sFile;
+							}?>
+							&nbsp;			
+						</td>
+					</tr>
+	 			</table>
+	 		</td>
+	 	</tr>
+	</table>
+	<table border="0" width="98%" align="center" style="padding-top:10px;">
+		<col width="20%"><col width="80%">
+		<tr style="width:100%" class="normal_label">
+			<td>
+				<label>6. Người ký văn bản: </label>
+			</td>
+			<td>
+				<?=$arrResul[0]['C_SIGNER_POSITION_NAME'];?>&nbsp;
+			</td>
+		</tr>
+		<tr style="width:100%" class="normal_label">
+			<td>
+				<label>7. Đơn vị soạn thảo: </label>
+			</td>
+			<td>
+				<?=$arrResul[0]['C_UNIT_NAME']?>&nbsp;	
+			</td>
+		</tr>
+		<tr style="width:100%" class="normal_label">
+			<td>
+				<label>8. Chuyên viên soạn thảo: </label>
+			</td>
+			<td>
+				<?=$arrResul[0]['C_DRAFF_POSITION_NAME']?>&nbsp;	
+			</td>
+		</tr>
+		<tr style="width:100%" class="normal_label">
+			<td>
+				<label>9. Nơi nhận: </label>
+			</td>
+			<td>
+				<?=$arrResul[0]['NOI_NHAN_VB']?>&nbsp;
+			</td>
+		</tr>
+	</table>
+	<div class="normal_label" style="padding:5px;"><b>LƯU TRỮ HỒ SƠ</b></div>
+	<table width='98%'  border='0' cellspacing='0' cellpadding='0' align="center">
+		<col width="50%"><col width="50%">
+		<tr>
+			<td class="box normal_label">
+				<table class="normal_label">
+					<col width="50%"><col width="50%">
+					<tr>
+	 					<td align="left">
+	 						<label>1. Giá số: </label>
+	 					</td>
+	 					<td align="left">							
+							<?=$arrResul[0]['GIA_SO']?>&nbsp;
+	 					</td>
+	 				</tr>
+	 				<tr>
+	 					<td align="left">
+	 						<label>2. Hộp/cặp số: </label>
+	 					</td>
+	 					<td align="left" valign="top">							
+							<?=$arrResul[0]['HOP_CAP_SO']?>&nbsp;
+	 					</td>
+	 				</tr>
+				</table>
+			</td>
+			<td class="box normal_label">
+				<table class="normal_label">
+					<col width="50%"><col width="50%">
+					<tr>
+						<td>
+							<label>3. Chi tiết các QĐ: </label>
+						</td>
+						<td valign="top">
+							<?=$arrResul[0]['CHI_TIET_QD']?>&nbsp;
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<label>4. Lĩnh vực: </label>
+						</td>
+						<td valign="top">
+							<?=Sys_Publib_Library ::_getNameByCode($this->arrLinhVuc, $arrResul[0]['LINH_VUC'],'C_NAME')?>&nbsp;
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	<table align="center">
+		<tr>
+			<td style="padding-top: 5px; padding-bottom: 5px;" align="center" valign="middle" colspan="2">
+				<?=$this->formsubmit('button','Quay lại',array("onClick"=>"actionUrl('../../index/modul/" . $this->getModulLeft . "');","class"=>"back_large_button"))?>
+			</td>	
+		</tr>
+	</table>
+</div>
+</form>

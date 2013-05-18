@@ -1,0 +1,272 @@
+
+<form action="index" method="POST" id="frmAll" autocomplete="off">
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<!--tao tac hidden!-->
+		<tr>
+			<!--Sinh mot hidden luu list ID ma NSD chon!-->
+			<?php echo $this->formHidden("hdn_object_id_list","",null); ?>			
+			<!--Sinh mot hidden luu ID loai danh muc!-->
+			<?php echo $this->formHidden("hdn_Report_id",$this->sCodeReport ,null); ?>	
+			<!--Sinh mot hidden luu gia tri xac dinh so ban ghi / 1 trang!-->	
+			<?php echo $this->formHidden("hdn_record_number_page",$this->numRowOnPage,null); ?>				
+			<!--Bien hdn_xml_file dung de luu ten file XML cua loai danh muc hien thoi-->
+			<?php echo $this->formHidden("hdn_xml_file",$this->xmlFileName,null); ?>	
+			<!--Bien hdn_xml_tag_list dung de luu danh sach cac THE XML tuong ung voi cac THUOC TINH cua mot doi tuong dang duoc cap nhat-->			
+			<?php echo $this->formHidden("hdn_xml_tag_list",'',null); ?>			
+			<!--Bien hdn_xml_value_list dung de luu danh sach cac gia tri cua cac THE XML tuong ung voi cac THUOC TINH cua mot doi tuong-->			
+			<?php echo $this->formHidden("hdn_xml_value_list",'',null); ?>	
+			<!--Bien hdn_page dung de luu chi so trang hien thi hien thoi-->			
+			<?php echo $this->formHidden("hdn_current_page",$this->currentPage,null); ?>
+			<!--Bien hdn_filter_xml_tag_list dung de luu danh sach cac THE XML tuong ung voi cac tieu thuc loc tren giao dien DANH SACH DOI TUONG-->
+			<?php echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); ?>
+			<!--Bien hdn_filter_xml_tag_list dung de luu gia tri cua cac THE XML tuong ung voi cac tieu thuc loc tren giao dien DANH SACH DOI TUONG-->	
+			<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+			
+			<?php echo $this->formHidden("hdn_exporttype",$this->sExportType ,null);?>	
+			
+			<?php echo $this->formHidden("hdn_fromdate","",null); ?>
+			<?php echo $this->formHidden("hdn_todate","",null); ?>
+			<?php echo $this->formHidden("hdn_doc_type_name","",null); ?>	
+			<?php echo $this->formHidden("hdn_agentcy_name","",null); ?>
+			<?php echo $this->formHidden("hdn_code_report","",null); ?>
+			<?php echo $this->formHidden("hdn_staff_process_id_list","",null); ?>	
+			<?php echo $this->formHidden("hdn_unit_name","",null); ?>			
+		</tr>
+	</table>	
+	<?php 
+	$urlCalendar = $this->urlCalendar;
+	$arrConst = $this->arrConst;
+	?>
+	<table cellpadding="0" cellspacing="0" border="0" width="100%" align="center">
+		<tr>
+<!--			Cemter-->
+			<td style="padding-left:10px;" colspan="2">
+					<!--HIen thi tieu de man hinh danh sach!-->
+					<table width='100%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+						<tr>
+							<td class="large_title" style="padding-left:7px;text-align:left;">
+								<?=$this->bodyTitle;?><br>
+							</td>
+						</tr>
+					</table>					
+					
+					<!--Hien thi danh sach tieu de code!-->			
+					<table cellpadding="0" cellspacing="0" border="0" width="98%" align="center">		
+							<!--Hien thi du lieu!-->
+						<tr>
+							<td class="small_title" colspan="3">
+								Bước 1: Chọn Báo Cáo
+							</td>
+						</tr>
+						<tr>
+							<td class="normal_label" colspan="3">								
+								<?=$this->sHtmlRes;?>								
+							</td>
+						</tr>
+						<tr>
+							<td class="small_title" colspan="3">
+								Bước 2: Chọn các tiêu thức lọc báo cáo
+							</td>
+						</tr>
+						<tr>
+							<td class="normal_label" colspan="3" >
+							<div class="box container c1">
+								<div class="pad">			
+									<table cellpadding="0" cellspacing="0" width="100%" border="0" >	
+										<col width="25%"/><col width="25%"/><col width="25%"/><col width="25%" />	
+										<?php if($this->sCodeReport !=	'VBDEN07'){ ?>
+											<!-- LOAI VAN BAN-->
+											<?php if($this->sCodeReport =='VBDEN06' or $this->sCodeReport =='VBDEN01'){ ?>
+											<tr>
+												<td class="normal_label" align="left" style="padding: 2px 2px 2px 2px;">
+													<label>&nbsp;<?=$arrConst['_LOAI_VAN_BAN'] ?></label>
+												</td>
+												<td colspan="2" style="padding: 2px 2px 2px 2px;">
+													<input style="width:65%" id ="C_DOC_TYPE" name="C_DOC_TYPE" type="text"  value="" optional = "false"  xml_tag_in_db="" xml_data="false" value="" column_name="C_DOC_TYPE"  onKeyDown="change_focus(document.forms[0],this)">			
+												</td>
+											</tr>
+											<!-- NOI GUI-->
+											<?php }if($this->sCodeReport =='VBDEN02'){ ?>
+											<tr>
+												<td class="normal_label" align="left" style="padding: 2px 2px 2px 2px;">
+													<label>&nbsp;<?=$arrConst['_NOI_GUI'] ?></label>
+												</td>
+												<td colspan="2" style="padding: 2px 2px 2px 2px;">
+													<input style="width:65%" id ="C_AGENTCY_NAME" name="C_AGENTCY_NAME" value="" type="text"  optional = "false"  xml_tag_in_db="" xml_data="false" value="" column_name="C_AGENTCY_NAME"  onKeyDown="change_focus(document.forms[0],this)">			
+												</td>
+											</tr>
+											<!--NGUOI XU LY-->
+											<?php }if($this->sCodeReport =='VBDEN03'){ ?>
+											<tr>
+												<td class="normal_label" align="left" style="padding: 2px 2px 2px 2px;">
+													<label>&nbsp;<?=$arrConst['_CAN_BO_XU_LY'] ?></label>
+												</td>
+												<td colspan="2" style="padding: 2px 2px 2px 2px;">
+													<input style="width:65%" id ="C_STAFF_POSITION_NAME" name="C_STAFF_POSITION_NAME" type="text" value="" optional = "false"  xml_tag_in_db="" xml_data="false" value="" column_name="C_STAFF_POSITION_NAME"  onKeyDown="change_focus(document.forms[0],this)">			
+												</td>
+											</tr>
+											<!--NOI XU LY-->
+											<?php }if($this->sCodeReport =='VBDEN04'){ ?>
+											<tr>
+												<td class="normal_label" align="left" style="padding: 2px 2px 2px 2px;">
+													<label>&nbsp;<?=$arrConst['_NOI_XU_LY'] ?></label>
+												</td>
+												<td colspan="2" style="padding: 2px 2px 2px 2px;">
+													<input style="width:65%" id ="C_UNIT_NAME" name="C_UNIT_NAME" type="text" value="" optional = "false"  xml_tag_in_db="" xml_data="false" value="" column_name="C_UNIT_NAME"  onKeyDown="change_focus(document.forms[0],this)">			
+												</td>
+											</tr>
+											<?php }if($this->sCodeReport =='VBDEN05' or $this->sCodeReport =='VBDEN06'){ ?>
+											<tr>
+												<td class="normal_label" align="left" style="padding: 2px 2px 2px 2px;">
+													<label>&nbsp;<?=$arrConst['_SO_VAN_BAN'] ?></label>
+												</td>
+												<td colspan="2" style="padding: 2px 2px 2px 2px;">
+													<select id="C_TEXT_BOOK" name="C_TEXT_BOOK" optional = "true" style="width:59%;" class="textbox normal_label"  xml_tag_in_db="" xml_data="false" column_name="C_TEXT_BOOK">
+														<option id="" name = "" value="">-- chọn sổ văn bản --</option><?php
+														$arrInputBooks = $this->arrInputBooks;
+														echo Sys_Library::_generateSelectOption($arrInputBooks,'C_CODE','C_CODE','C_NAME',$arrInputBooks[0]['C_CODE']);?>
+													</select>
+												</td>
+											</tr>
+											<?php } ?>
+										<?php } ?>	
+										<tr>
+											<td class="normal_label" align="left" style="padding: 2px 2px 2px 2px;">
+												&nbsp;Từ ngày
+											</td>
+											<td class="normal_label" align="left" style="padding: 2px 2px 2px 2px;">	
+												<?=$this->formText('fromDate',$this->fromDate,array('class'=>'textbox','option'=>'true', 'message'=>'NGAY THANG NAM khong dung dinh dang', 'isdate'=>'true', 'onKeyUp'=>'DateOnkeyup(\'fromDate\',this,event)'));?>
+												
+											</td>
+											<td class="normal_label" align="left" style="padding: 2px 2px 2px 2px;">		
+												&nbsp;&nbsp;Đến ngày &nbsp;&nbsp;
+											</td>
+											<td class="normal_label" align="left" style="padding: 2px 2px 2px 2px;">		
+												<?=$this->formText('toDate',$this->toDate,array('class'=>'textbox','option'=>'true', 'message'=>'NGAY THANG NAM khong dung dinh dang','isdate'=>'true', 'onKeyUp'=>'DateOnkeyup(\'toDate\',this,event)' )); //'onblur'=>'this.value=DatePrompt(this)' ?>
+												
+											</td>
+										</tr>
+									</table>
+								</div>
+							</div>							
+							</td>
+						</tr>
+						<tr>
+							<td class='small_title' align='left' colspan="2">
+								Bước 3: Chọn định dạng báo cáo kết xuất ra 
+							</td>
+						</tr>
+						<tr align="center">
+							<td class="normal_label">
+								<input type='radio' class='normal_radio' id = "rad_exporttype_pfd" name = "rad_exporttype" value='31' onClick="btn_rad_onclick(this,document.getElementById('hdn_exporttype'));">
+								<label for = "rad_exporttype_pfd" class = "normal_label" style = "display:inline;float:none; cursor:pointer;">Định dạng web</label>
+							</td>
+							<td class="normal_label">
+								<input type='radio' class='normal_radio' id = "rad_exporttype_wold" name="rad_exporttype" value='14' checked onClick="btn_rad_onclick(this,document.getElementById('hdn_exporttype'));"> 
+								<label for = "rad_exporttype_wold" class = "normal_label" style = "display:inline;float:none; cursor:pointer;"> Định dạng Word</label>
+							</td>		
+						</tr>
+					</table>		
+						<?php $http =  $_SERVER['HTTP_HOST'].Sys_Init_Config::_setWebSitePath();?>				
+					<table width="98%" align="center" cellpadding="0" cellspacing="0" border="0" class="buton_table">	
+						<tr><td height="10"></td></tr>	
+						<tr><td align="center" class="body"><?php
+							echo $this->formButton("btn_add","Kết xuất",array("type"=>"button","class"=>"add_large_button","onClick"=>"btn_show_report('$this->sCodeReport',document.getElementById('hdn_Report_id'),'printview','$http');")) . "&nbsp;";			
+							?>					
+						</td></tr>	
+						<tr><td height="10"></td></tr>	
+					</table>
+				
+			</td>			
+		</tr>	
+	</table>		
+<?php 
+	 echo $this->search_doc_type_name; 	 
+	 echo $this->search_textselectbox_agentcy_name;
+	 echo $this->search_textselectbox_staff_process ;
+	 echo $this->search_textselectbox_unit_name;
+?>
+<script type="text/javascript">
+function btn_show_report(codeReport,p_hdn_obj, p_fuseaction,p_http){
+	var v_url = '' ;
+	var v_doc_type = '';
+	var v_agentcy_name = '';
+	var v_staff_process_name = '';
+	var v_unit_name = '';
+	var v_text_book = '';
+	var v_exporttype =''
+	var arr_exporttype = document.getElementsByName('rad_exporttype');
+	for(i =0; i < arr_exporttype.length; i ++){
+		if(arr_exporttype[i].checked == true){
+			v_exporttype = arr_exporttype[i].value;	
+		}
+	}
+	var v_fromDate = document.getElementById('fromDate').value;
+	var v_toDate = document.getElementById('toDate').value;
+	try{
+		if(codeReport == 'VBDEN01' || codeReport == 'VBDEN06'){
+			v_doc_type = document.getElementById('C_DOC_TYPE').value;
+		}
+	}catch(e){;}
+	try{
+		if(codeReport == 'VBDEN02'){
+			v_agentcy_name = document.getElementById('C_AGENTCY_NAME').value;
+		}
+	}catch(e){;}	
+	try{
+		if(codeReport == 'VBDEN03'){
+			v_staff_process_name = document.getElementById('C_STAFF_POSITION_NAME').value;
+		}
+	}catch(e){;}
+	try{
+		if(codeReport == 'VBDEN04' ){
+			v_unit_name = document.getElementById('C_UNIT_NAME').value;
+		}
+	}catch(e){;}	
+	try{
+		if(codeReport == 'VBDEN05' || codeReport == 'VBDEN06'){
+			v_text_book = document.getElementById('C_TEXT_BOOK').value;
+		}
+	}catch(e){;}	
+	if (verify(document.forms[0])){	
+		v_url =  p_fuseaction + '/?';
+		v_url = v_url + 'hdn_exporttype=' + v_exporttype;	
+		v_url = v_url + '&hdn_code_report=' + codeReport;	
+		v_url = v_url + '&hdn_fromdate=' + v_fromDate;
+		v_url = v_url + '&hdn_todate=' + v_toDate;
+		v_url = v_url + '&hdn_doc_type_name=' + v_doc_type ;	
+		v_url = v_url + '&hdn_agentcy_name=' + v_agentcy_name ;
+		v_url = v_url + '&hdn_staff_process_id_list=' + v_staff_process_name ;
+		v_url = v_url + '&hdn_unit_name=' + v_unit_name ;
+		v_url = v_url + '&hdn_text_book=' + v_text_book ;v_url
+		v_url = 'http://'+p_http+'received/reports/' +v_url
+		//alert(v_url);
+		//window.open(v_url,'Kietxuatbaocao', 'width=1, height=1');
+		sRtn = showModalDialog(v_url,"","dialogWidth=1px;dialogHeight=1px;status=yes;scroll=yes;dialogCenter=yes");
+		if (sRtn!=""){
+			window.open(sRtn);
+		}  
+	}
+}
+//shortcut.add("Enter",function() {
+//	btn_show_report('?=$this->sCodeReport?>',document.getElementById('hdn_Report_id'),'printview','?=$http?>');
+//});					
+</script>
+<script type = "text/javascript">
+$(function() {
+	$( "#fromDate" ).datepicker({
+		changeMonth: true,
+		gotoCurrent: true,
+		maxDate: '+1m +1w',
+		minDate: new Date(1945, 1 - 1, 1),
+		changeYear: true
+	});
+	$( "#toDate" ).datepicker({
+		changeMonth: true,
+		gotoCurrent: true,
+		maxDate: '+1m +1w',
+		minDate: new Date(1945, 1 - 1, 1),
+		changeYear: true
+	});
+});</script>
+</form>

@@ -1,0 +1,230 @@
+<form action="index" method="POST" id="frmAddStaff" enctype="multipart/form-data" autocomplete="off">
+<?php  
+	$arrPermission = $_SESSION['arrStaffPermission'];
+	$arrConst = $this->arrConst;
+	$arrSystemPara=$this->arrSystemPara;
+	$arrOwnercode=$this->arrOwnercode;
+	$urlCalendar = $this->urlCalendar;
+	$arrSex=$this->arrSex;
+	$arrPosition=$this->arrPosition;
+	$arrGroupPosition=$this->arrGroupPosition;
+	$sUnitId=$this->sUnitId;
+	//lay pass mac dinh
+	$sPass='';
+	for($index =0; $index < sizeof($arrSystemPara); $index ++){
+		if($arrSystemPara[$index]['C_CODE']=="MAT_KHAU_MAC_DINH"){
+			$sPass=$arrSystemPara[$index]['C_NAME'];
+		}
+	}
+	$arrStaff = array();
+	$iIndexElement = 0;
+	for($index =0; $index < sizeof($arrGroupPosition); $index ++){
+		if ($arrGroupPosition[$index]['PK_POSITION_GROUP'] != "NULL" && $arrGroupPosition[$index]['PK_POSITION_GROUP'] != ""){
+			//Luu thong tin don vi - phong ban
+			$arrStaff[$iIndexElement]['id'] 			= "6868ID";
+			$arrStaff[$iIndexElement]['name'] 			= $arrGroupPosition[$index]['C_NAME'];
+			//
+			for($i =0; $i < sizeof($arrPosition); $i++){
+				if (str_replace('}', '',str_replace('{', '',$arrGroupPosition[$index]['PK_POSITION_GROUP'])) ==str_replace('}', '',str_replace('{', '', $arrPosition[$i]['FK_POSITION_GROUP']))){
+					$iIndexElement++;
+					$arrStaff[$iIndexElement]['id'] 			= $arrPosition[$i]['PK_POSITION'];
+					$arrStaff[$iIndexElement]['name'] 			= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;". $arrPosition[$i]['C_NAME'];
+				}	
+			}
+			$iIndexElement++;
+		}	
+	}	
+?>
+<!--Table chua cac textbox, combobox de nhap du lieu-->
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<!--tao tac hidden!-->
+		<tr>
+			<td>
+				<?php echo $this->formHidden("hdn_urlback",$this->hdn_urlback,null); ?>
+				<?php echo $this->formHidden("hdn_list_parent_id","",null); ?>
+				<?php echo $this->formHidden("hdn_item_id",$this->sUnitId,null); ?>
+				<?php echo $this->formHidden("hdn_current_position",$this->sUnitId,null); ?>
+				<?php echo $this->formHidden("hdn_unit_id","",null); ?>
+				<?php echo $this->formHidden("hdn_position_id",'',null); ?>
+				<?php echo $this->formHidden("hdn_unit_code",'',null); ?>			
+				<?php echo $this->formHidden("hdn_item_status","",null); ?>	
+				<?php echo $this->formHidden("hdn_item_role","",null); ?>	
+				<?php echo $this->formHidden("hdn_save_and_add_new",'',null); ?>	
+				<?php echo $this->formHidden("hdn_ldap_dn",'',null); ?>		
+				<?php echo $this->formHidden("hdn_department_list",'',null); ?>		
+				<?php echo $this->formHidden("hdn_department_unit",'',null); ?>	
+				<?php echo $this->formHidden("hdn_is_update",'',null); ?>	
+			</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 7px; text-align: left;" class="large_title">CẬP NHẬT THÔNG TIN CÁN BỘ</td>
+			<td style="padding-left: 7px;padding-right: 7px; text-align: right;" class="large_title">
+				<a style="cursor:pointer;letter-spacing:0;" onClick="btn_org_update('','1');" class="small_link"><?=$arrConst['_GHI_THEM_MOI']?></a> 
+				<a style="cursor:pointer;letter-spacing:0;" onClick="btn_org_update('','2');" class="small_link"><?=$arrConst['_GHI_QUAY_LAI']?></a> 
+				<a style="cursor:pointer;letter-spacing:0;" onclick="javascript:history.go(-1)" class="small_link"><?=$arrConst['_QUAY_LAI']?></a>
+			</td>
+		</tr>
+		<tr style = "height:5px;"></tr>
+	</table>
+	<!--Textbox -->
+	<div>
+		<table class="table_title" width="100%" cellpadding="0" cellspacing="0" border="0">
+			<col width="15%"><col width="25%"><col width="10%"><col width="25%">
+			<tr><td style=".height:10px"></td></tr>
+			<tr class="normal_label" >
+				<td style="padding-left:5px;"><?=$arrConst['_TEN_CAN_BO']?> <small class="normal_starmark">*</small></td>
+				<td>
+					<input type="text" name="txt_name" id="txt_name" style="width:100%" class="textbox normal_label" value="<?php echo $v_item_name; ?>" maxlength="<?php echo CONST_STAFF_NAME_MAXLENGTH;?>" message="Nhap ten can bo" optional="" onKeyDown="">
+				</td>
+			</tr >
+			<tr class="normal_label" >
+				<td style="padding-left:5px;"><?=$arrConst['_NGAY_SINH']?></td>
+				<td>
+					<input type="text" name="txt_birthday" id="txt_birthday" value="<?php echo $v_item_birthday;?>" isdate ="true" class="very_small_date_textbox" style="width:30%" optional="<?php echo CONST_STAFF_BIRTHDAY_OPTIONAL;?>" message="<?php echo CONST_STAFF_BIRTHDAY_MESSAGE;?>" maxlength="<?php echo CONST_STAFF_BIRTHDAY_MAXLENGTH;?>" onkeyup="DateOnkeyup1(this,event)">
+				</td>
+				<td style="padding-left:10px;" ><?=$arrConst['_GIOI_TINH']?></td>
+				<td>
+					<select class="textbox" id="txt_sex" name="txt_sex" class="textbox normal_label" style="width:95%" optional = "true" xml_tag_in_db="" xml_data="false" column_name="C_OWNER_CODE" onchange="">
+							<option id="" name = "" value="">-- Chọn --</option> <?php
+							echo Sys_Library::_generateSelectOption($arrSex,'C_NAME','C_NAME','C_NAME','');?>
+					</select>
+				</td>				
+			</tr >
+			<tr  class="normal_label">
+				<td style="padding-left:5px;"><?=$arrConst['_TEN_DANG_NHAP']?><small class="normal_starmark">*</small></td>
+				<td><input type="text" name="txt_username" id="txt_username" style="width:100%" class="textbox normal_label" value="<?php echo $v_item_username; ?>" message="Nhap ten dang nhap" optional="" onblur="check_VN_text(document.getElementById('txt_username'),'../checkvntext/');"></td>
+			</tr>
+			<tr  class="normal_label">
+				<td style="padding-left:5px;"><?=$arrConst['_MAT_KHAU']?><small class="normal_starmark">*</small></td>
+				<td><input type="password" name="txt_password" id="txt_password" style="width:100%" class="textbox normal_label" value="<?php echo $sPass; ?>" message="Nhap mat khau" optional="<?php echo $v_password_optional;?>" onKeyDown=""></td>
+				<td colspan="2" style="padding-left:10px;">
+					(Mật khẩu mặc định <?php echo $sPass;?>)
+				</td>
+			</tr>
+			<!--Textbox nhap chuc danh-->
+			<tr>
+					<td class="normal_label" style="padding-left:5px;"><?=$arrConst['_CHUC_DANH']?><small class="normal_starmark">*</small></td>
+					<td>
+						<select id="txt_title" name="txt_title" option = "true" style="width:100%;margin-bottom: 3px;" message="Bạn phải chọn chức danh" onChange="if (this.value == '6868ID'){alert('Bạn phải chọn chức danh');this.value = '';}">
+							<option id="" value="">--chọn--</option><?	
+								echo Sys_Library::_generateSelectOption($arrStaff,'id','id','name','');?>
+						</select>
+					</td>	
+				</tr>
+			<!--Textbox co quan-->
+			<tr class="normal_label" >
+				<td style="padding-left:5px;"><?=$arrConst['_PHONG_BAN']?></td>
+				<td colspan="10">
+				    <input type="hidden" name="txt_parent_code" id="txt_parent_code" value="<?= $this->sUnitId;?>">
+					<input type="text" name="txt_parent_name" id="txt_parent_name" readonly="" class="textbox normal_label" size="100" value="<?= $this->sUnitName;?>" optional="<?=CONST_WITHIN_UNIT_OPTIONAL;?>" >
+					<img src="<?php echo $this->UrlImg;?>find.gif" class="normal_image" onClick="btn_movehandle_onclick();">
+				</td>				
+			</tr>			
+			<tr class="normal_label" >
+				<td style="padding-left:5px;"><?=$arrConst['_DIA_CHI']?></td>
+				<td colspan="10"><input type="text" name="txt_address" id="txt_address" style="width:98%" class="textbox normal_label" value="<?php echo $v_item_address; ?>"optional="<?php echo CONST_STAFF_ADDRESS_OPTIONAL;?>" onKeyDown=""></td>
+			</tr>
+			<!--danh sach cac so dien thoai-->
+			<tr class="normal_label" >
+				<td style="padding-left:5px;"><?=$arrConst['_DIEN_THOAI_NOI_BO']?></td>
+				<td>
+					<input type="text" name="txt_tel_local" id="txt_tel_local" style="width:100%" class="textbox normal_label" value="<?php echo $v_item_tel_local; ?>" optional="<?php echo CONST_STAFF_TEL_OPTIONAL;?>" onKeyDown="">
+				</td>
+				<td style="padding-left:10px;"><?=$arrConst['_DIEN_THOAI_CO_QUAN']?></td>
+				<td>
+					<input type="text" name="txt_tel_office" id="txt_tel_office" style="width:95%" class="textbox normal_label" value="<?php echo $v_item_tel_ofice; ?>" optional="<?php echo CONST_STAFF_TEL_OPTIONAL;?>" onKeyDown="">
+				</td>
+			</tr>
+			<tr class="normal_label" >
+				<td style="padding-left:5px;"><?=$arrConst['_DIEN_THOAI_DI_DONG']?></td>
+				<td>
+					<input type="text" name="txt_tel_mobile" id="txt_tel_mobile" style="width:100%" class="textbox normal_label" value="<?php echo $v_item_tel_mobile; ?>" optional="<?php echo CONST_STAFF_TEL_OPTIONAL;?>" onKeyDown="">
+				</td>
+				<td style="padding-left:10px;"><?=$arrConst['_DIEN_THOAI_NHA_RIENG']?></td>
+				<td>
+					<input type="text" name="txt_tel_home" id="txt_tel_home" style="width:95%" class="textbox normal_label" value="<?php echo $v_item_tel_home; ?>" optional="<?php echo CONST_STAFF_TEL_OPTIONAL;?>" onKeyDown="">
+				</td>
+			</tr>
+			
+			<tr class="normal_label" >
+				<td style="padding-left:5px;"><?=$arrConst['_FAX']?></td>
+				<td>
+					<input type="text" name="txt_fax" id="txt_fax" style="width:100%" class="textbox normal_label" value="<?php echo $v_item_fax; ?>" optional="<?php echo CONST_STAFF_TEL_OPTIONAL;?>" onKeyDown="">
+				</td>
+				<td style="padding-left:10px;"><?=$arrConst['_EMAIL']?></td>
+				<td>
+					<input type="text" name="txt_email" id="txt_email" style="width:95%" class="textbox normal_label" value="<?php echo $v_item_email; ?>"  optional="<?php echo CONST_STAFF_EMAIL_OPTIONAL;?>" isemail=<?php echo CONST_IS_EMAIL;?> message="Email không hợp lệ" onKeyDown="">
+				</td>
+			</tr>
+			<tr  class="normal_label">
+				<td style="padding-left:5px;"><?=$arrConst['_THU_TU']?><small class="normal_starmark">*</small></td>
+				<td colspan="10">
+					<input type="text" name="txt_order" id="txt_order" class="short_number_textbox" value="<?=$this->iOrder;?>" maxlength="<?php echo CONST_STAFF_ORDER_MAXLENGTH;?>" message="Nhap so thu tu" optional="" isnumeric="<?php echo CONST_STAFF_ORDER_ISNUMERIC; ?>" min="<?php echo CONST_STAFF_ORDER_MIN; ?>" max="<?php echo CONST_STAFF_ORDER_MAX; ?>" onKeyDown="">
+					&nbsp;&nbsp;&nbsp;&nbsp;					
+				</td>
+			</tr>
+			<?php if($_SESSION['STAFF_PERMISSTION']==Sys_Init_Config::_setPermisstionSystem(1)){?>
+			<tr>
+				<td class="normal_label" style="padding-left:5px;"><?=$arrConst['_VAI_TRO']?></td>
+				<td class="normal_label" >
+					<input type="radio" hide="true" value="1" name="chk_role">
+					<font style="cursor:pointer;" onClick="btn_checkOrNotOption('chk_role',0);"><?=$arrConst['_QT_HE_THONG']?></font>					
+				</td>
+			</tr>
+			<?php }?>
+			<tr>
+				<td style="padding-left:5px;">&nbsp;</td>
+				<td class="normal_label" >
+					<input type="radio"  hide="true" value="2" name="chk_role">
+					<font style="cursor:pointer;" onClick="btn_checkOrNotOption('chk_role',1);"><?=$arrConst['_QT_DON_VI_TRIEN_KHAI']?></font>
+				</td>
+			</tr>
+			<tr>
+				<td style="padding-left:5px;">&nbsp;</td>
+				<td class="normal_label" >
+					<input type="radio" checked="" hide="true" value="3" name="chk_role">
+					<font style="cursor:pointer;" onClick="btn_checkOrNotOption('chk_role',2);"><?=$arrConst['_NGUOI_SU_DUNG']?></font>
+				</td>
+			</tr>		
+			<tr>
+				<td class="normal_label" ><?=$arrConst['_TT_HOAT_DONG']?></td>
+				<td class="normal_label" style="padding-left:5px;">
+					<input type="checkbox" name="chk_status" id="chk_status" checked="checked" optional = "true" class="textbox normal_label" <?php echo $v_str_status_checked;?> onClick="btn_checkOrNotCheckbox(document.getElementById('chk_status'));" onKeyDown=""> 
+					<font onClick="btn_checkOrNotCheckbox(document.getElementById('chk_status'));"><?=$arrConst['_HOAT_DONG']?></font>
+				</td>
+			</tr>					
+			<tr><td style=".height:10px"></td></tr>
+		</table>
+	</div>
+<!--bang chua cac button Chap nhan, Quay lai-->
+<div id="button">
+		<button name="btn_ghi_them_moi" id="btn_ghi_them_moi" type="button" style="Width:12%" value="Ghi&themmoi" class="add_large_button" onClick="btn_org_update('','1');"><?=$arrConst['_GHI_THEM_MOI']?></button>
+		<button name="btn_ghi_quay_lai" id="btn_ghi_quay_lai" type="button" style="Width:12%" value="Ghi&quaylai" class="add_large_button" onClick="btn_org_update('','2');"><?=$arrConst['_GHI_QUAY_LAI']?></button>
+		<button name="btn_quaylai" id="btn_quaylai" type="button" style="Width:12%" value="Quay lại" class="add_large_button" onClick="javascript:history.go(-1)"><?=$arrConst['_QUAY_LAI']?></button>
+</div>
+</form>
+<?php 
+	//echo  $this->arr_autocomplete_title ;
+	//echo  $this->arr_autocomplete_unit;exit;?>
+<script language="JavaScript">
+	<?php
+	if ($_Sys_INTEGRATE_LDAP == 1){?>
+		set_selected(document.getElementById('sel_ldap_dn'), "<?=$v_item_ldap_dn;?>");<?
+	}?>
+	set_focus(document.forms[0]);
+	window.dialogHeight = "280pt";
+	window.dialogWidth = "480pt";
+	window.dialogTop = "80pt";
+	function btn_movehandle_onclick(){
+		var p_url="";
+		f = document.forms[0];
+		v_parent_id = f.hdn_item_id.value;
+		p_url = '../dialog' + '/?hdn_item_id=' + v_parent_id ;
+		p_url = p_url + '&showModelDialog=1';
+		DialogCenter(p_url,'',800,400);			
+	}
+	$(function() {
+		$( "#txt_birthday" ).datepicker();
+	});
+</script>
+ 

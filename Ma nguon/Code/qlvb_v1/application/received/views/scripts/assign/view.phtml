@@ -1,0 +1,182 @@
+<form action="index" method="POST" id="frmreceived">
+<?php
+	$arrReceived = $this->arrReceived;
+	$arrConst = $this->arrConst; 
+	//Lay danh sach y kien cua Lanh dao
+	$sLeaderIdeaList = substr($arrReceived[0]['C_IDEA_LIST'],6);
+	//Lay danh sach Ten + Chuc vụ Lanh dao
+	$sLeaderPositionNameList = substr($arrReceived[0]['C_LEADER_POSITION_NAME_LIST'],0,-2);
+	//Lay y kien cua Chu Tich
+	if($sLeaderIdeaList != ''){
+		//Mang luu y kien 
+		$arrLeaderIdea = explode('!#~$|*',$sLeaderIdeaList);
+		//Mang luu Ten + Chuc vu
+		$arrLeaderPositionName = explode('; ',$sLeaderPositionNameList);
+		//Duyet theo chuc vu 
+		for ($index = 0; $index<sizeof($arrLeaderPositionName); $index++){
+			if (substr($arrLeaderPositionName[$index],0,2) == 'CT'){
+				$sPresidentIdea  = $arrLeaderIdea[$index];
+			}
+		}
+		
+	}
+?>
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<!--tao tac hidden!-->
+		<tr>
+			<td>
+				<!--Sinh mot hidden luu gia tri!-->
+				<?php echo $this->formHidden("hdn_object_id",$this->sReceiveDocumentId,null); ?>	
+				
+				<?php echo $this->formHidden("hdn_current_page",$this->currentPage,null); ?>
+				<?php echo $this->formHidden("hdn_record_number_page",$this->numRowOnPage,null); ?>
+				<?php echo $this->formHidden("fromDate",$this->fromDate,null); ?>	
+				<?php echo $this->formHidden("toDate",$this->toDate,null); ?> 
+				<?php echo $this->formHidden("FullTextSearch",$this->FullTextSearch,null); ?>
+				<?php echo $this->formHidden("status",$this->sStatus,null); ?>
+			</td>
+		</tr>
+	</table>
+	<!--HIen thi tieu de man hinh danh sach!-->
+	<script type="text/javascript">
+		$(function(){$('#test1').equalHeights();});
+	</script>
+	<div id ="content">
+		<div id="header_conten" style="height: 25px;padding-bottom:0px;border:none;">
+			<h1 class="large_label"><?=$this->bodyTitle;?></h1>
+		</div>
+		<div style="border:none; border:1px solid #CCCCCC;" id="body_conten1">
+			<div id="test1">
+				<div id ="body_conten1_left" style="width:49%">
+					<div>
+						<label>1.&nbsp;<?=$arrConst['_SO_KY_HIEU'] ?></label>
+						<label style="clear:right;"><?=$arrReceived[0]['C_SYMBOL'].'&nbsp;'?></label>
+					</div>
+					<div>
+						<label>2.&nbsp;<?=$arrConst['_NGAY_PHAT_HANH'] ?></label>
+						<label style="clear:right;"><?=$arrReceived[0]['C_RELEASE_DATE'].'&nbsp;'?></label>
+					</div>
+					<div>
+						<label id="l3">3.&nbsp;<?=$arrConst['_COQUAN_PHAT_HANH'] ?></label>
+						<div>
+							<label class="lbc2"><?=$arrConst['_CAP_GUI'] ?></label>
+							<div >
+								<label style="clear:right;"><?=$arrReceived[0]['C_AGENTCY_GROUP'].'&nbsp;'?></label>
+							</div>
+						</div>
+						<div>
+							<label class="lbc2"><?=$arrConst['_NOI_GUI'] ?></label>
+							<div>
+								<label style="clear:right;"><?=$arrReceived[0]['C_AGENTCY_NAME'].'&nbsp;'?></label>
+							</div>
+						</div>
+					</div>
+					<div>
+						<label>4.&nbsp;<?=$arrConst['_LOAI_VAN_BAN'] ?></label>
+						<div>
+							<label style="clear:right;"><?=$arrReceived[0]['C_DOC_TYPE'].'&nbsp;'?></label>
+						</div>	
+					</div>
+					<div>
+						<label>5.&nbsp;<?=$arrConst['_TRICH_YEU'] ?></label>
+						<label style="clear:right;display:block;width:65%;text-align:justify;margin-right:2%;"><?=$arrReceived[0]['C_SUBJECT'].'&nbsp;'?></label>
+					</div>
+				</div><!-- End #body_conten1_left-->
+				<div id="body_conten1_right" style="width:48%;">
+					<div>
+						<label>6.&nbsp;<?=$arrConst['_SO_VAN_BAN'] ?></label>
+						<label style="clear:right;"><?=$arrReceived[0]['C_TEXT_BOOK_NAME'].'&nbsp;'?></label>
+					</div>
+					<div>
+						<label>7.&nbsp;<?=$arrConst['_SO_DEN'] ?></label>
+						<div id="docNumber">
+							<label style="clear:right;"><?=$arrReceived[0]['C_NUM'].'&nbsp;'?></label>	
+						</div>
+					</div>
+					<div>
+						<label>8.&nbsp;<?=$arrConst['_NGAY_DEN'] ?></label>
+						<label style="clear:right;"><?=$arrReceived[0]['C_RECEIVED_DATE'].'&nbsp;'?></label>
+					</div>
+					<div>
+						<label>9.&nbsp;<?=$arrConst['_TINH_CHAT'] ?></label>
+						<label style="clear:right;"><?=$arrReceived[0]['C_NATURE_NAME'].'&nbsp;'?></label>
+					</div>
+					<div>
+						<label>10.&nbsp;<?=$arrConst['_DO_KHAN'] ?></label>
+						<label style="clear:right;"><?=$arrReceived[0]['C_TEXT_OF_EMERGENCY_NAME'].'&nbsp;'?></label>
+					</div>
+					<div>
+						<label>11.&nbsp;<?=$arrConst['_HINH_THUC_XU_LY'] ?></label>
+						<label style="clear:right;"><?=$arrReceived[0]['C_TYPE_PROCESSING_NAME'].'&nbsp;'?></label>
+					</div>
+					<div>
+						<label>12.&nbsp;<?=$arrConst['_FILE_DINH_KEM'] ?></label>
+						<?php
+							$strFileName 				= $arrReceived[0]['C_FILE_NAME'];
+							$sFile = '';
+							if($strFileName != ''){
+								$sFile 	= Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",Sys_Init_Config::_setAttachFileUrlPath());	
+							}
+						 ?>
+						 <label style="width:95%;"><?=$sFile.'&nbsp;'?></label>
+					</div>										
+				</div><!-- End #body_conten1_right-->	
+			</div>
+											
+		</div><!-- End #body_conten1-->		
+				<div id="abc">
+				<div>
+					<label class="leftabc">13.&nbsp;<?=$arrConst['_YK_LD_VP'] ?></label>
+					<label class="rightabc"><?=$arrReceived[0]['C_LEADER_OFFICE_IDEA'].'&nbsp;'?></label>
+				</div>
+				<div>
+					<label class="leftabc">14.&nbsp;<?=$arrConst['_YK_LD_DV'] ?></label>
+					<label class="rightabc"><?=$sPresidentIdea.'&nbsp;'?></label>
+				</div>
+				<div>
+					<label class="leftabc">15.&nbsp;<?=$arrConst['_NOI_XU_LY'] ?></label>
+					<label class="rightabc" ><?=$arrReceived[0]['C_PROCESS_UNIT_NAME_LIST'].'&nbsp;'?></label>
+				</div>	
+			</div>	 					 				 
+	</div><!-- End #content-->	
+		
+	<!--Hien thi nut!-->		
+	<table width='99%'  border='0' cellspacing='0' cellpadding='0' align='center' class='normal_label'>
+		<tr><td>&nbsp;  </td></tr>		
+		<tr>
+			<td align="center" style="padding-bottom:10px;">	
+				<input id="btn_print" name="btn_print" type="button" class="add_large_button" value="In" onclick="btn_print_infor_onclick(document.getElementById('hdn_object_id'),'../printdoc');">
+				<?=$this->formsubmit('button',$arrConst['_QUAY_LAI'],array("onClick"=>"btn_back_onclick('" . $this->historyBack . "')","class"=>"add_large_button"))?>
+			</td>
+		</tr>			
+	</table>	
+</form>
+<style>
+	#abc label.leftabc{
+		clear:left;
+		display:block;
+		float:left;
+		font-family:Tahoma;
+		font-size:13px;
+		line-height:25px;
+		margin-left:1%;
+		width:22%;
+	
+	}	
+	#abc label.rightabc{
+		display:block;
+		margin-left:25%;
+		font-family:Tahoma;
+		font-size:13px;
+		line-height:25px;
+	}	
+	#abc{
+		clear:both;background-color:#f4f9ff;
+		border-bottom:1px solid #CCCCCC;
+		border-left:1px solid #CCCCCC;
+		border-right:1px solid #CCCCCC;
+	}	 s
+</style>
+
+
+

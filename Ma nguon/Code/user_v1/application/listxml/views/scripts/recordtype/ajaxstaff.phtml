@@ -1,0 +1,16 @@
+<?php 
+	global $dspDiv, $readonlyInEditMode, $disabledInEditMode, $formFielName;
+	$this->dspDiv = 1;
+	$this->readonlyInEditMode = true; $this->disabledInEditMode = true;
+	if($this->sSelectReceive == "on"){	
+		$this->formFielName	= "C_RECEIVE_ID_LIST";		
+		$spRetHtml = "<div style='display:none'><input type='textbox' id='$this->formFielName' name='$this->formFielName' value='' hide='true' readonly optional = true xml_data=true xml_tag_in_db='' message=''></div>";		
+		echo $spRetHtml.Sys_Xml::_generateHtmlForTreeUser($this->sReceiveFkList);	
+	}	
+	if($this->sSelectHandle == "on"){	
+		$this->formFielName	= "C_HANDLE_ID_LIST";	
+		$spRetHtml = "<div style='display:none'><input type='textbox' id='$this->formFielName' name='$this->formFielName' value='' hide='true' readonly optional = true xml_data=true xml_tag_in_db='' message=''></div>";				
+		echo $spRetHtml . Sys_Xml::_generateHtmlForTreeUser($this->sHandleFkList );
+	}	
+	exit;
+?>

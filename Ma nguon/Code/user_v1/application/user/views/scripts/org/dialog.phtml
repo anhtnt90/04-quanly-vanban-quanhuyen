@@ -1,0 +1,58 @@
+<form action="index" method="POST" id="frmReceived" autocomplete="off" enctype="multipart/form-data" >
+<body onunload = "unloadfn();">
+	<?php echo $this->formHidden("hdn_parent_id","",null); ?>
+				<?php echo $this->formHidden("hdn_unit_id","",null); ?>
+				<?php echo $this->formHidden("hdn_item_id",$this->sUnitId,null); ?>
+				<?php echo $this->formHidden("hdn_item_value",'',null); ?>
+				<?php echo $this->formHidden("hdn_current_position","",null); ?>
+				<?php echo $this->formHidden("hdn_item_status",'',null); ?>
+				<?php echo $this->formHidden("hdn_save_and_add_new",'',null); ?>			
+				<?php echo $this->formHidden("hdn_filter","",null); ?>	
+				<?php echo $this->formHidden("hdn_list_parent_id","",null); ?>	
+				<?php echo $this->formHidden("hdn_parent_code",'',null); ?>	
+				<?php echo $this->formHidden("hdn_is_update",'',null); ?>	
+				<?php echo $this->formHidden("hdn_parent_item_id",'',null); ?>
+				<?php echo $this->formHidden("showModelDialog",$this->showModelDialog,null); ?>	
+	<?php
+		$arrConst = $this->arrConst;
+		$sUrlEdit  = "../edit/";
+		$arrAllStaff=$this->arrResult;
+		$iExceptionId = '';		
+		$sSelectParent = "true";
+		$sShowObject = 'true';
+	?>
+	<table cellpadding="0" cellspacing="0" width="500px" border="0">
+		<tr>
+			<td style="padding-left: 7px; text-align: left;" class="large_title">DANH SÁCH CÁC PHÒNG BAN</td>			
+		</tr>
+	</table>
+	<table cellpadding="0" cellspacing="0" border="0" width="100%" align="center" class="list_table2">
+		<?php 
+			$xml_str = Sys_Publib_Library::_builtXMLTreeByOrder($arrAllStaff,$iExceptionId, $sShowObject,'open.bmp','close.bmp','user.bmp',$sSelectParent);
+			//echo htmlspecialchars($xml_str);exit;
+			$xml = new DOMDocument;
+			$xml->loadXML($xml_str);
+			
+			$xsl = new DOMDocument;
+			$xsl->load("library/Sys/treeview.xsl");
+			
+			// Configure the transformer
+			$proc = new XSLTProcessor;
+			$proc->importStyleSheet($xsl); // attach the xsl rules
+			//echo htmlspecialchars($proc->transformToXML($xml)) . '<br>'; exit;				
+			echo $proc->transformToXML($xml);		
+		?>	
+	</table>
+	</body>
+</form>
+
+<script type="text/javascript">
+
+function unloadfn(){
+	if(document.getElementById('hdn_item_value').value!=""){
+		window.opener.document.getElementById('txt_parent_name').value = document.getElementById('hdn_item_value').value;
+		window.opener.document.getElementById('hdn_item_id').value = document.getElementById('hdn_item_id').value;
+	}	
+}
+</script>
+

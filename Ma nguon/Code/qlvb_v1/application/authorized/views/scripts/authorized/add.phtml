@@ -1,0 +1,91 @@
+<?php 
+	$staffName = $this->sStaffName;	
+	$staffId = $this->sStaffID;	
+?>
+<form action="index" method="POST" id="frmsheduleUnit" autocomplete="off">	
+		<?php echo $this->formHidden("htn_schedule_update",$this->currentUpdate,null); ?>
+		<?php echo $this->formHidden("hdn_approve_schedule",null); ?>
+		
+	<?php
+				
+	?>
+		
+<div>
+		<table width='50%'  border='0' cellspacing='0' cellpadding='0' class="table_title">			
+			<tr>
+				<td class="large_title" width ='75%' style="padding-left:10px; text-align:left;">
+					<?=$this->bodyTitle;?>	
+			    </td>						
+			</tr>
+		</table>								
+	<div>	
+</div>
+	<div class="box container c1" style="width: 60%; float: left;">
+		<div class="pad">			
+		<table width="100%" border="0" class="schedule_unit">		 	
+		  <tr>
+		   <td valign="top">&nbsp;<label>Mã:</label></td>
+			    <td colspan="5">
+			    	<input style="width:100%;" class="normal_texbox_text" id ="C_STAFF_ID" value="<?=$staffId;?>" name="C_STAFF_ID" type="text" readonly="readonly" >				
+			    </td>
+		  </tr>
+		    <td valign="top">&nbsp;<label>Tên cán bộ</label></td>
+			    <td colspan="5">
+			    	<input style="width:100%;" class="normal_texbox_text" id ="C_NAME" value="<?=$staffName;?>" name="C_NAME" type="text">				
+			    </td>
+		  </tr>
+		  <tr>
+		    <td valign="top">&nbsp;<label>Ngày bắt đầu Ủy Quyền</label></td>
+		    <td colspan="5">
+		    	<input style="width:100%;" class="normal_texbox_text" id ="C_START_DATE" name="C_START_DATE" type="text">				
+		    </td>
+		  </tr>
+		  <tr>
+		    <td valign="top">&nbsp;<label>Ngày kết thúc</label></td>
+		    <td colspan="5">
+		    	<input style="width:100%;" class="normal_texbox_text" id ="C_END_DATE" name="C_END_DATE" type="text">			    	
+		    </td>
+		  </tr>
+		  <tr>		   
+		    <td valign="top">
+		    <label>Trạng thái</label>
+		  	</td>
+		  	<td> 
+		    <input type="checkbox" name="chk_approver_schedule" id="chk_approver" optional = "true" value="" onclick="check_approve(this);" >
+		    <label for = "chk_approver_schedule" class = "normal_label" style = "display:inline;float:none; cursor:pointer;">Duyệt lịch</label>
+		    </td>		    		 
+		  </tr>
+		</table>
+	</div>
+</div>		
+	
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' align="left">		
+		<tr>
+			<td style="padding-top: 10px; padding-bottom: 10px;" align="center" valign="middle">												
+				<input id="btn_update" name="btn_update" type="button" class="add_large_button" value="Cập nhật" onclick="document.getElementById('htn_schedule_update').value='STATUS_UPDATE'; actionUrl('../add/');">
+				<input type="button" class="add_large_button" value="Quay lại" onclick="actionUrl('../index/');">				
+			</td>	
+		</tr>
+	</table>
+</div>
+</form>
+
+<script type = "text/javascript">
+$(function() {
+	$( "#C_START_DATE" ).datepicker({
+		changeMonth: true,
+		gotoCurrent: true,
+		maxDate: '+1m +1w',
+		minDate: new Date(1945, 1 - 1, 1),
+		changeYear: true
+	});
+	$( "#C_END_DATE" ).datepicker({
+		changeMonth: true,
+		gotoCurrent: true,
+		maxDate: '+1m +1w',
+		minDate: new Date(1945, 1 - 1, 1),
+		changeYear: true
+	});
+});
+</script>
+

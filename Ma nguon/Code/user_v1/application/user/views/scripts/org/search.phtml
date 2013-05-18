@@ -1,0 +1,299 @@
+<?php  
+$arrPermission = $_SESSION['arrStaffPermission'];
+?>	
+<form action="index" method="POST" id="" autocomplete="off">
+	<body onload = "changeSelectbox(document.getElementById('txtUnit'),'<?php echo $_SESSION['hdn_unitid'] ?>','txt_title');">
+		<?php echo $this->formHidden("hdn_type","",null); ?>
+		<!--Cac doi tuong hidden tren form-->
+		<?php echo $this->formHidden("hdn_object_id","",null); ?>
+		<?php echo $this->formHidden("hdn_list_parent_id","",null); ?>
+		<?php echo $this->formHidden("hdn_item_id",$this->sUnitId,null); ?>
+		<?php echo $this->formHidden("hdn_current_position","",null); ?>
+		<?php echo $this->formHidden("hdn_parent_item_id",'',null); ?>
+		<?php echo $this->formHidden("hdn_list_item_id","",null); ?>
+		<?php echo $this->formHidden("hdn_ldap_user_list","",null); ?>
+		<?php echo $this->formHidden("hdn_unit_id","",null); ?>
+		<?php echo $this->formHidden("hdn_type_obj","",null); ?>
+		<?php echo $this->formHidden("hdn_owner","",null); ?>
+		<?php echo $this->formHidden("hdn_fulltextsearch","",null); ?>
+		<?php echo $this->formHidden("hdn_unitid","",null); ?>
+		<?php echo $this->formHidden("hdn_option","",null); ?>
+		<?php echo $this->formHidden("hdn_urlback","",null); ?>
+		<?php echo $this->formHidden("hdn_exporttype","",null); ?>		
+		<?php if(isset($_REQUEST['modal_dialog_mode'])){
+				echo $this->formHidden("modal_dialog_mode","",null);
+			}?>
+		<?php
+			$arrConst = $this->arrConst;
+			$sUrlEdit  = "../edit/";
+			$arrAllStaff=$this->arrResult;
+			$iExceptionId = '';
+			$sSelectParent = "true";
+			$sShowObject = 'true';			
+		?>
+			<!--HIen thi tieu de man hinh danh sach!-->
+		<table width='100%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+			<tr>
+				<td class="large_title" style="padding-left:7px;text-align:left;">
+					<?=$this->bodyTitle;?><br>				
+				</td>
+				
+			</tr>
+		</table>
+		<!--HIen thi cac tieu chi loc!-->
+		<div id="filter">	
+		<table cellpadding="0" cellspacing="0" width="99%" border="0">
+			<col Width="12%"></col><col Width="88%"></col>
+			<tr>
+				<td style="padding-left:3px;padding-top:10px">
+					<label class="normal_label"><?=$arrConst['_DON_VI_TRIEN_KHAI']?></label>
+				</td>
+				<td>
+					<select id="txtUnit" name="txtUnit" class="textbox normal_label" onchange="changeSelectbox(document.getElementById('txtUnit'),'','txt_title')">
+					<option id="" name = "" value="">-- Chọn --</option> <?php
+					$arrOwnerCode = $this->arrOwnerCode;
+					echo Sys_Library::_generateSelectOption($arrOwnerCode,'C_CODE','C_CODE','C_NAME',$this->sOwnercode);?>
+					</select>
+					<label class="normal_label"><?=$arrConst['_PHONG_BAN']?></label>
+				    <select id="txt_title" name="txt_title" style="width:50%;margin-bottom: 3px;" class="textbox" onChange="change_text_selectbox(document.getElementById('txt_title'))" ONBLUR="change_text_selectbox(document.getElementById('txt_title'))" onFocus="changeSelectbox(document.getElementById('txtUnit'),'','txt_title')" onClick="changeSelectbox(document.getElementById('txtUnit'),'','txt_title')">
+								<option id="" value="" class="textbox1">--chọn--</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;
+					
+				</td>
+				<td>
+					<?=$this->formText('txtFullTextSearch',$this->txtFullTextSearch,array('style'=>'width:70%','value'=>$this->txtFullTextSearch,'class'=>'normal_textbox','optional'=>TRUE,'onKeyDown'=>'change_focus_on_firefox(document.forms[0],this,event)'));?>&nbsp;<?php
+					echo $this->formButton("btn_filter","Tìm kiếm",array("type"=>"button","class"=>"add_large_button","onClick"=>"btn_search(document.getElementById('txtUnit'),document.getElementById('txt_title'),document.getElementById('txtFullTextSearch'));")) . "&nbsp;";?>
+				</td>
+			</tr>
+		</table>	
+		</div>	
+		<table width='100%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+			<tr>
+				<td class="large_title" style="padding-left:7px;text-align:left;">
+					<?='DANH SÁCH CÁN BỘ';?><br>				
+				</td>
+				<td>
+					<div style="text-align:right;">
+						<label>
+							<a  class="small_link"  onclick="actionUrl('../addstaff/');"><?php echo $arrConst['_THEM']?></a> 
+						</label>
+						<label>
+							<a  class="small_link"  onclick="btn_edit_onclick(document.getElementsByName('chk_item_id'),'../editstaff/');"><?php echo $arrConst['_SUA']?></a> 
+						</label>
+						<label>
+							<a  class="small_link"  onclick="btn_delete_onclick(document.getElementsByName('chk_item_id'),'../deletestaff/');"><?php echo $arrConst['_XOA']?></a> 
+						</label>
+						<label>
+							<a  class="small_link"  onclick="btn_print_onclick('../print/','1',document.getElementById('txtUnit').value,document.getElementById('txtFullTextSearch').value,document.getElementById('txt_title').value);">In dạng Web</a> 
+						</label>
+						<label>
+							<a  class="small_link"  onclick="btn_print_onclick('../print/','2',document.getElementById('txtUnit').value,document.getElementById('txtFullTextSearch').value,document.getElementById('txt_title').value);">In dạng Excel</a>
+							 
+						</label>
+						<label style="padding-right:10px">
+							<a  class="small_link"  onclick="actionUrl('../index/');"><?php echo $arrConst['_QUAY_LAI']?></a> 
+						</label>
+					</div>	
+				</td>
+			</tr>
+		</table>
+		<!--Hien thi danh sach tieu de code!-->			
+			<div style = "width:100%; padding-left:10px;overflow:auto;">
+			<table cellpadding="0" cellspacing="0" border="0" width="98%" align="left" class="list_table2" id="table1">
+				<tr class='normal_label'>
+					<td align="center" width="3%" class = 'title' style = 'text-align:center;background-color:#F2F3F5; background-image:none; border-bottom:1px solid #969696;line-height:18px;'>
+						#
+					</td>
+					<td  width="12%" class = 'title' style = 'text-align:center;background-color:#F2F3F5; background-image:none; border-bottom:1px solid #969696;line-height:18px;'>
+						Họ tên
+					</td>					
+					<td  width="5%" class = 'title' style = 'text-align:center;background-color:#F2F3F5; background-image:none; border-bottom:1px solid #969696;line-height:18px;'>
+						Giới tính
+					</td>
+					<td  width="10%" class = 'title' style = 'text-align:center;background-color:#F2F3F5; background-image:none; border-bottom:1px solid #969696;line-height:18px;'>
+						Chức vụ
+					</td>																		
+					<td  width="15%" class = 'title' style = 'text-align:center;background-color:#F2F3F5; background-image:none; border-bottom:1px solid #969696;line-height:18px;'>
+						Địa chỉ
+					</td>
+					<td  width="15%" class = 'title' style = 'text-align:center;background-color:#F2F3F5; background-image:none; border-bottom:1px solid #969696;line-height:18px;'>
+						Đơn vị
+					</td>
+					<td  width="7%" class = 'title' style = 'text-align:center;background-color:#F2F3F5; background-image:none; border-bottom:1px solid #969696;line-height:18px;'>
+						ĐT CQ
+					</td>
+					<td  width="7%" class = 'title' style = 'text-align:center;background-color:#F2F3F5; background-image:none; border-bottom:1px solid #969696;line-height:18px;'>
+						ĐT NR
+					</td>
+					<td  width="7%" class = 'title' style = 'text-align:center;background-color:#F2F3F5; background-image:none; border-bottom:1px solid #969696;line-height:18px;'>
+						ĐT DĐ
+					</td>
+					<td  width="12%" class = 'title' style = 'text-align:center;background-color:#F2F3F5; background-image:none; border-bottom:1px solid #969696;line-height:18px;'>
+						Email
+					</td>																																																						
+					<td  width="7%" class = 'title' style = 'text-align:center;background-color:#F2F3F5; background-image:none; border-bottom:1px solid #969696;line-height:18px;'>
+						Tình Trạng
+					</td>
+				</tr>				
+				<?php for($index = 0; $index <sizeof($arrAllStaff); $index ++){?>
+					<tr class='normal_label' >
+						<td align="center" style="padding-left:3px;padding-right:3px; border-bottom:1px solid #969696;border-right: 1px solid #969696;line-height:25px;" class="normal_label">
+							<input type="checkbox" onClick="selectrow(this)" name="chk_item_id" id="chk_item_id"  value="<?php echo $arrAllStaff[$index]['PK_STAFF']?>" />
+						</td>
+						<td onClick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$arrAllStaff[$index]['PK_STAFF']?>');" align="left" style="padding-left:3px;padding-right:3px; border-bottom:1px solid #969696;border-right: 1px solid #969696;line-height:25px;" class="normal_label">						
+							<?=Sys_Function_RecordFunctions::searchStringColor2($this->txtFullTextSearch,$arrAllStaff[$index]['C_NAME']);?>		
+						</td>
+						<td onClick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$arrAllStaff[$index]['PK_STAFF']?>');" align="left" style="padding-left:3px;padding-right:3px; border-bottom:1px solid #969696;border-right: 1px solid #969696;line-height:25px;" class="normal_label">						
+							<?=$arrAllStaff[$index]['C_SEX'];?>		
+						</td>											
+						<td onClick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$arrAllStaff[$index]['PK_STAFF']?>');" align="left" style="padding-left:3px;padding-right:3px; border-bottom:1px solid #969696;border-right: 1px solid #969696;line-height:25px;" class="normal_label">						
+							<?=$arrAllStaff[$index]['POSITION_NAME'];?>		
+						</td>
+						<td onClick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$arrAllStaff[$index]['PK_STAFF']?>');" align="left" style="padding-left:3px;padding-right:3px; border-bottom:1px solid #969696;border-right: 1px solid #969696;line-height:25px;" class="normal_label">						
+							<?=$arrAllStaff[$index]['C_ADDRESS'];?>		
+						</td>
+						<td onClick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$arrAllStaff[$index]['PK_STAFF']?>');" align="left" style="padding-left:3px;padding-right:3px; border-bottom:1px solid #969696;border-right: 1px solid #969696;line-height:25px;" class="normal_label">						
+							<?=$arrAllStaff[$index]['UNIT_NAME'];?>		
+						</td>
+						<td onClick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$arrAllStaff[$index]['PK_STAFF']?>');" align="left" style="padding-left:3px;padding-right:3px; border-bottom:1px solid #969696;border-right: 1px solid #969696;line-height:25px;" class="normal_label">						
+							<?=$arrAllStaff[$index]['C_TEL'];?>		
+						</td>						
+						<td onClick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$arrAllStaff[$index]['PK_STAFF']?>');" align="left" style="padding-left:3px;padding-right:3px; border-bottom:1px solid #969696;border-right: 1px solid #969696;line-height:25px;" class="normal_label">						
+							<?=$arrAllStaff[$index]['C_TEL_HOME'];?>		
+						</td>
+						<td onClick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$arrAllStaff[$index]['PK_STAFF']?>');" align="left" style="padding-left:3px;padding-right:3px; border-bottom:1px solid #969696;border-right: 1px solid #969696;line-height:25px;" class="normal_label">						
+							<?=$arrAllStaff[$index]['C_TEL_MOBILE'];?>		
+						</td>
+						<td onClick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$arrAllStaff[$index]['PK_STAFF']?>');" align="left" style="padding-left:3px;padding-right:3px; border-bottom:1px solid #969696;border-right: 1px solid #969696;line-height:25px;" class="normal_label">						
+							<?=$arrAllStaff[$index]['C_EMAIL'];?>		
+						</td>
+						<td onClick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$arrAllStaff[$index]['PK_STAFF']?>');" align="center" style="padding-left:3px;padding-right:3px; border-bottom:1px solid #969696;border-right: 1px solid #969696;line-height:25px;" class="normal_label">						
+							<?=$arrAllStaff[$index]['C_STATUS_NAME'];?>		
+						</td>
+					</tr>		
+				<?php }?>
+			</table>
+		</div>
+		<table width="98%" align="center" cellpadding="0" cellspacing="0" border="0" class="buton_table">	
+			<tr style="height: 15px"><td>&nbsp;</td></tr>		
+			<tr>
+				<td align="center" class="body"><?php
+					//Nut "Them"
+					echo $this->formButton("btn_add",$arrConst['_THEM'],array("type"=>"button","style"=>"Width:8%","class"=>"add_large_button","onClick"=>"actionUrl('../addstaff/');")). "&nbsp;";
+					echo $this->formButton("btn_edit",$arrConst['_SUA'],array("type"=>"button","style"=>"Width:8%","class"=>"add_large_button","onClick"=>"btn_edit_onclick(document.getElementsByName('chk_item_id'),'../editstaff/');")). "&nbsp;";
+					echo $this->formButton("btn_delete",$arrConst['_XOA'],array("type"=>"button","style"=>"Width:8%","class"=>"add_large_button","onClick"=>"btn_delete_onclick(document.getElementsByName('chk_item_id'),'../deletestaff/');")). "&nbsp;";									
+					echo $this->formButton("btn_print_web",$arrConst['_IN_DANG_WEB'],array("type"=>"button","style"=>"Width:8%","class"=>"add_large_button","onClick"=>"btn_print_onclick('1',document.getElementById('txtUnit').value,document.getElementById('txtFullTextSearch').value,document.getElementById('txt_title').value,'../print/');")). "&nbsp;";
+					echo $this->formButton("btn_print_excel",$arrConst['_IN_DANG_EXCEL'],array("type"=>"button","style"=>"Width:8%","class"=>"add_large_button","onClick"=>"btn_print_onclick('2',document.getElementById('txtUnit').value,document.getElementById('txtFullTextSearch').value,document.getElementById('txt_title').value,'../print/');")). "&nbsp;";									
+					echo $this->formButton("btn_back",$arrConst['_QUAY_LAI'],array("type"=>"button","style"=>"Width:8%","class"=>"add_large_button","onClick"=>"actionUrl('../index/');")). "&nbsp;";
+					?>
+				</td>
+			</tr>
+		</table>	
+	</body>
+</form>
+<script type="text/javascript">
+	shortcut.add("Ctrl+K",function() {
+		document.getElementById('txtfullTextSearch').focus();
+		document.getElementById('txtfullTextSearch').select();
+	});
+	function ResetSearch(){
+		document.getElementById('hdn_current_page').value = "1";
+	}
+	function checkvalue(){
+		if(document.getElementById('txtfullTextSearch').value != "" || document.getElementById('C_TRAINING_LEVEL_INDEX').value != "" || document.getElementById('C_ENROLLMENT_YEAR_INDEX').value != "" || document.getElementById('C_ENROLLMENT_TIME_INDEX').value != ""){
+			actionUrl('');
+		}
+	}
+	function btn_them_click(){
+		if(document.getElementById('hdn_item_id').value == ""){
+			alert('Phải chọn đơn vị cha cần thêm');
+			return;
+		}
+		else{
+			actionUrl('../add/');
+		}
+	}
+	function btn_search(objOwner,objUnit,objFulltextsearch){
+		if(objOwner.value == "" & objFulltextsearch.value==""){
+			alert('Nhập điều kiện tìm kiếm');
+			return;
+		}
+		else{
+			document.getElementById('hdn_owner').value =objOwner.value;
+			document.getElementById('hdn_unitid').value =objUnit.value;
+			document.getElementById('hdn_fulltextsearch').value = objFulltextsearch.value;
+			document.getElementById('hdn_option').value ='1';
+			actionUrl('../search/');
+		}
+	}
+	function btn_edit_onclick(p_checkbox_obj,p_url){
+		v_value_list = checkbox_value_to_list(p_checkbox_obj,",");
+		if (!v_value_list){
+			alert("Chưa đối tượng nào được chọn");
+		}else{
+			arr_value = v_value_list.split(",");
+			if (arr_value.length > 1){
+				alert("Chỉ được chọn 1 đối tượng để sửa")
+				return;
+			}
+			else{
+				document.getElementById('hdn_urlback').value ='user/org/search/';
+				actionUrl(p_url+'?sUnitId='+v_value_list);
+			}
+		}
+	}
+	function btn_delete_onclick(p_checkbox_obj,p_url){
+		v_value_list = checkbox_value_to_list(p_checkbox_obj,",");
+		if (!v_value_list){
+			alert("Chưa đối tượng nào được chọn");
+		}else{
+			if(confirm('Bạn thực sự muốn xóa đối tượng đã chọn ?')){
+				actionUrl(p_url+'?sUnit='+v_value_list);
+			}
+		}
+	}
+	//
+	function changeSelectbox(obj,sSelectValue,sSelectboxName){
+		selector = document.getElementById(sSelectboxName);
+		var selectedValue = selector.value;
+		var number=0;
+		if (!selectedValue)
+			selectedValue = sSelectValue;
+		removeAllChild(selector);
+		option = document.createElement('option');
+		option.value = '';
+		option.appendChild(document.createTextNode('--Chọn--'));
+		selector.appendChild(option);
+		trainingLevel = obj.value;
+		if(trainingLevel != '')
+			for(i = 0; i < arrProfession.length; i++){
+				if(arrProfession[i][2].search(trainingLevel) >= 0){
+					//tim thay lan dau tien
+					if(number==0){
+						number=(arrProfession[i][3]).length;
+					}
+					var space='';
+					for(j=0;j<((arrProfession[i][3]).length-number);j++){
+						space=space+"\u2002";
+					}
+					nodevalue=space+arrProfession[i][1];
+					option = document.createElement('option');
+					option.value = arrProfession[i][0];
+					option.appendChild(document.createTextNode(nodevalue));
+					selector.appendChild(option);
+				}
+		}
+		selector.value = selectedValue;
+	}
+	//xoa cac phan tu trong selectbox
+	function removeAllChild(obj){
+			while (obj.hasChildNodes()) {
+				obj.removeChild(obj.firstChild);
+			}
+	}
+	
+</script>

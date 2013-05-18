@@ -1,0 +1,150 @@
+<?php 
+$arrPermission = $_SESSION['arrStaffPermission'];
+if($arrPermission['CAP_NHAT_LOAI_DM'] || $arrPermission['CAP_NHAT_DM_DOI_TUONG'] || $arrPermission['CAP_NHAT_QUYEN'])
+{?>
+<form action="index" method="POST" id="frmAddListType" enctype="multipart/form-data">
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<!--tao tac hidden!-->
+		<tr>
+			<td>
+			<!--ID cua ListType-->
+			<?php echo $this->formHidden("hdn_listtype_id",$this->iListTypeId,null); ?>	
+			<!--Sinh mot hidden luu list ID ma NSD chon!-->
+			<?php echo $this->formHidden("hdn_object_id_list","",null); ?>	
+			<!--Sinh mot hidden luu gia tri xac dinh so ban ghi / 1 trang!-->	
+			<?php echo $this->formHidden("hdn_record_number_page",$this->NumberRowOnPage,null); ?>				
+			<!--Sinh mot hidden luu gia tri trang hien thoi 1, 2, ...!-->
+			<?php echo $this->formHidden("hdn_page",$this->numCurrentPage,null); ?>	
+			<!--Luu gia tri kiem tra cho cap nhat -->
+			<?php echo $this->formHidden("hdn_update",'OK',null); ?>	
+			
+			<?php echo $this->formHidden("hdn_xml_tag_list",'',null); ?>			
+			<!--Bien hdn_xml_value_list dung de luu danh sach cac gia tri cua cac THE XML tuong ung voi cac THUOC TINH cua mot doi tuong-->			
+			<?php echo $this->formHidden("hdn_xml_value_list",'',null); ?>				
+			<?php echo $this->formHidden("hdn_owner_code_list",'',null); ?>			
+			
+			</td>
+		</tr>
+	</table>
+	
+
+	
+	<!--HIen thi tieu de man hinh danh sach!-->
+	<table width='98%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<?=$this->bodyTitle;?><br>				
+			</td>
+		</tr>
+	</table>	<br />
+	
+	<table width='98%'  border='0' cellspacing='0' cellpadding='0' class="table_title" align="center">	
+		<col width="30%"><col width="70%">
+		<tr>
+			<td class="normal_label">Mã loại danh mục <small class="normal_starmark">*</small></td>
+			<td>				
+				<?=$this->formText('C_CODE',$this->arrInput['C_CODE'],array('size'=>50,'class'=>'normal_textbox','optional'=>false,'message'=>'Ma LOAI DANH MUC khong duoc de trong!','onKeyDown'=>'change_focus(document.forms(0),this)'));?>					
+			</td>
+		</tr>
+		<tr>
+			<td class="normal_label">Tên loại danh mục	<small class="normal_starmark">*</small></td>
+			<td>
+				<?=$this->formText('C_NAME',$this->arrInput['C_NAME'],array('size'=>90,'class'=>'normal_textbox','optional'=>false,'message'=>'TEN LOAI DANH MUC khong duoc de trong!','onKeyDown'=>'change_focus(document.forms(0),this)'));?>
+			</td>
+		</tr>		
+		<tr>
+			<td class="normal_label">Thứ tự hiền thị</td>
+			<td class="normal_label">
+				<?=$this->formText('C_ORDER',$this->arrInput['C_ORDER'],array('size'=>10));?>
+			</td>
+		</tr>
+		<tr>
+			<td class="normal_label"> File XML</td>			
+			<td>	
+				<table width="100%" border="0">
+					<tr>
+						<td colspan="2">
+							<!--Chon file tu client 							-->			
+							<?=$this->formFile('C_XML_FILE_NAME',$this->arrInput['C_XML_FILE_NAME'],array('size'=>50,'style'=>'display:none'));?>	
+						</td>
+					</tr>
+					<tr>
+						<td width="50%">
+							<!-- Chon file tu server	-->
+							<?=$this->formText('txt_xml_file_name',$this->arrInput['C_XML_FILE_NAME'],array('type'=>'text','size'=>77, 'class'=>'normal_textbox', 'optional'=>true,'onKeyDown'=>'change_focus(document.forms(0),this)', ));?>
+						</td>
+						<td align="left">							
+							<?=$this->formButton("popupDialog","Browse",array("type"=>"button","class"=>"large_button","onClick"=>"openmypage(); return false"))?>								
+							<!--	Goi mot Digloa bang javascript			-->				
+					 	 <div id="somediv" style="display:none">
+							<?php echo $this->divDialog;?>
+						 </div>					  
+						  
+						  <script type="text/javascript">
+							function openmypage(){ 
+								divwin=dhtmlwindow.open("divbox", "div", "somediv", "vnbsoft.vn", "width=450px,height=300px,left=300px,top=100px,resize=1,scrolling=1")
+							}
+						</script>		
+						</td>					
+					</tr>					 
+				  </table>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				 &nbsp; 
+			</td>
+			<td class="normal_label">
+				<?=$this->formCheckbox('C_CLIENT',1, array('checked' => false,'onClick'=>'show_hide_div()'));?> Chọn từ Client
+			</td>
+		</tr>
+		
+		
+		<tr>
+			<td class="normal_label">
+				Trạng thái
+			</td>
+			<td class="normal_label">
+				<?=$this->formCheckbox('C_STATUS',1, array('checked' => true));?> Hoạt động				
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td class="normal_label">
+				<?=$this->formCheckbox('C_SAVE_AND_ADD_NEW',1, array('checked' => false));?> Ghi và thêm mới				
+			</td>
+		</tr>
+
+		<!--Hien thi Button!-->	
+		
+	</table>	
+	<table width="98%" align="center" cellpadding="0" cellspacing="0" border="0">				
+		<tr>
+
+			<td align="center" height="10px">			
+			</td>
+		</tr>
+	</table>
+	<table width="98%" align="center" cellpadding="0" cellspacing="0" border="0" class="buton_table">				
+		<tr>
+
+			<td align="center" class="body">
+				<?=$this->formButton("btn_update","Cập nhật",array("type"=>"button","class"=>"update_large_button","onClick"=>"btn_save_list(document.getElementsByName('hdn_xml_tag_list'),document.getElementsByName('hdn_xml_value_list'),'');"))?>								
+				<?=$this->formsubmit('button','Quay lại',array("onClick"=>"actionUrl('../index/')","class"=>"back_large_button"))?>											
+		
+			</td>
+		</tr>
+	</table>	
+	
+</form>
+<?php } 
+else 
+	echo 'Bạn không có quyền truy cập chức năng này';
+?>
+	
+					
+
+
+
+
+							

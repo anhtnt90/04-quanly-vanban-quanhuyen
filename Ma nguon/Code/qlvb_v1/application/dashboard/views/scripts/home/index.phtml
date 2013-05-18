@@ -1,0 +1,290 @@
+ <?php 
+		$arrCount = $this->arrCount;
+		$baseUrl = Sys_Init_Config::_getCurrentHttpAndHost();
+		$arrScheduleToday = $this->arrScheduleToday;
+		$v_day_staff = $this->v_day_staff;
+		$arryDayStaff = explode('!~~!', $v_day_staff);
+?>
+<form action="index" method="POST" id="frmRecord">	
+	<?php echo $this->formHidden("hdn_object_id","",null); ?>	
+	<table class='Table_index_home'>				  
+		<tr>
+			<td id="td1" style="border: solid 1px #047FA5; " valign="top" width="50%">
+				<table width="100%" cellpadding="0" cellspacing="0" border="0">
+					<tr>				                       
+                        <td class="titleHome"  height="30px"  width="98%"style=" text-indent:10px; border-bottom: solid 1px #047FA5; font-family:Arial, Helvetica, sans-serif; font-weight:bold; color:#047FA5; font-size:12px">LỊCH CÔNG TÁC TRONG NGÀY</td>                       
+					</tr>
+					<tr>
+						<td>
+						<div class='Content_auto'>
+						<?php foreach ($arrScheduleToday as $Resuft){
+							$iStarttime  = $Resuft['C_START_TIME']; 
+							$iFinishtime = $Resuft['C_FINISH_TIME']; 
+							$sStarttime  = "<font color='#006fe1' size='2'><u>  " . $iStarttime .":</u></font>";
+							$sFinishtime = "<font color='#006fe1' size='2'><u> -> " . $iFinishtime .":</u></font>&nbsp;";				
+							if($iFinishtime == ''){
+								$sStarttime = "<font color='#006fe1' size='2'><u>" . $iStarttime ."</u></font>&nbsp;";
+								$sFinishtime ='';
+							}?>
+								<p class='row_schedule'>
+									<?php echo $sStarttime.$sFinishtime.$Resuft['C_WORK_NAME']; ?>
+								</p>
+							<?php } ?>
+							</div>						
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td style=" width:1px;"></td>
+			<td id="td1" style="border: solid 1px #047FA5;"  valign="top" width="50%">							
+				<table width="100%" cellpadding="0" cellspacing="0" border="0" align="center">
+					<tr>				
+                       
+                        <td  class="titleHome" height="30px" width="98%" style="text-indent:10px; border-bottom: solid 1px #047FA5;  font-family:Arial, Helvetica, sans-serif; font-weight:bold; color:#047FA5; font-size:12px">CÔNG VIỆC CẦN XỬ LÝ</td>
+                       
+					</tr>
+					<tr>						
+						<td valign="top" style="height: 150px;">
+						<div class='Content_auto' style='float:left;'>
+							<?php if(trim($arryDayStaff[0])!=''){ ?>
+								<p class='row_schedule'><b>Lịch buổi sáng: </b><?php 							
+									$sNotydate = Sys_Publib_Library ::_isrplatecontent($arryDayStaff[0]);
+									$arrNotydate = explode('!~~!', $sNotydate);						
+									for ($i=0; $i< sizeof($arrNotydate); $i++) {
+										if($arrNotydate[$i]!=''){?>
+										<p class='row_schedule'>- <?=$arrNotydate[$i];?></p>
+									<?php }
+									}	
+								}
+								if(trim($arryDayStaff[1])!=''){ ?>
+									<p class='row_schedule'><b>Lịch buổi chiều: </b><?php 
+									$sNotydate = Sys_Publib_Library ::_isrplatecontent($arryDayStaff[1]);
+									$arrNotydate = explode('!~~!', $sNotydate);						
+									for ($i=0; $i< sizeof($arrNotydate); $i++) {
+										if($arrNotydate[$i]!=''){?>
+										<p class='row_schedule'>- <?=$arrNotydate[$i];?></p>
+									<?php }
+									}
+								}
+								if(($this->arrTaskNoty[0]['CV_DEN'] > 0)||($this->arrTaskNoty[0]['CV_DI'] > 0)){?>
+									<p class='row_schedule'><b>Giao việc - trao đổi công việc:</b></p>
+								<?php } 
+								if($this->arrTaskNoty[0]['CV_DEN'] > 0){
+									$urlS = $baseUrl.'taskwork/received/index/?menuid=27AA1034-16F0-4E44-A765-0E8066AC2053&parent_menuid=3C4BDCAC-7930-4C68-9544-36ADEE0F8D6E&articleid=&menuname=Coong%20vieejc%20ddeesn&sleftmenu=mn_3_1_0';
+								?>
+									<p class='row_schedule'>- <a href='<?=$urlS?>' style="color:#000;"><?=$this->arrTaskNoty[0]['CV_DEN']?> công việc đến cần trao đổi, xử lý</a></p>
+								<?php } 
+								if($this->arrTaskNoty[0]['CV_DI'] > 0){
+									$urlS = $baseUrl.'taskwork/sent/index/?menuid=64D0051A-CD80-4548-8FD6-361CB13DD24E&parent_menuid=3C4BDCAC-7930-4C68-9544-36ADEE0F8D6E&articleid=&menuname=Coong vieejc ddax guwri&sleftmenu=mn_3_2_0';
+								?>
+									<p class='row_schedule'>- <a href="<?=$urlS?>" style="color:#000;"><?=$this->arrTaskNoty[0]['CV_DI']?> công việc đã gửi có phản hồi</a></p>
+									<?php }								
+								if($this->iDocNoti){
+									$urlS = $baseUrl.'reminder/addnote/?menuid=828CB05E-9C7E-4A94-B165-9C56DF1823FC&parent_menuid=&articleid=&sliid=li2&sleftmenu=mn_0_0_0';
+								?>
+									<p class='row_schedule'><b>Quản lý văn bản: </b><a href="<?=$urlS?>" style="color:#000;">Có văn bản cần xử lý</a></p>
+								
+								<?php }?>
+							</div>												
+						</td>
+					</tr>		
+				</table>								
+			</td>
+		</tr>
+	</table>
+	<table class='Table_index_home'>
+		<?php 
+		$arrResul = $this->arrResul;
+		$arrMenuHome = $this->arrMenuHome;
+		//var_dump($arrResul);
+		//var_dump($arrMenuHome);
+		for($index = 0;$index < $this->countMenu;$index++){
+		$ileft = $index * 2;
+		$iright = $ileft + 1;
+		$urlReleft = $baseUrl .'web/home/getarticle/?menuid='.$arrMenuHome[$ileft][PK_WEB_MENU].'&parent_menuid='.$arrMenuHome[$ileft][FK_WEB_MENU].'&articleid='.$arrMenuHome[$ileft][FK_WEB_ARTICLE].'&sleftmenu='.$arrMenuHome[$ileft]['C_VISIT_LEFT'].'&sliid='.$arrMenuHome[$ileft]['C_VISIT_TOP'].'&menuname='.$arrMenuHome[$ileft]['C_NAME'];
+		$urlReright = $baseUrl .'web/home/getarticle/?menuid='.$arrMenuHome[$iright][PK_WEB_MENU].'&parent_menuid='.$arrMenuHome[$iright][FK_WEB_MENU].'&articleid='.$arrMenuHome[$iright][FK_WEB_ARTICLE].'&sleftmenu='.$arrMenuHome[$iright]['C_VISIT_LEFT'].'&sliid='.$arrMenuHome[$iright]['C_VISIT_TOP'].'&menuname='.$arrMenuHome[$iright]['C_NAME'];
+		$iOpenNewWinleft = 0;
+		if($arrMenuHome[$ileft][C_WINDOWS_OPEN]=='1'){
+			$iOpenNewWinleft = 3;
+		}
+		$urlReleft = "javaScript:goto_url('".$urlReleft."',".$iOpenNewWinleft.")";	
+		
+		$iOpenNewWinright = 0;
+		if($arrMenuHome[$iright][C_WINDOWS_OPEN]=='1'){
+			$iOpenNewWinright = 3;
+		}
+		$urlReright = "javaScript:goto_url('".$urlReright."',".$iOpenNewWinright.")";	
+		?>
+		<tr>				
+			<td id="td1" style="padding-top:0px; border: solid 1px #047FA5; " valign="top"  width="50%" >
+				 <table height="100%" cellpadding="0" cellspacing="0">
+                	<tr>
+                    	<td valign="top">
+                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>				
+                                    <td valign="top" width="4px" height="35px"></td>
+                                    <td  height="35px" width="99%" style="font-family:Arial, Helvetica, sans-serif; font-weight:bold; color:#047FA5; font-size:13px; text-transform:uppercase"> <?=$arrMenuHome[$ileft]['C_NAME']?></td>
+                                    <td valign="top" width="4px" height="35px"></td>
+                                </tr>
+						<?php
+						if($arrMenuHome[$ileft]['PK_WEB_MENU']!=''){
+							$check_one = 0; 
+							$saddurlvisit = '?sliid='.$arrMenuHome[$ileft]['C_VISIT_TOP'].'&sleftmenu='.$arrMenuHome[$ileft]['C_VISIT_LEFT'];
+							for($i = 0;$i < sizeof($arrResul);$i++){
+								$sgotoArticle = "javascript:item_onclick('".$arrResul[$i]['PK_WEB_ARTICLE']."','../viewarticle/".$saddurlvisit."');";
+								if(($arrResul[$i]['FK_WEB_MENU']==$arrMenuHome[$ileft]['PK_WEB_MENU'])&&($check_one !=0 )){
+								$linkImg = $this->baseUrl.'images/nut_before_article.gif';
+							?>
+									<tr>
+										<td class='' width='6px' valign="top"></td>
+										<td class="link_article_row" valign="top"  colspan="3">									
+										<a  href="<?=$sgotoArticle?>"><?=$arrResul[$i]['C_TITLE']?></a></td>
+									</tr>
+							<?php 
+								}	
+								if(($arrResul[$i]['FK_WEB_MENU']==$arrMenuHome[$ileft]['PK_WEB_MENU'])&&($check_one == 0)){
+									$check_one = 1; 
+							?>
+									<tr>
+										<td width='6px'></td>										
+										<?php
+											$sImageName = $arrResul[$i]['C_IMAGE_NAME']; 
+											$sImageUrl = '';
+											if($sImageName != ''){
+												// Tach ten file ra
+												if(strpos($sImageName,"!~!") == 0){
+													$file_name = $sImageName;
+												}else{
+													$arrFilename = explode('!~!',$sImageName);					
+													$file_name = $arrFilename[1];
+													$file_id   = explode("_", $arrFilename[0]);
+												} 
+												$sImageUrl = $this->baseUrl.'attach-file/article/image-upload/'. $file_id[0] . "/" . $file_id[1] . "/" . $file_id[2] . "/" . $sImageName;
+											}	
+											?>
+												<td class="content_article" valign="top">
+												<?php if($sImageUrl!=''){ ?>	
+												<?php if($arrResul[$i]['C_IMAGE_TITLE']){ ?>
+													<div style='height:120px; width:140px; float:left; margin-bottom:1px;'>	
+												<?php }else{ ?>
+													<div style='height:100px; width:140px; float:left; margin-bottom:1px;'>
+												<?php } ?>
+												<img style="border: solid 2px #CCCCCC; " align="left"  src="<?=$sImageUrl?>" onclick = "<?=$sgotoArticle?>" onload="javaScript:resizeImageWithoutLink(130,100, this)">
+													<br clear="all" />		                                           																					
+													<?php if($arrResul[$i]['C_IMAGE_TITLE']){ ?>														
+														<div style="height:auto; width:135px;text-align:center;margin-top:3px; margin-bottom:2px;">
+															<span style="font-family:Tahoma; font-size:11px;"><?=$arrResul[$i]['C_IMAGE_TITLE']?></span> 
+														</div>											
+													<?php } ?>	
+												</div>	
+												<?php } ?>	
+											<p class="title_article" ><a  href="<?=$sgotoArticle?>"><?=$arrResul[$i]['C_TITLE']?></a></a></p>				
+											<p class="short_content_article" style='margin-top:-15px;'><?=$arrResul[$i]['C_SHORT_CONTENT']?></p>	
+											</td>
+									</tr>
+							<?php
+								}
+							}
+						}
+						?>	
+							</table>
+                	  	</td>
+                   </tr>
+               </table>
+			</td>            
+			<td style=" width:1px;"></td>
+			<td id="td1" style="padding-top:0px; border: solid 1px #047FA5;" valign="top" width="50%">				
+                <table height="100%" cellpadding="0" cellspacing="0">
+                	<tr>
+                    	<td valign="top">
+                        	 <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td valign="top" width="4px" height="35px"></td>
+                                    <td height="35px" width="99%" style="font-family:Arial, Helvetica, sans-serif; font-weight:bold; color:#047FA5; font-size:13px; text-transform:uppercase"><?=$arrMenuHome[$iright]['C_NAME']?></td>
+                                    <td valign="top" width="4px" height="35px" ></td>
+                                </tr>
+						<?php
+						if($arrMenuHome[$iright]['PK_WEB_MENU']!=''){
+							$check_one = 0; 
+							$saddurlvisit = '?sliid='.$arrMenuHome[$iright]['C_VISIT_TOP'].'&sleftmenu='.$arrMenuHome[$iright]['C_VISIT_LEFT'];
+							for($i = 0;$i < sizeof($arrResul);$i++){
+								$sgotoArticle = "javascript:item_onclick('".$arrResul[$i]['PK_WEB_ARTICLE']."','../viewarticle/".$saddurlvisit."');";
+								if(($arrResul[$i]['FK_WEB_MENU']==$arrMenuHome[$iright]['PK_WEB_MENU'])&&($check_one !=0 )){
+								$linkImg = $this->baseUrl.'images/nut_before_article.gif';
+							?>
+									<tr>
+										<td class='' width='6px' valign="top"></td>
+										<td class="link_article_row" valign="top"  colspan="2">									
+										<a  href="<?=$sgotoArticle?>"><?=$arrResul[$i]['C_TITLE']?></a></td>
+									</tr>
+							<?php 
+								}	
+								if(($arrResul[$i]['FK_WEB_MENU']==$arrMenuHome[$iright]['PK_WEB_MENU'])&&($check_one == 0)){
+									$check_one = 1; 
+							?>
+									<tr>
+										<td width='6px'></td>
+									<?php
+										$sImageName = $arrResul[$i]['C_IMAGE_NAME']; 
+										$sImageUrl = '';
+										if($sImageName != ''){
+											// Tach ten file ra
+											if(strpos($sImageName,"!~!") == 0){
+												$file_name = $sImageName;
+											}else{
+												$arrFilename = explode('!~!',$sImageName);					
+												$file_name = $arrFilename[1];
+												$file_id   = explode("_", $arrFilename[0]);
+											} 
+											$sImageUrl = $this->baseUrl.'attach-file/article/image-upload/'. $file_id[0] . "/" . $file_id[1] . "/" . $file_id[2] . "/" . $sImageName;
+										}		
+										?>
+									<td class="content_article" valign="top" >
+									<?php if($sImageUrl!=''){ ?>	
+									<?php if($arrResul[$i]['C_IMAGE_TITLE']){ ?>
+										<div style='height:120px; width:140px; float:left; margin-bottom:1px;'>
+									<?php }else{ ?>
+										<div style='height:100px; width:140px; float:left; margin-bottom:1px;'>
+									<?php } ?>	
+									<img style="border: solid 2px #CCCCCC; " align="left"  src="<?=$sImageUrl?>" onclick = "<?=$sgotoArticle?>" onload="javaScript:resizeImageWithoutLink(130,100, this)">
+										<br clear="all" />		                                           																					
+										<?php if($arrResul[$i]['C_IMAGE_TITLE']){ ?>														
+											<div style="height:auto; width:135px;text-align:center;margin-top:3px; margin-bottom:2px;">
+												<span style="font-family:Tahoma; font-size:11px;"><?=$arrResul[$i]['C_IMAGE_TITLE']?></span> 
+											</div>											
+										<?php } ?>	
+									</div>	
+									<?php } ?>	
+									<p class="title_article" ><a  href="<?=$sgotoArticle?>"><?=$arrResul[$i]['C_TITLE']?></a></a></p>				
+									<p class="short_content_article" style='margin-top:-15px;'><?=$arrResul[$i]['C_SHORT_CONTENT']?></p>
+								</td>										
+							</tr>
+					<?php } } } ?>	     
+                        </table> 
+                        </td>
+                    </tr>
+                </table>
+               </td>																	
+            </tr>
+            
+            <tr>				
+                <td valign="top" width="50%">
+                <table cellpadding="0" cellspacing="0" width="100%">
+					
+                </table>
+                </td>                         
+                <td style=" width:1px;"></td>
+                <td valign="top" width="50%">
+                <table cellpadding="0" cellspacing="0" width="100%">
+					
+                </table>
+                </td>
+            </tr>
+            <tr>
+                <td style="height:2px;"></td>
+            </tr>
+		<?php }?>
+	</table>
+    
+</form>
+

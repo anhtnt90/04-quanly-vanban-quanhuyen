@@ -1,0 +1,128 @@
+<?php  
+$arrPermission = $_SESSION['arrStaffPermission'];
+?>	
+<form  method="POST" Name="inndex" autocomplete="off">
+	<?php echo $this->formHidden("hdn_type","",null); ?>
+	<!--Cac doi tuong hidden tren form-->
+	<?php echo $this->formHidden("hdn_list_parent_id","",null); ?>
+	<?php echo $this->formHidden("hdn_item_id",$this->sUnitId,null); ?>
+	<?php echo $this->formHidden("hdn_current_position","",null); ?>
+	<?php echo $this->formHidden("hdn_parent_item_id",$this->sUnitParentId,null); ?>
+	<?php echo $this->formHidden("hdn_list_item_id","",null); ?>
+	<?php echo $this->formHidden("hdn_ldap_user_list","",null); ?>
+	<?php echo $this->formHidden("hdn_unit_id","",null); ?>
+	<?php echo $this->formHidden("hdn_type_obj","",null); ?>
+	<?php echo $this->formHidden("hdn_owner","",null); ?>
+	<?php echo $this->formHidden("hdn_fulltextsearch","",null); ?>
+	<?php echo $this->formHidden("hdn_unitid","",null); ?>
+	<?php echo $this->formHidden("hdn_option","",null); ?>
+	<?php if(isset($_REQUEST['modal_dialog_mode'])){
+			echo $this->formHidden("modal_dialog_mode","",null);
+		}?>
+	<?php
+		$arrConst = $this->arrConst;
+		$sUrlEdit  = "../edit/";
+		$arrAllStaff=$this->arrResult;
+		$iExceptionId = '';
+		$sSelectParent = "true";
+		$sShowObject = 'true';
+	?>
+		<!--HIen thi tieu de man hinh danh sach!-->
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<?=$this->bodyTitle;?><br>				
+			</td>
+		</tr>
+	</table>
+	<!--HIen thi cac tieu chi loc!-->
+	<div id="filter">	
+	<table cellpadding="0" cellspacing="0" width="99%" border="0">
+		<col Width="12%"></col><col Width="88%"></col>
+		<tr>
+			<td style="padding-right:3px;">
+				<label class="normal_label"><?=$arrConst['_DON_VI_TRIEN_KHAI']?></label>
+			</td>
+			<td>
+				<select id="txtUnit" name="txtUnit" class="textbox normal_label" onchange="changeSelectbox(document.getElementById('txtUnit'),'','txt_title')">
+					<option id="" name = "" value="">-- Chọn --</option> <?php
+					$arrOwnerCode = $this->arrOwnerCode;
+					echo Sys_Library::_generateSelectOption($arrOwnerCode,'C_CODE','C_CODE','C_NAME',$this->sOwnercode);?>
+				</select>
+				<label class="normal_label"><?=$arrConst['_PHONG_BAN']?></label>
+			    <select id="txt_title" name="txt_title" style="width:50%;margin-bottom: 3px;" class="textbox" onChange="change_text_selectbox(document.getElementById('txt_title'))" ONBLUR="change_text_selectbox(document.getElementById('txt_title'))" onFocus="changeSelectbox(document.getElementById('txtUnit'),'','txt_title')" onClick="changeSelectbox(document.getElementById('txtUnit'),'','txt_title')">
+							<option id="" value="" class="textbox1">--chọn--</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;
+				
+			</td>
+			<td>				
+				<?=$this->formText('txtFullTextSearch',$this->txtFullTextSearch,array('style'=>'width:70%','value'=>$this->txtFullTextSearch,'class'=>'normal_textbox','optional'=>TRUE,'onKeyDown'=>"change_focus_on_firefox(document.forms[0],this,event)"));?>&nbsp;<?php
+				echo $this->formButton("btn_filter","Tìm kiếm",array("type"=>"button","class"=>"add_large_button","style"=>"margin-bottom:0;","onClick"=>"btn_search(document.getElementById('txtUnit'),document.getElementById('txt_title'),document.getElementById('txtFullTextSearch'));")) . "&nbsp;";?>
+			</td>
+		</tr>
+	</table>	
+	</div>	
+	<table cellpadding="0" cellspacing="0" width="99%" border="0">
+		<tr>
+			<td colspan="2">
+				<div style="text-align:right; width:100%;">
+					<label>
+						<a  class="small_link"  onclick="btn_them_click();">Thêm phòng ban</a> 
+						<a  class="small_link"  onclick="btn_them_can_bo_click();">Thêm cán bộ</a> 
+						<a  class="small_link"  onclick="delete_node_of_tree(document.getElementsByName('rad_item_id'), document.getElementsByName('chk_item_id'), document.getElementById('hdn_list_item_id'));">Xóa</a>
+					</label>
+				</div>	
+			</td>
+		</tr>
+	</table>
+	<!--Hien thi danh sach tieu de code!-->			
+		<?php		
+			$xml_str = Sys_Publib_Library::_builtXMLTreeByOrder($arrAllStaff,$iExceptionId, $sShowObject,'open.bmp','close.bmp','user.bmp',$sSelectParent);
+			//echo htmlspecialchars($xml_str);exit;
+			$xml = new DOMDocument;
+				$xml->loadXML($xml_str);
+				$xsl = new DOMDocument;
+				$xsl->load("library/Sys/treeview.xsl");
+				
+				// Configure the transformer
+				$proc = new XSLTProcessor;
+				$proc->importStyleSheet($xsl); // attach the xsl rules
+				//echo htmlspecialchars($proc->transformToXML($xml)) . '<br>';				
+				echo $proc->transformToXML($xml);		
+		?>	
+	<table width="98%" align="center" cellpadding="0" cellspacing="0" border="0">				
+		<tr>
+			<td align="center" height="10px">	
+			</td>
+		</tr>
+	</table>
+	<table width="98%" align="center" cellpadding="0" cellspacing="0" border="0" class="buton_table">				
+		<tr>
+			<td align="center" class="body"><?php
+				//Nut "Them"
+				echo $this->formButton("btn_add",$arrConst['_THEM_PHONG_BAN'],array("type"=>"button","style"=>"Width:12%","class"=>"add_large_button","onClick"=>"btn_them_click();")). "&nbsp;";	
+				//Sua
+				echo $this->formButton("btn_addstaff",$arrConst['_THEM_CAN_BO'],array("type"=>"button","style"=>"Width:12%","class"=>"add_large_button","onClick"=>"btn_them_can_bo_click();")). "&nbsp;";	
+				//Xoa
+				echo $this->formButton("btn_delete",$arrConst['_XOA'],array("type"=>"button","style"=>"Width:12%","class"=>"add_large_button","onClick"=>"delete_node_of_tree(document.getElementsByName('rad_item_id'), document.getElementsByName('chk_item_id'), document.getElementById('hdn_list_item_id'));")). "&nbsp;";?>		
+			</td>
+		</tr>
+	</table>	
+</form>
+<script type="text/javascript">
+	shortcut.add("Ctrl+K",function() {
+		document.getElementById('txtfullTextSearch').focus();
+		document.getElementById('txtfullTextSearch').select();
+	});
+	//
+	if ("<? echo $this->sUnitId?>"==''){
+		set_root_node_to_open("<?php echo $this->baseUrl.'images/open.bmp';?>");;
+	}
+	else{
+		set_node_to_open("<? echo $this->sUnitParentId;?>","<? echo $this->sUnitId;?>","<?php echo $this->baseUrl.'images/open.bmp';?>");
+	}
+</script>

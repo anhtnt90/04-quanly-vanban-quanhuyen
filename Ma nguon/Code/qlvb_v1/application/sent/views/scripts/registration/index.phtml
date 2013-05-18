@@ -1,0 +1,195 @@
+<form action="index" method="POST" id="frmSent">
+<div><?php
+	$urlCalendar = $this->urlCalendar;
+	$arrConst = $this->arrConst;
+	?>
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<!--Cac doi tuong hidden tren form-->
+				<?php echo $this->formHidden("hdn_current_page",$this->currentPage,null); ?>
+				<?php echo $this->formHidden("cbo_nuber_record_page",$this->numRowOnPage,null); ?>
+				<?php echo $this->formHidden("hdn_object_id_list","",null); ?>
+				<?php echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); ?>
+				<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+				<?php echo $this->formHidden("hdn_record_number_page",$this->numRowOnPage,null); ?>	
+				<?php echo $this->formHidden("hdn_object_id",'',null); ?>
+				<?php echo $this->formHidden("hdn_XmlTagValueList",$this->XmlTagValueList,null); ?>
+				<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+				<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>	
+				<!--Bien hdnStatus dung de lay trang thai van ban tu menu trai ...-->	
+				<?php echo $this->formHidden("hdnStatus","",null);?>
+				<?php echo $this->formHidden("hdn_function_modul",$this->getModulLeft,null);?>
+				<?php echo $this->formHidden("hdn_history_back",$this->sUrl,null); ?>
+				<!--Cac doi tuong hidden tren form-->
+				<?php 
+				if($this->getModulLeft == 'DA_BAN_HANH'){
+					echo "DANH SÁCH VĂN BẢN ĐÃ PHÁT HÀNH ";
+				 }else{
+					echo "DANH SÁCH VĂN BẢN CHỜ PHÁT HÀNH";
+				}
+				?>
+			</td>
+		</tr>
+	</table>
+	<div class="box container c1">
+		<div class="pad">			
+			<table cellpadding="0" cellspacing="0" width="98%" border="0">
+				<col width="100%" align="left"/>			
+				<tr>
+					<td  style="padding-left:10px;">
+						<input type="text" id="FullTextSearch" name="FullTextSearch"  class="textbox" size="40%" value="<?= $this->sFullTextSearch ?>">
+						<input type="button" value="Tìm kiếm" class="add_large_button"  onchange="handler(event)" onclick="actionUrl('');">
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<?php if($this->getModulLeft != 'DA_BAN_HANH'){ ?>		
+	<table width='99%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<?=$this->bodyTitle;?>	
+			</td>
+			<!-- 
+			<td style="text-align:right;" valign="bottom">
+				<a class="small_link" onclick="actionUrl('../../add/modul/<?=$this->getModulLeft?>'); "><?= $arrConst['_THEM'] ?></a>  
+				<a class="small_link" onclick="btn_update_onclick(document.getElementsByName('chk_item_id'),'../../edit/modul/<?=$this->getModulLeft?>');"> <?= $arrConst['_SUA'] ?> </a> 
+				<a class="small_link" onclick="btn_delete_onclick(document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id_list'),'../../delete','<?=$this->UrlAjax?>','VB_DI','T_DOC_SENT_DOCUMENT');"><?= $arrConst['_XOA'] ?> </a>
+				<a class="small_link" onclick="btn_register_onclick(document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id_list'),'../../register');"><?= $arrConst['_DANG_KY_PHAT_HANH'] ?> </a>
+			</td>
+			 -->
+		</tr>
+	</table>
+	<?php }else{ echo "<br>"; } ?>
+	<div id="viewAllSentDocument">
+		<table cellpadding="0" cellspacing="0" border="0" width="98%" align="center" class="list_table2" id="table1">
+			<?php			
+			$delimitor = $this->delimitor;//Lay ky tu phan cach giua cac phan tu
+			//Hien thi cac cot cua bang hien thi du lieu
+			if($this->getModulLeft == 'DA_BAN_HANH'){
+				$StrHeader = explode("!~~!",$this->GenerateHeaderTable("3%" . $delimitor . "12%" . $delimitor . "14%" . $delimitor . "46%" . $delimitor . "25%"
+												,'<input type="checkbox" name="chk_all_item_id" value="" onclick="checkbox_all_item_id(document.forms[0].chk_item_id);">' . $delimitor .$arrConst['_NGAY_PHAT_HANH']  . $delimitor . $arrConst['_SO_KY_HIEU'] . $delimitor . $arrConst['_TRICH_YEU'] . $delimitor . $arrConst['_NOI_NHAN'] 
+												,$delimitor));
+			}else{
+				$StrHeader = explode("!~~!",$this->GenerateHeaderTable("3%" . $delimitor . "10%" . $delimitor . "35%" . $delimitor . "17%" . $delimitor . "23%". $delimitor . "12%"
+												,'<input type="checkbox" name="chk_all_item_id" value="" onclick="checkbox_all_item_id(document.forms[0].chk_item_id);">' . $delimitor . $arrConst['_NGAY_DANG_KY']. $delimitor . $arrConst['_TRICH_YEU'] . $delimitor .$arrConst['_NGUOI_KY']. $delimitor . $arrConst['_NOI_NHAN']. $delimitor . $arrConst['_TRANG_THAI']
+												,$delimitor));
+			}
+			echo $StrHeader[0];				
+			echo $StrHeader[1]; //Hien thi <col width = 'xx'><...		
+			//Dinh nghia URL
+			$sUrView  = "../../view/";
+			$sCurrentStyleName = "round_row";
+			$arrSent = $this->arrSent;	
+			$objFunction =	new	Sys_Function_DocFunctions()	;	
+			for($index = 0;$index < sizeof($arrSent);$index++){	
+				//lay file dinh kem
+				$strFileName 				= $arrSent[$index]['C_FILE_NAME'];
+				$sFile = Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+				$documentId 				= $arrSent[$index]['PK_SENT_DOCUMENT'];				
+				$sentDate					= $objFunction->searchCharColor($this->sFullTextSearch,$arrSent[$index]['C_SENT_DATE']) .'&nbsp;';						
+				$numSysbol					= $objFunction->searchCharColor($this->sFullTextSearch,$arrSent[$index]['C_NUMBER'].$arrSent[$index]['C_SYMBOL'] ).'&nbsp;';	
+				$receivePlace				= $objFunction->searchStringColor($this->sFullTextSearch,$arrSent[$index]['C_RECEIVE_PLACE'] ).'&nbsp;';				
+				$signerPositionName			= $objFunction->searchStringColor($this->sFullTextSearch,$arrSent[$index]['C_SIGNER_POSITION_NAME'] ).'&nbsp;';		
+				$status						= $arrSent[$index]['C_STATUS'];		
+				if($status == 'CHO_DANG_KY'){
+					$status = "<font color='red'> Chờ đăng ký</font>";
+				}
+				if($status == 'CHO_BAN_HANH'){
+					$status = "Đã đăng ký";
+				}
+				//Tai lieu kem theo ho so
+				if($strFileName == '' || $strFileName == null){
+					$subject				= $objFunction->searchStringColor($this->sFullTextSearch,$arrSent[$index]['C_SUBJECT']) .'&nbsp;';
+				}else {
+					$subject				= $objFunction->searchStringColor($this->sFullTextSearch,$arrSent[$index]['C_SUBJECT']) . '<br>'.$sFile;
+					$sFile = "";
+				}
+				$unitId 					= $arrSent[$index]['C_UNIT_NAME'] .'&nbsp;';	
+				if ($sCurrentStyleName == "odd_row"){
+					$sCurrentStyleName = "round_row";
+				}else{
+					$sCurrentStyleName = "odd_row";					
+				}?>					
+				<tr class="<?=$sCurrentStyleName?>">	
+					<td align="center" style="padding-left:3px;padding-right:3px;" class="normal_label">					
+						<?=$this->formCheckbox('chk_item_id',$documentId, array('checked' => false,'onclick' =>'selectrow(this)'));?>					
+					</td>
+					<td align="center" ondblclick="item_onclick('<?=$documentId?>','<?=$sUrView?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$documentId?>');" style="padding-left:3px;padding-right:3px;" class="normal_label">
+						<?=$sentDate?>
+					</td>								
+					<!--Hien thi trich yeu!-->					
+					<td ondblclick="item_onclick('<?=$documentId?>','<?=$sUrView?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$documentId?>');"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?php if($this->getModulLeft == 'DA_BAN_HANH'){ echo $numSysbol ;}else{ echo $subject;} ?></td>
+					<!--Hien ket qua xu ly!-->	
+					<?php if($this->getModulLeft == 'DA_BAN_HANH'){ $scanhle = "left";}else{ $scanhle = "center";}?>
+					<td align="<?= $scanhle ?>" ondblclick="item_onclick('<?=$documentId?>','<?=$sUrView?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$documentId?>');" align="left" style="padding-left:3px;padding-right:3px;" class="normal_label"><?php if($this->getModulLeft == 'DA_BAN_HANH'){ echo $subject ;}else{ echo $signerPositionName;} ?></td>	
+					<td align="left" ondblclick="item_onclick('<?=$documentId?>','<?=$sUrView?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$documentId?>');"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=  $receivePlace?></td>
+					<?php if($this->getModulLeft != 'DA_BAN_HANH'){	?>
+							<td align="center" ondblclick="item_onclick('<?=$documentId?>','<?=$sUrView?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$documentId?>');"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=  $status?></td>	
+					<?php } ?>
+				</tr><?php
+			}					
+			//Tu dien cac dong trang trong truong hop du lieu tra ve < so row _CONST_NUMBER_OF_ROW_PER_LIST	
+			if($this->getModulLeft != 'DA_BAN_HANH'){							
+				echo $this->addEmptyRow($this->iCountElement,15 -sizeof($arrSent),$sCurrentStyleName,6);
+			}else{
+				echo $this->addEmptyRow($this->iCountElement,15 -sizeof($arrSent),$sCurrentStyleName,5);
+			} ?>
+		</table>	
+		<!--Hien thi trang can xem!-->
+		<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td class="normal_label" style="color:red;width:23%;padding-left:1%;">
+						<?=$this->sdocpertotal;?>
+					</td>
+					<td align="center" style="width:48%;.">
+						<table width="10%"><?php
+							//Hien thi danh sach so trang
+							echo $this->generateStringNumberPage;?>
+						</table>
+					</td>
+					<td width="25%" align="right" style="font-size:13px; padding-right:1%; font:tahoma" class="normal_label"><?php
+						//Hien thi so trang
+						echo $this->generateHtmlSelectBoxPage;?>
+					</td>
+				</tr>
+		</table>
+	</div>
+	<?php if($this->getModulLeft != 'DA_BAN_HANH'){ ?>	
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' align="center">
+		<tr>
+			<td style="padding-top: 5px; padding-bottom: 5px;" align="center" valign="middle">
+				<input id="btn_add" name="btn_add" type="button" class="add_large_button" value="<?= $arrConst['_THEM']?>" onclick="actionUrl('../../add/modul/<?=$this->getModulLeft?>');">
+				<input type="button" class="add_large_button" value="<?= $arrConst['_SUA']?>" onclick="btn_update_onclick(document.getElementsByName('chk_item_id'),'../../edit/modul/<?=$this->getModulLeft?>');">
+				<input type="button" class="add_large_button" value="<?= $arrConst['_XOA']?>" onclick="btn_delete_onclick(document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id_list'),'../../delete','<?=$this->UrlAjax?>','VB_DI','T_DOC_SENT_DOCUMENT');">
+				<input type="button" class="add_large_button" value="<?=$arrConst['_DANG_KY_PHAT_HANH']?>" onclick="btn_register_onclick(document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id_list'),'../../register');">
+			</td>	
+		</tr>
+	</table>
+	<?php } ?>
+</div>
+</form>
+<script type="text/javascript">
+/*
+var keyEnter="13";
+var x='';	
+function handler(e){
+	//IE return :event.keyCode; FF return : e.which;
+	var  x=(window.event)?event.keyCode:e.which; 
+	if (x==13){	//Enter					
+		document.getElementsByTagName('form')[0].action = '<?= $this->getModulLeft ?>';
+		document.getElementsByTagName('form')[0].submit();
+	}
+}	
+if (!document.all){
+	window.captureEvents(Event.KEYPRESS);
+	window.onkeypress=handler;
+}else{
+	document.onkeypress = handler;
+} */	
+
+
+</script>

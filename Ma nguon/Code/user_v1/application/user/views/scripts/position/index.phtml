@@ -1,0 +1,171 @@
+<?php  
+$arrPermission = $_SESSION['arrStaffPermission'];
+?>	
+<form action="../index/" method="POST" id="" autocomplete="off">
+	<?php echo $this->formHidden("hdn_type","",null); ?>
+	<!--Cac doi tuong hidden tren form-->
+	<?php echo $this->formHidden("hdn_fulltextsearch",$this->txtFullTextSearch,null); ?>
+	<?php echo $this->formHidden("hdn_filter_positiongroup",$this->sPositionGroup,null); ?>
+	<?php echo $this->formHidden("hdn_filter_status",$this->sStatus,null); ?>
+	<?php echo $this->formHidden("hdn_current_page",$this->iCurrentPage,null); ?>
+	<?php echo $this->formHidden("cbo_nuber_record_page",$this->iNumberRecordPerPage,null); ?>
+	<?php echo $this->formHidden("hdn_record_number_page",$this->iNumberRecordPerPage,null); ?>
+	<?php echo $this->formHidden("hdn_object_id_list","",null); ?>
+	<?php echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); ?>
+	<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+	<?php echo $this->formHidden("hdn_object_id",$this->pSendReceiveDocumentId,null); ?>
+	<?php echo $this->formHidden("hdn_XmlTagValueList",$this->XmlTagValueList,null); ?>
+	<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+	<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+	<?php echo $this->formHidden("htn_leftModule",$this->currentModulCodeForLeft,null); ?>	
+	<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+	<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null);?>
+	<?php
+		$arrConst = $this->arrConst;
+		$sUrlEdit  = "../edit/";
+	?>
+		<!--HIen thi tieu de man hinh danh sach!-->
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<?=$this->bodyTitle;?><br>				
+			</td>
+		</tr>
+	</table>
+	<!--HIen thi cac tieu chi loc!-->
+	<div id="filter">	
+	<table cellpadding="0" cellspacing="0" width="99%" border="0">
+		<col width="100%" align="left"/>	
+		<tr>
+			
+			<td style="padding-left:3px;padding-top:10px">
+				<label for = "C_POSITION_GROUP" class="normal_label"><?=$arrConst['_NHOM_CHUC_VU']?></label>
+				<select class="textbox" id="C_FILTER_POSITION_GROUP" name="C_FILTER_POSITION_GROUP" class="textbox normal_label" optional = "true"  onchange="">
+					<option id="" name = "" value="">-- Chọn --</option><?php
+					$arrPositionGroup = $this->arrPositionGroup;
+					echo Sys_Library::_generateSelectOption($arrPositionGroup,'PK_POSITION_GROUP','PK_POSITION_GROUP','C_NAME',$this->sPositionGroup);?>
+				</select>
+				<label for = "C_FILTER_STATUS" class="normal_label"><?=$arrConst['_TT_HOAT_DONG']?></label>
+				<select class="textbox" id="C_FILTER_STATUS" name="C_FILTER_STATUS" class="textbox normal_label" optional = "true" xml_tag_in_db="" xml_data="false" column_name="C_FILTER_STATUS" onchange="">
+					<option id="" name = "" value="">-- Chọn --</option><?php
+					$arrStatus = $this->arrStatus;
+					echo Sys_Library::_generateSelectOption($arrStatus,'C_CODE','C_CODE','C_NAME',$this->sStatus);?>
+				</select>
+				<?=$this->formText('txtFullTextSearch',$this->txtFullTextSearch,array('style'=>'width:70%','value'=>$this->txtFullTextSearch,'class'=>'normal_textbox','optional'=>TRUE,'onKeyDown'=>'change_focus_on_firefox(document.forms[0],this,event)'));?>&nbsp;<?php
+				echo $this->formButton("btn_filter","Tìm kiếm",array("type"=>"button","class"=>"add_large_button","onClick"=>"actionUrl('../index/');")) . "&nbsp;";?>
+			</td>
+		</tr>
+	</table>	
+	</div>	
+	<table cellpadding="0" cellspacing="0" width="99%" border="0">
+		<tr>
+			<td colspan="2">
+				<div style="text-align:right; width:100%; height:24px">
+					<label>
+						<a  class="small_link"  onclick="actionUrl('../add/');">Thêm</a> 
+						<a  class="small_link"  onclick="btn_update_onclick(document.getElementsByName('chk_item_id'),'../edit/');">Sửa</a> 
+						<a  class="small_link"  onclick="btn_delete_onclick(document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id_list'),'../delete/','<?=$this->UrlAjax?>','POSITION','T_USER_POSITION');")>Xóa</a>
+					</label>
+				</div>	
+			</td>
+		</tr>
+	</table>
+	<!--Hien thi danh sach tieu de code!-->			
+	<table cellpadding="0" cellspacing="0" border="0" width="99%" align="center" class="list_table2" id="table1">	
+		<?php			
+			$delimitor = $this->delimitor;//Lay ky tu phan cach giua cac phan tu
+			//Hien thi cac cot cua bang hien thi du lieu
+			$StrHeader = explode("!~~!",Sys_Library::_GenerateHeaderTable("5%" . $delimitor . "30%" . $delimitor . "40%" . $delimitor . "10%" . $delimitor . "15%"
+											,'<input optional = "true" type="checkbox" name="chk_all_item_id" value="" onclick="checkbox_all_item_id(document.forms[0].chk_item_id);">' . $delimitor . $arrConst['_MA_CHUC_VU'] . $delimitor . $arrConst['_TEN_CHUC_VU'] . $delimitor . $arrConst['_THU_TU'] . $delimitor . $arrConst['_TT_HOAT_DONG']
+											,$delimitor));
+			echo $StrHeader[0];?>
+			<!--Hien thi du lieu!--><?php
+			echo $StrHeader[1]; //Hien thi <col width = 'xx'><...
+			//Kieu style
+			$v_current_style_name = "round_row";	
+			//Lay du lieu tu Controller gui sang
+			$arrResult = $this->arrResult;			
+			//Duyet va hien thi ket qua
+			$iNumElement = sizeof($arrResult);
+			$sPositionGroupNameOld = "";
+			for($index = 0;$index < $iNumElement;$index++){	
+				// Pk cua bang
+				$pkPosition 				= $arrResult[$index]['PK_POSITION'];				
+				// Ma Chuc vu
+				$sPositionCode 				= Sys_Function_RecordFunctions::searchStringColor($this->txtFullTextSearch,$arrResult[$index]['C_CODE']).'&nbsp;';							
+				//Nhom chuc vu
+				$sPositionGroupName		 	= $arrResult[$index]['C_POSITION_GROUP_NAME'];
+				// Ten Chuc vu
+				$sPositionName 				= Sys_Function_RecordFunctions::searchStringColor($this->txtFullTextSearch,$arrResult[$index]['C_NAME']).'&nbsp;';	
+				// So thu tu
+				$iOrder 					= $arrResult[$index]['C_ORDER'].'&nbsp;';					
+				// Tinh trang hoat dong
+				$sStatus		 			= $arrResult[$index]['C_STATUS'];	
+				if ($sStatus == "HOAT_DONG"){
+					$sStatus = "Hoạt động";
+				}else{
+					$sStatus = "<font color='red'>Không hoạt động</font>";
+				}
+				// su dung style
+				if ($v_current_style_name == "odd_row"){
+					$v_current_style_name = "round_row";
+				}else{
+					$v_current_style_name = "odd_row";					
+				}
+				//Group Theo nhom
+				if ($sPositionGroupNameOld != $sPositionGroupName){?>
+					<tr class="<?=$v_current_style_name?>">
+						<td align="left" colspan="5"><B>Nhóm <?=$sPositionGroupName;?></B></td><?php
+						$sPositionGroupNameOld = $sPositionGroupName;?>
+					</tr><?php
+				}?>
+				<tr class="<?=$v_current_style_name?>">	
+					<td align="center" style="padding-left:3px;padding-right:3px;" class="normal_label">						
+						<?=$this->formCheckbox('chk_item_id',$pkPosition, array('checked' => false,'onclick' => 'selectrow(this);'));?>					
+					</td>
+					<td align="left" ondblclick="item_onclick('<?=$pkPosition?>','../edit/');" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$pkPosition?>');"  class="normal_label"><?=$sPositionCode;?></td>						
+					<td align="left" ondblclick="item_onclick('<?=$pkPosition?>','../edit/');" onclick= "set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$pkPosition?>');" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sPositionName;?></td>				
+					<td align="center" ondblclick="item_onclick('<?=$pkPosition?>','../edit/');" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$pkPosition?>');"  style="padding-left:3px;padding-right:3px; cursor: pointer;" class="normal_label"><?=$iOrder;?></td>
+					<td align="center" ondblclick="item_onclick('<?=$pkPosition?>','../edit/');" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$pkPosition?>');"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sStatus?></td>					
+				</tr>
+	
+				<?php
+			}							
+			//Tu dien cac dong trang trong truong hop du lieu tra ve < so row _CONST_NUMBER_OF_ROW_PER_LIST			
+			echo Sys_Library::_addEmptyRow($iNumElement,15,$v_current_style_name,5);			
+		?>	
+	</table>
+	<table width="98%" align="center" cellpadding="0" cellspacing="0" border="0">				
+		<tr>
+
+			<td align="center" height="10px">			
+			</td>
+		</tr>
+	</table>
+	<table width="98%" align="center" cellpadding="0" cellspacing="0" border="0" class="buton_table">				
+		<tr>
+			<td align="center" class="body"><?php
+				//Nut "Them"
+				echo $this->formButton("btn_add",$arrConst['_THEM'],array("type"=>"button","class"=>"add_large_button","onClick"=>"actionUrl('../add/');")). "&nbsp;";	
+				//Sua
+				echo $this->formButton("btn_edit",$arrConst['_SUA'],array("type"=>"button","class"=>"add_large_button","onClick"=>"btn_update_onclick(document.getElementsByName('chk_item_id'),'../edit/');")). "&nbsp;";	
+				//Xoa
+				echo $this->formButton("btn_delete",$arrConst['_XOA'],array("type"=>"button","class"=>"add_large_button","onClick"=>"btn_delete_onclick(document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id_list'),'../delete/','<?=$this->UrlAjax?>','POSITION','T_USER_POSITION');")). "&nbsp;";?>		
+			</td>
+		</tr>
+	</table>	
+</form>
+<script type="text/javascript">
+	shortcut.add("Ctrl+K",function() {
+		document.getElementById('txtfullTextSearch').focus();
+		document.getElementById('txtfullTextSearch').select();
+	});
+	function ResetSearch(){
+		document.getElementById('hdn_current_page').value = "1";
+	}
+	function checkvalue(){
+		if(document.getElementById('txtfullTextSearch').value != "" || document.getElementById('C_TRAINING_LEVEL_INDEX').value != "" || document.getElementById('C_ENROLLMENT_YEAR_INDEX').value != "" || document.getElementById('C_ENROLLMENT_TIME_INDEX').value != ""){
+			actionUrl('');
+		}
+	}
+</script>

@@ -1,0 +1,23 @@
+<form action="index" method="POST" id="frmAddReceived" enctype="multipart/form-data">
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+		<!--tao tac hidden!-->
+		<tr>
+			<td>
+				<?php echo $this->formHidden("hdn_option_view",'TAT_CA',null); ?>
+				<?php echo $this->formHidden("hdn_view_staff",'',null); ?>		
+				<?php echo $this->formHidden("hdn_article_id",'',null); ?>		
+				<?php echo $this->formHidden("hdn_object_id",$this->sReceiveDocumentId,null); ?>				
+				<?php echo $this->formHidden("hdn_history_back",$this->sUrl,null); ?>
+				<?php echo $this->formHidden("hdn_xml_tag_list","",null); ?>
+				<?php echo $this->formHidden("hdn_xml_value_list","",null); ?>
+				<?php echo $this->formHidden("hdn_XmlTagValueList","",null); ?>
+				<?php echo $this->formHidden("hdn_status","1",null); ?>
+				<?php echo $this->formHidden("hdn_display_web","0",null); ?>
+				<?php echo $this->formHidden("hdn_open_win","0",null); ?>
+				
+				<?php echo $this->formHidden("hdn_position",$this->iPosition,null); ?>
+				<?php echo $this->formHidden("hdn_owner",$this->sOwner,null); ?>
+			</td>
+		</tr>
+	</table>
+</form>

@@ -1,0 +1,44 @@
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+	<!--Hien thi banner!<img src="< ?= $this->baseUrl?>images/Banner.jpg" align="left" width="100%"/>-->
+</table><?php
+//$arrPermission = $_SESSION['arrStaffPermission'];
+//Ham Const
+$arrConst	=	Sys_Init_Config::_setProjectPublicConst();
+//var_dump($_SESSION);
+?>
+<!--He thong Menu ngang-->
+<table width="100%" cellpadding="0" cellspacing="0" class="top_menu_table">
+	<tr><td>
+    	<ul>
+	    	<!--Hiển thị Cơ cấu tổ chức-->
+	    	<?php
+	    	if($_SESSION['STAFF_PERMISSTION']==Sys_Init_Config::_setPermisstionSystem(1)||$_SESSION['STAFF_PERMISSTION']==Sys_Init_Config::_setPermisstionSystem(2)){
+				$urlRe = $this->baseUrl . "../user/org/index/";?>				
+				<li  id="header_org" style="cursor:pointer;" onclick="href('<?= $urlRe?>');"><span><?=$arrConst['_CO_CAU_TO_CHUC']?></span></li>	<?php 
+	    	}?>
+			<!--He thong danh muc-->
+			<?php 
+			if($_SESSION['STAFF_PERMISSTION']==Sys_Init_Config::_setPermisstionSystem(1)){
+				$urlRe = $this->baseUrl . "../listxml/listtype/"; ?>
+				<li  id ="header_list" align="left" style="cursor:pointer;" onclick="href('<?=$urlRe;?>')"><?=$arrConst['_DANH_MUC']?></a></li>	<?php 
+			}?>	
+			<!--THOAT-->
+			<?php $urlRe = $this->baseUrl . "../logout/index/";?>	
+			<li  id ="header_logout" align="left" style="cursor:pointer;" onclick="href('<?=$urlRe;?>')"><?=$arrConst['_THOAT']?></a></li>
+        </ul>	
+	</tr></td>
+</table>
+<script type="text/javascript"><?php 
+	$sCurrentModulCode = $this->currentModulCode;
+	//Co Cau to chuc
+	if ($sCurrentModulCode == "ORG"){ ?>
+		document.getElementById('header_org').className="visited";<?php
+	}
+	//Danh muc
+	if ($sCurrentModulCode == "LIST"){ ?>
+		document.getElementById('header_list').className="visited";<?php
+	}?>
+	 function href(url){
+	 	window.location.href = url;
+	 } 
+</script>

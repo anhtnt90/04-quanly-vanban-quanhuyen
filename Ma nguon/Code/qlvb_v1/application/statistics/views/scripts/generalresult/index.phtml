@@ -1,0 +1,210 @@
+<base target=_self>
+<form action="index" method="POST" id="frmReceived" autocomplete="off">
+<div>
+	<!--Cac doi tuong hidden tren form-->
+	<?php echo $this->formHidden("hdn_docrelate_id_list","",null); ?>
+	<?php echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); ?>
+	<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+	<?php echo $this->formHidden("hdn_object_id",$this->sReceiveDocumentId,null); ?>
+	<?php echo $this->formHidden("hdn_XmlTagValueList",$this->XmlTagValueList,null); ?>
+	<?php echo $this->formHidden("hdn_status",$this->sStatus,null); ?>
+	<?php echo $this->formHidden("hdn_unit_id",$this->iUnitId,null); ?>
+	<?php echo $this->formHidden("hdn_subModulLeft",$this->getStatusLeftMenu,null); ?>
+	<?php
+		$arrConst 				= $this->arrConst;
+		$arrResul 				= $this->arrResul;
+		$objFunction 			= new Sys_Function_DocFunctions();
+		$iLeaderId 				= $this->iLeaderId;
+		if ($iLeaderId != '')
+			$sLeaderPositionName	= Sys_Publib_Library::_getItemAttrById($_SESSION['arr_all_staff'],$iLeaderId,'position_code').' - '.Sys_Publib_Library::_getItemAttrById($_SESSION['arr_all_staff'],$iLeaderId,'name');
+		else $sLeaderPositionName = '';
+		if ($_SESSION['arrStaffPermission']['THEO_DOI_KQXL_VB_DEN_PB'] != 1 && $_SESSION['arrStaffPermission']['THEODOI_XLVBDEN_PX'] !=1 && $_SESSION['arrStaffPermission']['THEO_DOI_KQXL_VBDEN'] != 1)
+				$disablebtn = 'disabled ="true"';
+		else 	$disablebtn = "";
+	?>
+	<table>
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<?=$this->bodyTitle;?>				
+			</td>
+		</tr>
+	</table>
+	<div class="box container c1">
+		<div class="pad" style="padding:4px;">			
+			<table align="center" cellpadding="0" cellspacing="0" width="98%" border="0" style="padding-left:0%;">
+				<col width="10%" /><col width="15%" /><col width="10%" /><col width="15%" /><col width="50%" />
+				<tr>
+					<td align="left"><label class="normal_label"><?=$arrConst['_TU_NGAY']?></label></td>
+					<td colspan="1">
+						<input tabindex ="1" style="width:75%;" id="fromDate" name="fromDate" type="text" isdate="true" value="<?=$this->fromDate?>" option = "false" message="<?php echo "NGAY THANG NAM khong dung dinh dang";?>">						
+					</td>
+					<td align="center"><label class="normal_label"><?=$arrConst['_DEN_NGAY']?></label></td>
+					<td>
+						<input tabindex ="2" style="width:75%;" id="toDate" name="toDate" type="text" isdate="true" value="<?=$this->toDate?>" option = "false" message="<?php echo "NGAY THANG NAM khong dung dinh dang";?>">						
+					</td>
+					<td align="left"><input tabindex ="3" <?=$disablebtn?> style="margin-top:-2px;" tabindex ="6" type="button" name="timkiem" id="timkiem" value="Tìm Kiếm" class="add_large_button"  onclick="actionUrl('');"></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div style="height:20px;"></div>
+	<table cellpadding="0" cellspacing="0" border="0" width="98%" align="center" class="list_table2" id="table1">
+		<?php			
+		$delimitor = $this->delimitor;//Lay ky tu phan cach giua cac phan tu
+		//Hien thi cac cot cua bang hien thi du lieu
+		$StrHeader = explode("!~~!",$this->GenerateHeaderTable("5%". $delimitor ."35%". $delimitor . "9%" . $delimitor . "9%" . $delimitor . "14%" . $delimitor . "14%". $delimitor . "14%"
+										,$arrConst['_STT']. $delimitor . $arrConst['_DON_VI_XU_LY'] . $delimitor . $arrConst['_TONG_SO_VB'] . $delimitor . $arrConst['_DANG_XU_LY'] . $delimitor . $arrConst['_DA_XU_LY_DUNG_HAN'] . $delimitor . $arrConst['_DA_XU_LY_QUA_HAN']. $delimitor . $arrConst['_QUA_HAN_CHUA_XU_LY']
+										,$delimitor));
+		echo $StrHeader[0];					
+		echo $StrHeader[1]; //Hien thi <col width = 'xx'><...		
+			//Dinh nghia URL
+			$sUrlView  = "../view/";
+			$v_current_style_name = "round_row";
+			$arrResul = $this->arrResul;	
+			$iSumTongsoVB = 0;
+			$iSumDangXuLy = 0;
+			$iSumDaXuLyDungHan = 0;
+			$iSumDaXuLyQuaHan = 0;
+			$iSumQuaHanChuaXuLy = 0;
+			for($index = 0;$index < sizeof($arrResul);$index++){
+				//echo $arrResul[$index]['C_UNIT_ID'];
+				$sUnitName				= $objFunction->getNameUnitByIdUnitList($arrResul[$index]['C_UNIT_ID'],'');
+				$iTongSoVB				= $arrResul[$index]['TONG_SO_VB'].'&nbsp;';	
+				$iDangXuLy				= $arrResul[$index]['DANG_XU_LY'].'&nbsp;';	
+				$iSumDangXuLy		   += $iDangXuLy;
+				$iDaXuLyDungHan			= $arrResul[$index]['DA_XU_LY_DUNG_HAN'].'&nbsp;';	
+				$iSumDaXuLyDungHan     += $iDaXuLyDungHan;
+				$iDaXuLyQuaHan			= $arrResul[$index]['DA_XU_LY_QUA_HAN'].'&nbsp;';	
+				$iSumDaXuLyQuaHan      += $iDaXuLyQuaHan;
+				$iQuaHanChuaXuLy		= $arrResul[$index]['QUA_HAN_CHUA_XU_LY'].'&nbsp;';	
+				$iSumQuaHanChuaXuLy    += $iQuaHanChuaXuLy;
+				if ($v_current_style_name == "odd_row"){
+					$v_current_style_name = "round_row";
+				}else{
+					$v_current_style_name = "odd_row";					
+				}?>
+				<tr class="<?=$v_current_style_name?>">	
+					<td style="display:none;" align="center" style="padding-left:3px;padding-right:3px;" class="normal_label">
+						<?=$this->formCheckbox('chk_item_id',$arrResul[$index]['PK_RECEIVED_DOC'], array('checked' => false,'onclick' =>'selectrow(this)'));?>					
+					</td>
+					<td onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="center" valign="middle" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$index + 1?></td>
+					<td onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="left" valign="middle"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sUnitName;?></td>
+					<td <?php if($iTongSoVB > 0){?>
+							onclick="document.getElementById('hdn_status').value = 'TAT_CA';document.getElementById('hdn_unit_id').value = '<?=$arrResul[$index]['C_UNIT_ID']?>';item_onclick('<?=$sDocumentId?>','<?=$sUrlView?>')"  
+						<?php } ?>
+					align="center" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=($iTongSoVB > 0)?$iTongSoVB:''?></td>	
+					<td <?php if($iDangXuLy > 0){ ?>
+							onclick="document.getElementById('hdn_status').value = 'DANG_XU_LY';document.getElementById('hdn_unit_id').value = '<?=$arrResul[$index]['C_UNIT_ID']?>';item_onclick('<?=$sDocumentId?>','<?=$sUrlView?>')"  
+						<?php } ?>
+					align="center" valign="middle" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=($iDangXuLy > 0)?$iDangXuLy:''?></td>	
+					<td <?php if($iDaXuLyDungHan > 0){ ?>
+							onclick="document.getElementById('hdn_status').value = 'DA_XU_LY_DUNG_HAN';document.getElementById('hdn_unit_id').value = '<?=$arrResul[$index]['C_UNIT_ID']?>';item_onclick('<?=$sDocumentId?>','<?=$sUrlView?>')" 
+						<?php } ?>
+					align="center" valign="middle" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=($iDaXuLyDungHan > 0)?$iDaXuLyDungHan:''?></td>	
+					<td <?php if($iDaXuLyQuaHan > 0) { ?>
+							onclick="document.getElementById('hdn_status').value = 'DA_XU_LY_QUA_HAN';document.getElementById('hdn_unit_id').value = '<?=$arrResul[$index]['C_UNIT_ID']?>';item_onclick('<?=$sDocumentId?>','<?=$sUrlView?>')"  
+						<?php } ?>
+					align="center" valign="middle" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=($iDaXuLyQuaHan > 0)?$iDaXuLyQuaHan:''?></td>	
+					<td <?php if($iQuaHanChuaXuLy > 0) { ?>
+							onclick="document.getElementById('hdn_status').value = 'QUA_HAN_CHUA_XU_LY';document.getElementById('hdn_unit_id').value = '<?=$arrResul[$index]['C_UNIT_ID']?>';item_onclick('<?=$sDocumentId?>','<?=$sUrlView?>')"  
+						<?php } ?>
+					align="center" valign="middle" style="padding-left:3px;padding-right:3px;color:red;" class="normal_label"><?=($iQuaHanChuaXuLy > 0)?$iQuaHanChuaXuLy:''?></td>	
+				</tr><?php
+			}	?>		
+				<?php
+				if ($v_current_style_name == "odd_row"){
+					$v_current_style_name = "round_row";
+				}else{
+					$v_current_style_name = "odd_row";					
+				}
+				//Tu dien cac dong trang trong truong hop du lieu tra ve < so row _CONST_NUMBER_OF_ROW_PER_LIST		
+				if(sizeof($arrResul) <= 0){	
+					echo $this->addEmptyRow($this->iCountElement,15 - sizeof($arrResul),$v_current_style_name,7);		
+				}	
+				?>
+				<tr class="<?=$v_current_style_name?>">
+					<td align="center" valign="middle" style="padding-right:3px;border-bottom: solid 1px #CCC;" class="normal_label"></td>
+					<td align="center" valign="middle" style="padding-right:3px;border-bottom:solid 1px #CCC;font-weight:bold;" class="normal_label">Tổng số</td>
+					<td align="center" style="padding-right:3px;border-bottom:solid 1px #CCC;" class="normal_label"><?=(($iSumDangXuLy + $iSumDaXuLyDungHan + $iSumDaXuLyQuaHan + $iSumQuaHanChuaXuLy) > 0)?($iSumDangXuLy + $iSumDaXuLyDungHan + $iSumDaXuLyQuaHan + $iSumQuaHanChuaXuLy):''?></td>	
+					<td align="center" valign="middle" style="padding-right:3px;border-bottom:solid 1px #CCC;" class="normal_label"><?=($iSumDangXuLy > 0)?$iSumDangXuLy:''?></td>	
+					<td align="center" valign="middle" style="padding-right:3px;border-bottom:solid 1px #CCC;" class="normal_label"><?=($iSumDaXuLyDungHan > 0)?$iSumDaXuLyDungHan:''?></td>	
+					<td align="center" valign="middle" style="padding-right:3px;border-bottom:solid 1px #CCC;" class="normal_label"><?=($iSumDaXuLyQuaHan > 0)?$iSumDaXuLyQuaHan:''?></td>	
+					<td align="center" valign="middle" style="padding-right:3px;color:red;border-bottom:solid 1px #CCC;" class="normal_label"><?=($iSumQuaHanChuaXuLy > 0)?$iSumQuaHanChuaXuLy:''?></td>	
+				</tr>
+	</table>	
+	<!--Hien thi trang can xem!-->
+	
+	<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:2px;">
+		<tr>
+			<td style="color:red;width:30%;padding-left:1%;" class="small_label">
+				<small class="small_starmark"><?=$this->sdocpertotal;?></small>
+			</td>
+			<td align="center" style="width="50%">
+				<table width="10%"><?php
+					//Hien thi danh sach so trang
+					//echo $this->generateStringNumberPage;?>
+				</table>
+			</td>
+			<td width="30%" align="right" style="font-size:13px; padding-right:1%; font:tahoma" class="normal_label"><?php
+				//Hien thi so trang
+				//echo $this->generateHtmlSelectBoxPage;?>
+			</td>
+		</tr>
+	</table>
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' align="center">
+		<tr>
+			<td style="padding-top: 10px; padding-bottom: 10px;" align="center" valign="middle">
+				<?php 
+					$iLeaderId	 = $objFunction->convertStaffNameToStaffId($sLeaderPositionName);
+					$iUnitId 	 = $objFunction->convertUnitNameListToUnitIdList($this->iUnitId);
+				?>
+				<input type="button" class="add_large_button" value="&nbsp;&nbsp;&nbsp;In thống kê&nbsp;&nbsp;&nbsp;" onclick="btn_printresult_rop_onclick('../printresult/','<?=($iSumDangXuLy + $iSumDaXuLyDungHan + $iSumDaXuLyQuaHan + $iSumQuaHanChuaXuLy)?>','<?=$iSumDangXuLy?>','<?=$iSumDaXuLyDungHan?>','<?=$iSumDaXuLyQuaHan?>','<?=$iSumQuaHanChuaXuLy?>','<?=$this->fromDate?>','<?=$this->toDate?>');">
+			</td>	
+		</tr>
+	</table>
+</div>
+</form>
+<?php echo $this->search_textselectbox_doc_type;?>
+<?php echo $this->search_textselectbox_doc_cate;?>
+<?php echo $this->search_textselectbox_leader;?>
+<?php
+	if($_SESSION['arrStaffPermission']['THEO_DOI_KQXL_VBDEN'] == 1)
+		echo $this->search_textselectbox_unit;
+?>
+<script type="text/javascript">
+/*
+shortcut.add("Ctrl+K",function() {
+	document.getElementById('txtfullTextSearch').focus();
+	document.getElementById('txtfullTextSearch').select();
+});
+function ResetSearch(){
+	document.getElementById('hdn_current_page').value = "1";
+}
+function checkvalue(){
+	if(document.getElementById('txtfullTextSearch').value != "")
+		actionUrl('');
+}*/
+</script>
+<style>
+	.dspnone{
+		display:none;
+	}
+</style>
+<script type = "text/javascript">
+$(function() {
+	$( "#fromDate" ).datepicker({
+		changeMonth: true,
+		gotoCurrent: true,
+		maxDate: '+1m +1w',
+		minDate: new Date(1945, 1 - 1, 1),
+		changeYear: true
+	});
+	$( "#toDate" ).datepicker({
+		changeMonth: true,
+		gotoCurrent: true,
+		maxDate: '+1m +1w',
+		minDate: new Date(1945, 1 - 1, 1),
+		changeYear: true
+	});
+});
+</script>

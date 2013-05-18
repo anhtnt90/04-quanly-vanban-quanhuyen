@@ -1,0 +1,33 @@
+<form action="index" method="POST" id="frmAddReceived" enctype="multipart/form-data" autocomplete="off">
+
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<!--tao tac hidden!-->
+		<tr>
+			<td>
+				<?php echo $this->formHidden("hdn_xml_tag_list","",null); ?>
+				<?php echo $this->formHidden("hdn_xml_value_list","",null); ?>
+				<?php echo $this->formHidden("hdn_XmlTagValueList","",null); ?>
+				<?php echo $this->formHidden("hdh_option",$this->option,null); ?>
+				<!--Sinh mot hidden luu ID VB!-->
+				<?php echo $this->formHidden("hdn_object_id",$this->sReceiveDocumentId,null); ?>		
+				<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+				<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>	
+				<?php echo $this->formHidden("hdnListId","",null); ?> 
+				<?php echo $this->formHidden("hdn_agentcy_group","",null); ?>
+				<?php echo $this->formHidden("hdn_agentcy_name","",null); ?>
+				<?php echo $this->formHidden("hdn_doc_type","",null); ?>
+				<?php echo $this->formHidden("hdn_doc_cate_name","",null); ?>
+				
+				<?php echo $this->formHidden("hdn_current_page",$this->currentPage,null); ?>
+				<?php echo $this->formHidden("hdn_record_number_page",$this->numRowOnPage,null); ?>
+				<?php echo $this->formHidden("fromDate",$this->fromDate,null); ?>	
+				<?php echo $this->formHidden("toDate",$this->toDate,null); ?> 
+				<?php echo $this->formHidden("FullTextSearch",$this->FullTextSearch,null); ?>
+				<?php echo $this->formHidden("hdn_history_back",$this->sUrl,null); ?>
+
+			</td>
+		</tr>
+	</table>
+	

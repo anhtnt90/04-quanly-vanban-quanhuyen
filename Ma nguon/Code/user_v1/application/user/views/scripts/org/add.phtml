@@ -1,0 +1,128 @@
+<form action="index" method="POST" id="frmAddReceived" enctype="multipart/form-data" autocomplete="off">
+<?php  
+$arrPermission = $_SESSION['arrStaffPermission'];
+$arrConst = $this->arrConst;
+$arrOwnercode=$this->arrOwnercode;
+$sUnitId=$this->sUnitId;
+?>
+<!--Table chua cac textbox, combobox de nhap du lieu-->
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<!--tao tac hidden!-->
+		<tr>
+			<td>
+				<?php echo $this->formHidden("hdn_parent_id","",null); ?>
+				<?php echo $this->formHidden("hdn_unit_id","",null); ?>
+				<?php echo $this->formHidden("hdn_item_id",$this->sUnitId,null); ?>
+				<?php echo $this->formHidden("hdn_current_position","",null); ?>
+				<?php echo $this->formHidden("hdn_item_status",'',null); ?>
+				<?php echo $this->formHidden("hdn_save_and_add_new",'',null); ?>			
+				<?php echo $this->formHidden("hdn_filter","",null); ?>	
+				<?php echo $this->formHidden("hdn_list_parent_id","",null); ?>	
+				<?php echo $this->formHidden("hdn_parent_code",'',null); ?>	
+				<?php echo $this->formHidden("hdn_is_update",'',null); ?>	
+			</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 7px; text-align: left;" class="large_title">CẬP NHẬT THÔNG TIN PHÒNG BAN</td>
+			<td style="padding-left: 7px;padding-right: 7px; text-align: right;" class="large_title">
+				<a style="cursor:pointer;letter-spacing:0;" onClick="btn_org_update('','1');"><?=$arrConst['_GHI_THEM_MOI']?> |</a> 
+				<a style="cursor:pointer;letter-spacing:0;" onClick="btn_org_update('','2');"><?=$arrConst['_GHI_QUAY_LAI']?> |</a> 
+				<a style="cursor:pointer;letter-spacing:0;" onclick="btn_back_onclick('../index/?sUnitId=<?php echo $sUnitId?>')"><?=$arrConst['_QUAY_LAI']?></a>
+			</td>
+		</tr>
+		<tr style = "height:5px;"></tr>
+	</table>
+	<!--Textbox -->
+	<div>
+		<table width="99%" align="center" cellpadding="0" cellspacing="0" border="0" class="buton_table">
+			<col width="20%"><col width="80%">
+				<tr>
+					<td class="normal_label" style="padding-left:5px;"><?=$arrConst['_MA_PHONG_BAN']?><small class="normal_starmark">*</small></td>
+					<td><input name="txt_code" id="txt_code" type="text" class="textbox normal_label" style="width:70%"  value="<?=$v_item_code; ?>" option = "true" message="Phải nhập mã phòng ban!" ></td>
+				</tr>
+				<tr>
+					<td class="normal_label" style="padding-left:5px;"><?=$arrConst['_TEN_PHONG_BAN']?> <small class="normal_starmark">*</small></td>
+					<td><input name="txt_name" id="txt_name" Type="text" class="textbox normal_label" style="width:70%" value="<?=$v_item_name; ?>" maxlength="<?=CONST_UNIT_NAME_MAXLENGTH;?>" message="Nhập tên phòng ban" option = "true"></td>
+				</tr>
+				<tr>
+					<td class="normal_label" style="padding-left:5px;"><?=$arrConst['_DON_VI_TRIEN_KHAI']?><small class="normal_starmark">*</small></td>
+					<td>
+						<select class="textbox" id="C_OWNER_CODE" name="C_OWNER_CODE" class="textbox normal_label" style="width:70%" option = "true" message="Phải chọn đơn vị triển khai!" onchange="changeSelectbox_resetcode();">
+							<option id="" name = "" value="">-- Chọn đơn vị triển khai --</option> <?php
+							echo Sys_Library::_generateSelectOption($arrOwnercode,'C_CODE','C_CODE','C_NAME',$this->sOwnerCode);?>
+						</select>
+					</td>	
+				</tr>
+				<tr>
+					<td class="normal_label" style="padding-left:5px;"><?=$arrConst['_PHONG_BAN']?></td>
+					<td><input type="hidden" name="txt_parent_code" id="txt_parent_code" value="<?= $this->sUnitId;?>">
+						<input type="text" name="txt_parent_name" id="txt_parent_name" readonly="" class="textbox normal_label" style="width:70%" value="<?= $this->sUnitName;?>" optional="<?=CONST_WITHIN_UNIT_OPTIONAL;?>" >
+						<img src="<?php echo $this->UrlImg;?>find.gif" class="normal_image" onClick="btn_movehandle_onclick();">
+					</td>	
+				</tr>				
+				<tr>
+					<td class="normal_label" style="padding-left:5px;"><?=$arrConst['_DIA_CHI']?></td>
+					<td><input name="txt_address" id="txt_address" Type="text" class="textbox normal_label" style="width:70%" value="<?=$v_item_address; ?>" optional="<?=CONST_UNIT_ADDRESS_OPTIONAL;?>" ></td>
+				</tr>
+				<!--SO NOI BO-->
+				<tr>
+					<td class="normal_label" style="padding-left:5px;"><?=$arrConst['_DIEN_THOAI_NOI_BO']?></td>
+					<td><input name="txt_tel" id="txt_tel" Type="text" class="textbox normal_label" style="width:70%" value="<?=$v_item_tel; ?>" optional="<?=CONST_UNIT_TEL_LOCAL_OPTIONAL;?>" ></td>
+				</tr>
+				<!--SO CO DINH-->
+				<tr>
+					<td class="normal_label" style="padding-left:5px;"><?=$arrConst['_DIEN_THOAI_CO_DINH']?></td>
+					<td><input name="txt_local" Type="text"  style="width:70%" value="<?=$v_item_local; ?>" class="textbox normal_label" optional="<?=CONST_UNIT_TEL_OPTIONAL;?>" ></td>
+				</tr>
+				<tr>
+					<td class="normal_label" style="padding-left:5px;"><?=$arrConst['_FAX']?></td>
+					<td><input name="txt_fax" id="txt_fax" Type="text"  style="width:70%" value="<?=$v_item_fax; ?>" class="textbox normal_label" optional="<?=CONST_UNIT_FAX_OPTIONAL;?>" ></td>
+				</tr>
+				<tr>
+					<td class="normal_label" style="padding-left:5px;"><?=$arrConst['_EMAIL']?></td>
+					<td><input name="txt_email" id="txt_email" Type="text"  style="width:70%" value="<?=$v_item_email;?>" class="textbox normal_label" isemail=<?=CONST_IS_EMAIL;?> message="<?=CONST_IS_EMAIL_MESSAGE;?>" optional="<?=CONST_UNIT_EMAIL_OPTIONAL;?>" ></td>
+				</tr>			
+				<tr>
+					<td class="normal_label" style="padding-left:5px;"><?=$arrConst['_THU_TU']?><small class="normal_starmark">*</small></td>
+					<td><input name="txt_order" id="txt_order" Type="text"  value="<?=$this->iOrder;?>" class="textbox normal_label" maxlength="<?=CONST_UNIT_ORDER_MAXLENGTH;?>" message="<?=CONST_UNIT_ORDER_MESSAGE;?>" optional="<?=CONST_UNIT_ORDER_OPTIONAL;?>" isnumeric="<?=CONST_UNIT_ORDER_ISNUMERIC; ?>" min="<?=CONST_UNIT_ORDER_MIN; ?>" max="<?=CONST_UNIT_ORDER_MAX; ?>" ></td>
+				</tr>
+				<tr>
+					<td class="normal_label" style="padding-left:5px;"><?=$arrConst['_TT_HOAT_DONG']?></td>
+					<td class="normal_label" onClick="btn_checkOrNotCheckbox(document.getElementById('chk_status'));">
+						<input type="checkbox" name="chk_status" id="chk_status"   optional = "true"  checked="checked" onClick="btn_checkOrNotCheckbox(document.getElementById('chk_status'));" > <?=$arrConst['_HOAT_DONG']?>
+					</td>
+				</tr>
+				<tr style="display:none">
+					<td height="37"></td>
+					<td><input type="checkbox" name="chk_save_and_add_new" id="chk_save_and_add_new" optional = "true"  <?=$v_str_save_and_add_new_checked; ?> onclick="btn_single_checkbox_onclick(document.getElementById('chk_save_and_add_new'),document.getElementById('hdn_save_and_add_new'))" ><?=_CONST_SAVE_AND_ADD_NEW_LABEL;?></td>
+				</tr>
+				<tr><td height="5">&nbsp;</td></tr>
+		</table>
+	</div>
+<!--bang chua cac button Chap nhan, Quay lai-->
+<div id="button">
+		<button name="btn_ghi_them_moi" id="btn_ghi_them_moi" type="button" style="Width:12%" value="Ghi&themmoi" class="add_large_button" onClick="btn_org_update('','1');"><?=$arrConst['_GHI_THEM_MOI']?></button>
+		<button name="btn_ghi_quay_lai" id="btn_ghi_quay_lai" type="button" style="Width:12%" value="Ghi&quaylai" class="add_large_button" onClick="btn_org_update('','2');"><?=$arrConst['_GHI_QUAY_LAI']?></button>
+		<button name="btn_quaylai" id="btn_quaylai" type="button" style="Width:12%" value="Quay lại" class="add_large_button" onClick="btn_back_onclick('../index/?sUnitId=<?php echo $sUnitId?>')"><?=$arrConst['_QUAY_LAI']?></button>
+</div>
+</form>
+<script language="JavaScript">
+	set_focus(document.forms[0]);
+	window.dialogHeight = "270pt";
+	window.dialogWidth = "420pt";
+	window.dialogTop = "80pt";
+	function btn_movehandle_onclick(){
+		var p_url="";
+		f = document.forms[0];
+		v_parent_id = f.hdn_item_id.value;
+		v_parent_code = f.C_OWNER_CODE.value;
+		p_url = '../dialog' + '/?hdn_item_id=' + v_parent_id ;
+		p_url = p_url + '&sParentCode='+v_parent_code;
+		p_url = p_url + '&showModelDialog=1';
+		DialogCenter(p_url,'',800,400);			
+	}
+	function changeSelectbox(){
+		document.forms[0].txt_parent_code.value="";
+		document.forms[0].txt_parent_name.value="";
+	}
+</script>

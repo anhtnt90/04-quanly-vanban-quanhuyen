@@ -1,0 +1,82 @@
+<form action="index" method="POST" id="frmAddReceived" enctype="multipart/form-data" autocomplete="off">
+<?php  
+$arrPermission = $_SESSION['arrStaffPermission'];
+$arrConst = $this->arrConst;
+$arrPositionGroupSingle = $this->arrPositionGroupSingle; 
+?>	
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<!--tao cac hidden!-->
+		<tr>
+			<td>
+				<?php echo $this->formHidden("hdn_fulltextsearch",$this->txtFullTextSearch,null); ?>			
+				<?php echo $this->formHidden("hdn_xml_tag_list","",null); ?>
+				<?php echo $this->formHidden("hdn_xml_value_list","",null); ?>
+				<?php echo $this->formHidden("hdn_XmlTagValueList","",null); ?>
+				<!--Bien luu trang thai ung voi tung nut "Ghi va Them moi;..."!-->
+				<?php echo $this->formHidden("hdh_option",$this->option,null); ?>
+				<!--Sinh mot hidden luu ID VB!-->
+				<?php echo $this->formHidden("hdn_object_id",$this->sSendReceiveDocumentId,null); ?>		
+				<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+				<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>	
+				<?php echo $this->formHidden("hdn_is_update",'',null); ?>	
+			</td>
+		</tr>
+		<tr>
+			<td style="padding-left: 7px; text-align: left;" class="large_title"><?php echo $this->bodyTitle;?></td>
+			<td style="padding-left: 7px;padding-right: 7px; text-align: right;" class="large_title">
+				<a style="cursor:pointer;letter-spacing:0;" onClick="document.getElementById('hdh_option').value='GHI_THEMMOI';btn_save_profile_enrollment('','<?=$this->UrlAjax?>','<?=$this->sProfileEnrollmentId?>','GHI_THEMMOI');"><?=$arrConst['']?></a> 
+				<a style="cursor:pointer;letter-spacing:0;" onclick="btn_back_onclick('../index/')"><?=$arrConst['']?></a>
+			</td>
+		</tr>
+		<tr style = "height:5px;"></tr>
+	</table>
+	<div>
+		<table width="99%" align="center" cellpadding="0" cellspacing="0" border="0" class="buton_table">
+			<col width="20%"><col width="80%">
+			<tr>
+				<td class="normal_label" style="padding-left:5px;"><?=$arrConst['_MA_NHOM_CHUC_VU'];?> <span class="requiein">*</span></td>
+				<td><input type="text" id="C_POSITION_GROUP_CODE" name="C_POSITION_GROUP_CODE" size="100" value="<?=$this->sPositionCode;?>"  option = "false" class="textbox normal_label" message="Phai xac dinh MA NHOM CHUC VU!"></td>
+			</tr>
+			<tr>
+				<td class="normal_label" style="padding-left:5px;"><?=$arrConst['_TEN_NHOM_CHUC_VU'];?> <span class="requiein">*</span></td>
+				<td><input type="text" id="C_POSITION_GROUP_NAME" name="C_POSITION_GROUP_NAME" size="100" value="<?=$this->sPositionCode;?>"  option = "false" class="textbox normal_label" message="Phai xac dinh TEN NHOM CHUC VU!"></td>
+			</tr>			
+			<tr>
+				<td class="normal_label" style="padding-left:5px;"><?=$arrConst['_THU_TU'];?> <span class="requiein">*</span></td>
+				<td>
+					<input type="text" id="C_ORDER" name="C_ORDER" size="19" value="<?=$this->iOrder;?>" isnumeric option = "false" class="textbox normal_label" message="THU TU HIEN THI phai la kieu so nguyen (1, 2,...)!">
+				</td>
+			</tr>	
+			<tr><?php
+				$sStatus = $arrPositionGroupSingle['C_STATUS'];
+				$checked = "";
+				if ($sStatus == "HOAT_DONG"){
+					$checked = "checked";
+				}
+				else $checked= " ";
+				?>
+				<td class="normal_label" style="padding-left:5px;"><?=$arrConst['_TT_HOAT_DONG'];?> <span class="requiein">*</span></td>
+				<td class="normal_label" onClick="btn_checkOrNotCheckbox(document.getElementById('C_STATUS'));">
+					<input type="checkbox" id="C_STATUS"  name="C_STATUS" checked class="textbox normal_label" onClick="btn_checkOrNotCheckbox(document.getElementById('C_STATUS'));"> (Hoạt động)
+				</td>
+			</tr>				
+		</table>
+	</div>
+	<!--Hien thi nut!-->		
+	<table width="98%" align="center" cellpadding="0" cellspacing="0" border="0" class="buton_table">				
+		<tr>
+			<td align="center" class="body"><?php
+				//Nut "GHI"
+				echo $this->formButton("btn_save",$arrConst['_GHI'],array("type"=>"button","class"=>"add_large_button","onClick"=>"btn_position_update('');")). "&nbsp;";	
+					//Xoa
+				echo $this->formButton("btn_back",$arrConst['_QUAY_LAI'],array("type"=>"button","class"=>"add_large_button","onClick"=>"btn_back_onclick('../index/')")). "&nbsp;";?>		
+			</td>
+		</tr>
+	</table>	
+</form>
+<script type="text/javascript"> 
+	//Focus vao o nhap dau tien
+	document.getElementById('C_POSITION_GROUP_CODE').focus();
+</script>

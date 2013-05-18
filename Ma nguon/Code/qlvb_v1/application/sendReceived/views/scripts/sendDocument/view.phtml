@@ -1,0 +1,158 @@
+<form action="index" method="POST" id="frmAddReceived" enctype="multipart/form-data"><?php 	
+	$urlCalendar = $this->urlCalendar; 
+	$arrSendReceived = $this->arrSendReceived;
+	$arrSigner = $this->arrSigner;
+	$arrUrgent = $this->arrUrgent;
+	$arrLoaiVB = $this->arrLoaiVB;
+	$sOwnerCode  = $this ->Owner;
+	$dspgiaymoi = 'none';
+	if($arrSendReceived[0]['C_DOC_TYPE'] == 'Giấy mời'){
+		$dspgiaymoi = 'block';
+	}
+?>
+	<!--tao tac hidden!-->
+				<?php echo $this->formHidden("hdnCode","",null); ?>
+				<!--Sinh mot hidden luu ID loai danh muc!-->
+				<?php echo $this->formHidden("hdn_object_id",$this->sSendReceiveDocumentId,null); ?>		
+				<!--Bien hdn_xml_tag_list dung de luu danh sach cac THE XML tuong ung voi cac THUOC TINH cua mot doi tuong dang duoc cap nhat-->			
+				<?php echo $this->formHidden("hdn_xml_tag_list",'',null); ?>			
+				<!--Bien hdn_xml_value_list dung de luu danh sach cac gia tri cua cac THE XML tuong ung voi cac THUOC TINH cua mot doi tuong-->			
+				<?php echo $this->formHidden("hdn_xml_value_list",'',null); ?>			
+				<!--Sinh mot hidden luu list ID ma NSD chon!-->
+				<?php echo $this->formHidden("hdn_object_id_list","",null); ?>	
+				<!--Hidden luu gia tri cua list tag va list value (TagList|{*^*}|ValueList) -->
+				<?php echo $this->formHidden("hdn_XmlTagValueList",$this->XmlTagValueList,null); ?>
+				<!--Bien hdn_page dung de luu chi so trang hien thi hien thoi-->			
+				<?php echo $this->formHidden("hdn_current_page",$this->currentPage,null); ?>	
+				<!--Sinh mot hidden luu gia tri xac dinh so ban ghi / 1 trang!-->	
+				<?php echo $this->formHidden("hdn_record_number_page",$this->numRowOnPage,null); ?>	
+				<!--Bien hdn_filter_xml_tag_list dung de luu danh sach cac THE XML tuong ung voi cac tieu thuc loc tren giao dien DANH SACH DOI TUONG-->
+				<?php echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); ?>
+				<!--Bien hdn_filter_xml_tag_list dung de luu gia tri cua cac THE XML tuong ung voi cac tieu thuc loc tren giao dien DANH SACH DOI TUONG-->	
+				<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+				<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+				<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>	
+				<?php echo $this->formHidden("hdh_option",$this->option,null); ?>	
+				<?php echo $this->formHidden("hdn_doc_type","",null); ?>
+				<?php echo $this->formHidden("hdn_signer_position_name","",null); ?>
+				<?php echo $this->formHidden("hdn_staff_id_list","",null); ?>
+				<?php echo $this->formHidden("hdn_unit_id_list","",null); ?>
+				<?php echo $this->formHidden("showModalDialog","",null); ?>
+				<?php echo $this->formHidden("hdn_type",$this->pType,null); ?>
+				<?php echo $this->formHidden("hdn_doc_id",$this->pDocId,null); ?>
+
+	<!--HIen thi tieu de man hinh danh sach!-->
+	<script type="text/javascript">
+		$(function(){$('#body_conten1').equalHeights();});
+	</script>
+	<div id ="content">
+		<div id="header_conten" style="height: 25px;padding-bottom:0px;border:none;"></div>
+		<div style="border:none; border:1px solid #CCCCCC;" id="body_conten1">
+				<div id ="body_conten1_left" style="width:49%">
+					<div>
+						<label>1. Loại văn bản:</label>
+						<label style="clear:right;display:block;width:67%;">
+							<?=$arrSendReceived[0]['C_DOC_TYPE'].'&nbsp;'?>
+						</label>
+					</div>
+					<div>
+						<label>2. Ngày gửi:</label>
+						<label style="clear:right;display:block;width:67%;"><?=$arrSendReceived[0]['C_SEND_DATE'].'&nbsp;'?></label>
+					</div>
+					<div>
+						<label>3. Ngày phát hành:</label>
+						<label style="clear:right;display:block;width:25%;"><?=Sys_Library::_yyyymmddToDDmmyyyy($arrSendReceived[0]['C_RELEASE_DATE']).'&nbsp;'?></label>
+						<label style="clear:none;float:none;display:inline;">4.Số/Ký hiệu:</label>
+						<label style="clear:none;float:none;display:inline;"><?=$arrSendReceived[0]['C_SYMBOL'].'&nbsp;'?></label>
+					</div>
+					<?php if($dspgiaymoi == 'block'){?>
+						<div id="thoigianhop">
+							<label>5. Thời gian họp:</label>
+							<label style="clear:right;display:block;width:25%;"><?=$arrSendReceived[0]['C_HOURS'].'&nbsp;'?></label>
+							
+							<label style="float:none;clear:none;display:inline;">6. Ngày họp: </label>
+							<label style="clear:none;float:none;display:inline;"><?=Sys_Library::_yyyymmddToDDmmyyyy($arrSendReceived[0]['C_DATE']).'&nbsp;'?></label>
+						</div>
+					<div id="diadiem" style="display:<?=$dspgiaymoi?>";>
+						<label>7. Địa điểm họp: </label>
+						<label style="clear:right;display:block;width:67%;"><?=$arrSendReceived[0]['C_ADDRESS'].'&nbsp;'?></label>
+					</div>
+					<?php $iindex = 8;} else $iindex = 5; ?>
+					<div>
+						<label><?=$iindex;?>. Trích yếu:</label>
+						<label style="clear:right;display:block;width:65%;text-align:justify;margin-right:2%;"><?=$arrSendReceived[0]['C_SUBJECT'].'&nbsp;'?></label>
+					</div>
+					<div>
+						<label><?=$iindex += 1;?>. Độ khẩn:</label>
+						<label style="clear:right;display:block;width:67%;"><?=$arrSendReceived[0]['C_TEXT_OF_EMERGENCY'].'&nbsp;'?></label>
+					</div>
+					<div>
+						<label><?=$iindex += 1;?>. Người ký:</label>
+						<label style="clear:right;display:block;width:67%;"><?=$arrSendReceived[0]['C_SIGNER_POSITION_NAME'].'&nbsp;'?></label>
+					</div>
+					<div>
+						<label><?=$iindex += 1;?>. Số bản:</label>
+						<label style="clear:right;display:block;width:25%;"><?php if($arrSendReceived[0]['C_NUMBER_SHEET'] != 0) echo $arrSendReceived[0]['C_NUMBER_SHEET'].'&nbsp;'?></label>
+						<label style="clear:none;float:none;display:inline;"><?=$iindex += 1;?>. Số trang:</label>
+						<label style="clear:none;float:none;display:inline;"><?php if($arrSendReceived[0]['C_NUMBER_SHEET'] != 0) echo $arrSendReceived[0]['C_NUMBER_PAGE'].'&nbsp;'?></label>
+					</div>
+				</div><!-- End #body_conten1_left-->
+				<div id="body_conten1_right" style="width:48%;">
+					<div>
+						<label><?=$iindex += 1;?>. Thông tin khác:</label>
+						<label style="width:95%;">
+							<?php $arrSendReceived[0]['C_OTHER'];
+								$docType					= $arrSendReceived[0]['C_DOC_TYPE'];
+								$other 			 			= $arrSendReceived[0]['C_OTHER'];	
+								// Thong tin khac
+								$signerPositionName 		= Sys_Library::_getNameByCode($arrSigner,$arrSendReceived[0]['C_SIGNER_POSITION_NAME'],'C_NAME','C_CODE');
+								$hours						= $arrSendReceived[0]['C_HOURS'];
+								$date						= $arrSendReceived[0]['C_DATE'];
+								$address					= $arrSendReceived[0]['C_ADDRESS'];
+								if($docType == 'GM'){
+									echo 'Thời gian họp: '.$hours.' ngày '.$date.'<br>Địa điểm: '.$address.'<br>';
+								}
+								echo 'Người ký: '.$signerPositionName.'<br>';
+								echo '<font color=\'red\'>'.$other.'</font>';
+							?>
+						
+						</label>
+					</div>
+					<div>
+						<label><?=$iindex += 1;?>. Cán bộ nhận:</label>
+						<label style="width:95%;">
+							<?=str_replace(';','; ',$arrSendReceived[0]['C_STAFF_NAME_LIST'])?>
+						</label>
+					</div>
+					<div>
+						<label style="width:55%;"><?=$iindex += 1;?>. Đơn vị, phòng ban nhận:</label>
+						<label style="width:95%;">
+							<?=str_replace(';','; ',$arrSendReceived[0]['C_UNIT_NAME_LIST'])?>
+						</label>
+					</div>
+					<div>
+						<label style="width:95%;"><?=$iindex += 1;?>. File đính kèm</label>
+						<?php
+							$strFileName 				= $arrSendReceived[0]['C_FILE_NAME'];
+							if($strFileName != ""){
+								$sFile 					= Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+							}else 
+								$sFile = "";
+						 ?>
+						 <label style="width:95%;"><?=$sFile?></label>
+					</div>	
+				</div><!-- End #body_conten1_right-->
+		</div><!-- End #body_conten1-->
+		
+	</div><!-- End #content-->	
+	
+	<!--Hien thi nut!-->		
+	<div class="divButton" style="margin-top:10px;text-align:center;margin-bottom:10px;">
+		<!-- <input id="btn_print" name="btn_print" type="button" class="add_large_button" value="In" onclick="btn_print_infor_onclick(document.getElementById('hdn_object_id'),'<?=$this->pDocId?>','<?=$this->pType?>','../print');"> -->
+		<input type="submit" name="quaylai" id="quaylai" value="Quay lại" onClick="btn_back_onclick('../index/')" class="add_large_button">
+	</div>
+</form>
+
+

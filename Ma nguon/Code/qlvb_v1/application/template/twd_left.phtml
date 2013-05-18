@@ -1,0 +1,684 @@
+<?php $arrPermission = $_SESSION['arrStaffPermission'];?>
+<div id="Iddiv_leftmenu" style="margin-top: 5px; margin-bottom: 5px;">	
+		<table width="98%" cellpadding="0"  cellspacing="0" align="center"  class="left_menu_table">
+				<tr>  
+					<td id ="id_vanbanden" class="level0_doc">														
+						<a href="#" onclick="showHideMenu('Iddiv_received_doc')">QUẢN LÝ VĂN BẢN ĐẾN</a>
+					</td>
+				</tr>
+		</table>
+		<div id ="Iddiv_received_doc" style="display:none;"  value="true">
+			<table  cellpadding="0"  cellspacing="0" border="0" class="body3">
+				<tr>
+					<td valign="top">
+						<table width="98%" cellpadding="0"  cellspacing="0" align="center"  class="left_menu_table">
+						<?php
+							if ($arrPermission['CAP_NHAT_VB_DEN_DON_VI'] || $arrPermission['CAP_NHAT_VBDEN_PB'] || $arrPermission['CAP_NHAT_VBDEN_PX']){?>
+								<tr>  
+									<td id ="id_vsvbden" class="level1" >						
+										<a href="<?php echo $this->baseUrl;?>../received/documents/index/">Vào sổ VB đến</a>
+									</td>
+									</tr>
+									<tr> 
+										<td id ="id_email_vb" class="level1" >						
+											<a href="<?php echo $this->baseUrl;?>../email/email/index/">Nhận văn bản từ Email</a>
+										</td>
+									</tr><?php
+							}
+							if ($arrPermission['PPVB_DEN_DON_VI']){?>
+								<tr>  
+									<td id ="id_ppvb" class="level1">														
+										<a href="#"onclick="showHideMenu('iddiv_phanphoi_vb');">Phân phối VB đến</a>
+									</td>
+								</tr>
+								<tr>
+									<td >
+										<div id="iddiv_phanphoi_vb" style="display:none;"  value="true">
+											<table border="0" class="menu_level2" cellpadding="0" cellspacing="0">
+												<tr>
+													<td class="level2" id="id_chophanphoivb" ><img src="<?= $this->baseUrl?>images/icon_td_level2.gif">&nbsp;<a href="<?php echo $this->baseUrl;?>../received/distribution/index/status/CHO_PHAN_PHOI">VB chờ phân phối</a></td>
+												</tr>
+												<tr>
+													<td class="level2" id='id_daphanphoivb'><img src="<?= $this->baseUrl?>images/icon_td_level2.gif">&nbsp;<a  href="<?php echo $this->baseUrl;?>../received/distribution/index/status/DA_PHAN_PHOI" >VB đã phân phối</a></td>
+												</tr>									
+											</table>
+										</div>	
+									</td>
+								</tr><?	
+							}											
+							if ($arrPermission['CAP_NHAT_PCXL_VB_DV']||$arrPermission['PCXL_VB_DEN_PB'] || $arrPermission['PCXL_VBDEN_PX']){?>
+								<tr>  
+									<td id ="id_pcxlvb" class="level1">														
+										<a href="#" onclick="showHideMenu('iddiv_phancongxuly_vb');">Phân công xử lý</a>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div id="iddiv_phancongxuly_vb" style="display:none;"  value="true">
+											<table border="0" class="menu_level2" cellpadding="0" cellspacing="0" >
+												<tr>
+													<td class="level2" id="id_chophancongxulyvb" ><img src="<?= $this->baseUrl?>images/icon_td_level2.gif">&nbsp;<a href="<?php echo $this->baseUrl;?>../received/assign/index/status/CHO_PHAN_CONG">VB chờ phân công</a></td>
+												</tr>
+												<tr>
+													<td class="level2" id='id_daphancongxulyvb'><img src="<?= $this->baseUrl?>images/icon_td_level2.gif">&nbsp;<a  href="<?php echo $this->baseUrl;?>../received/assign/index/status/DA_PHAN_CONG" >VB đã phân công</a></td>
+												</tr>							
+											</table>
+										</div>	
+									</td>
+								</tr>
+								<tr> 
+									<td id ="id_uy_quyen" class="level1">						
+										<a href="<?php echo $this->baseUrl;?>../authorized/authorized/index/">Ủy quyền xử lý VB</a>
+									</td> 									
+								</tr>							
+							<?php
+							}
+							if (!$arrPermission['CAP_NHAT_PCXL_VB_DV']){
+							?>						
+							<!-- Xử lý văn bản -->
+							<tr>  
+								<td id ="id_processDoc" class="level1">														
+									<a href="#"onclick="showHideMenu('iddivSub_processDoc');">Xử lý văn bản</a>
+								</td>
+							</tr>
+							<tr>
+								<td >
+									<div id="iddivSub_processDoc" style="display:none;"  value="true">
+										<table border="0" class="menu_level2" >
+											<tr>
+												<td class="level2" id="id_WaitProcess" ><img src="<?= $this->baseUrl?>images/icon_td_level2.gif">&nbsp;<a href="<?php echo $this->baseUrl;?>../received/process/index/status/CAN_XU_LY">VB cần xử lý</a></td>
+											</tr>
+											<tr>
+												<td class="level2" id='id_Processed'><img src="<?= $this->baseUrl?>images/icon_td_level2.gif">&nbsp;<a  href="<?php echo $this->baseUrl;?>../received/process/index/status/DA_XU_LY" >VB đã xử lý</a></td>
+											</tr>
+											<tr>
+												<td class="level2" id="id_CoordinateProcess" ><img src="<?= $this->baseUrl?>images/icon_td_level2.gif">&nbsp;<a href="<?php echo $this->baseUrl;?>../received/process/index/status/PHXL">Phối hợp xử lý</a></td>
+											</tr>									
+										</table>
+									</div>	
+								</td>
+							</tr>		
+							<?php }?>							
+									<tr>  
+								<td id ="id_bcvb_den" class="level1" >						
+									<a href="<?php echo $this->baseUrl;?>../received/reports/index/">Báo cáo</a>
+								</td>
+							</tr>																
+							<tr>
+								<td id ="id_tcvb" class="level1">										
+									<a href="<?php echo $this->baseUrl;?>../received/search/index/modul/QUAN" >Tra cứu</a>														
+								</td>							
+							</tr>
+						</table> 						
+					</td>					
+				</tr>
+			</table>
+		</div>	
+		<table width="98%" cellpadding="0"  cellspacing="0" align="center"  class="left_menu_table">
+				<tr>  
+					<td id ="id_vanbandi" class="level0_doc">														
+						<a href="#" onclick="showHideMenu('Iddiv_sent_doc')">QUẢN LÝ VĂN BẢN ĐI</a>
+					</td>
+				</tr>
+		</table>	
+		<div id ="Iddiv_sent_doc" style="display:none;"  value="true">
+			<table width="100%" cellpadding="0"  cellspacing="0" class="body3">		
+				<tr>
+					<td valign="top">
+						<table width="98%" cellpadding="0"  cellspacing="0" align="center"  class="left_menu_table">
+								<?php						
+							if (!$arrPermission['CAP_NHAT_VB_DI_DON_VI'] && !$arrPermission['CAP_NHAT_VB_BH_PB'] && !$arrPermission['CAP_NHAT_VB_BH_PX']&&!$arrPermission['CAP_NHAT_PCXL_VB_DV']
+								){?>
+									<tr>  
+										<td id ="id_duthaovb" class="level1">						
+											<a href="#" onclick="showHideMenu('iddiv_sent_draff');">Dự thảo văn bản</a>
+										</td>
+									</tr>
+									<tr>
+										<td >
+											<div id="iddiv_sent_draff" style="display:none;" value="true">
+												<table border="0" class="menu_level2" cellpadding="0" cellspacing="0" >
+													<tr>
+														<td class="level2" id="id_cb_duthao" ><img src="<?= $this->baseUrl?>images/icon_td_level2.gif">&nbsp;<a href="<?php echo $this->baseUrl;?>../sent/draff/index" >VB dự thảo</a></td>
+													</tr>
+													<tr>
+														<td class="level2" id="id_cb_datrinh" ><img src="<?= $this->baseUrl?>images/icon_td_level2.gif">&nbsp;<a href="<?php echo $this->baseUrl;?>../sent/submitorder/index/modul/CBDT_DA_TRINH_KY">VB đã trình ký</a></td>
+													</tr>
+													<tr>
+														<td class="level2" id="id_cb_daduyet" ><img src="<?= $this->baseUrl?>images/icon_td_level2.gif">&nbsp;<a href="<?php echo $this->baseUrl;?>../sent/submitorder/index/modul/CBDT_DA_DUYET">VB đã duyệt</a></td>
+													</tr>
+												</table>
+											</div>	
+										</td>
+									</tr><?php
+								}
+								if ($arrPermission['PCXL_VB_DU_THAO'])
+								{?>
+									<tr>  
+										<td id ="id_pcxl" class="level1">						
+											<a href="#" onclick="showHideMenu('iddiv_sent_assign_ph');">Phân công xử lý</a>
+										</td>
+									</tr>
+									<tr>
+										<td >
+											<div id="iddiv_sent_assign_ph" style="display:none;" value="true">
+												<table border="0" class="menu_level2" cellpadding="0" cellspacing="0" >
+													<tr>
+														<td class="level2" id="id_wait_assign" ><img src="<?= $this->baseUrl?>images/icon_td_level2.gif">&nbsp;<a href="<?php echo $this->baseUrl;?>../sent/assign/index/modul/CHO_PHAN_CONG">VB chờ phân công</a></td>
+													</tr>
+													<tr>
+														<td class="level2" id="id_finish_assign" ><img src="<?= $this->baseUrl?>images/icon_td_level2.gif">&nbsp;<a href="<?php echo $this->baseUrl;?>../sent/assign/index/modul/DA_PHAN_CONG">VB đã phân công</a></td>
+													</tr>
+												</table>
+											</div>	
+										</td>
+									</tr><?php
+								} 
+								if (!$arrPermission['CAP_NHAT_PCXL_VB_DV']){ ?>
+									<!-- <tr>
+										<td id ="id_process" class="level1">										
+											 <a href="#" onclick="showHideMenu('iddiv_sent_process');">Xử lý văn bản</a>  													
+										</td>							
+									</tr>
+									<tr>
+										<td >
+											<div id="iddiv_sent_process" style="display:none;" value="true">
+												<table border="0" class="menu_level2" cellpadding="0" cellspacing="0" >
+													<tr>
+														<td class="level2" id="id_xlc_process" ><img src="<?= $this->baseUrl?>images/icon_td_level2.gif">&nbsp;<a href="<?php echo $this->baseUrl;?>../sent/process/index/modul/XU_LY_CHINH">Xử lý chính</a></td>
+													</tr>
+													<tr>
+														<td class="level2" id="id_phxl_process" ><img src="<?= $this->baseUrl?>images/icon_td_level2.gif">&nbsp;<a href="<?php echo $this->baseUrl;?>../sent/process/index/modul/PHXL">Phối hợp xử lý</a></td>
+													</tr>
+												</table>
+											</div>	
+										</td>
+									</tr>-->
+								<?php
+								}								
+								if (!$arrPermission['CAP_NHAT_VB_DI_DON_VI'] && !$arrPermission['CAP_NHAT_VB_BH_PB'] && !$arrPermission['CAP_NHAT_VB_BH_PX']								
+								&& ($arrPermission['KYVBDI_PX'] || $arrPermission['CAP_NHAT_KY_DUYET_VB_DI'] || $arrPermission['DUYET_THE_THUC_VB_DU_THAO'])
+								){?>
+									<tr>
+										<td id ="id_duyetvbduthao" class="level1">										
+											<a href="#" onclick="showHideMenu('iddiv_sent_approve');">Phê duyệt văn bản</a>														
+										</td>							
+									</tr>
+									<tr>
+										<td >
+											<div id="iddiv_sent_approve" style="display:none;" value="true">
+												<table border="0" class="menu_level2" cellpadding="0" cellspacing="0" >
+													<tr>
+														<td class="level2" id="id_ld_choduyet" ><img src="<?= $this->baseUrl?>images/icon_td_level2.gif">&nbsp;<a href="<?php echo $this->baseUrl;?>../sent/submitorder/index/modul/CHO_DUYET">Văn bản chờ duyệt</a></td>
+													</tr>
+													<tr>
+														<td class="level2" id="id_ld_datrinh" ><img src="<?= $this->baseUrl?>images/icon_td_level2.gif">&nbsp;<a href="<?php echo $this->baseUrl;?>../sent/submitorder/index/modul/DA_TRINH_KY">Văn bản đã trình ký</a></td>
+													</tr>
+													<tr>
+														<td class="level2" id="id_ld_daduyet" ><img src="<?= $this->baseUrl?>images/icon_td_level2.gif">&nbsp;<a href="<?php echo $this->baseUrl;?>../sent/submitorder/index/modul/DA_DUYET">Văn bản đã duyệt</a></td>
+													</tr>
+												</table>
+											</div>	
+										</td>
+									</tr><?php
+								}
+								?><?php
+								if (!$arrPermission['CAP_NHAT_VB_DI_DON_VI'] && !$arrPermission['CAP_NHAT_VB_BH_PB'] && !$arrPermission['CAP_NHAT_VB_BH_PX'] && !$arrPermission['CAP_NHAT_PCXL_VB_DV']){?>
+									<tr>
+										<td id ="id_dkph" class="level1">										
+											<a href="#" onclick="showHideMenu('iddiv_sent_doc_ph');">Đăng ký phát hành</a>														
+										</td>							
+									</tr>
+									<tr>
+										<td >
+											<div id="iddiv_sent_doc_ph" style="display:none;" value="true">
+												<table border="0" class="menu_level2" cellpadding="0" cellspacing="0" >
+													<tr>
+														<td class="level2" id="id_wait" ><img src="<?= $this->baseUrl?>images/icon_td_level2.gif">&nbsp;<a href="<?php echo $this->baseUrl;?>../sent/registration/index/modul/CHO_BAN_HANH">Chờ phát hành</a></td>
+													</tr>
+													<tr>
+														<td class="level2" id="id_finish" ><img src="<?= $this->baseUrl?>images/icon_td_level2.gif">&nbsp;<a href="<?php echo $this->baseUrl;?>../sent/registration/index/modul/DA_BAN_HANH">Đã phát hành</a></td>
+													</tr>
+												</table>
+											</div>	
+										</td>
+									</tr><?php	
+								}									
+								if ($arrPermission['CAP_NHAT_VB_DI_DON_VI'] || $arrPermission['CAP_NHAT_VB_BH_PB'] || $arrPermission['CAP_NHAT_VB_BH_PX']){?>
+									<tr>  
+										<td id ="id_chph" class="level1">						
+											<a style="cursor:pointer;" href="<?php echo $this->baseUrl;?>../sent/registration/waitrelease/">Văn bản chờ phát hành</a>
+										</td>
+									</tr>
+									<tr>  
+										<td id ="id_vaosovbdi" class="level1">						
+											<a style="cursor:pointer;" href="<?php echo $this->baseUrl;?>../sent/documents/index/">Vào sổ văn bản đi</a>
+										</td>
+									</tr><?php
+								}?>	
+								<!-- Báo cáo -->
+								<tr>  
+									<td id ="id_sent_report" class="level1" >						
+										<a href="<?php echo $this->baseUrl;?>../sent/reports/index">Báo cáo</a>
+									</td>
+								</tr>														
+								<tr>
+									<td id ="id_tcvbdi" class="level1">										
+										<a href="<?php echo $this->baseUrl;?>../sent/search/index/modul/QUAN" onclick="showHideMenu('iddiv_snet_doc_tracuu');">Tra cứu</a>														
+									</td>							
+								</tr>	
+						</table>   
+					</td>
+				</tr>
+			</table>
+		</div>	
+		<table width="98%" cellpadding="0"  cellspacing="0" align="center"  class="left_menu_table">
+				<tr>  
+					<td id ="id_guinhanvb" class="level0_doc">														
+						<a href="#" onclick="showHideMenu('Iddiv_sentreceived_doc')">GỬI NHẬN VĂN BẢN ĐIỆN TỬ</a>
+					</td>
+				</tr>
+		</table>
+		<div id ="Iddiv_sentreceived_doc" style="display:none;"  value="true">
+			<table width="100%" cellpadding="0" cellspacing="0" class="body3">		
+				<tr>
+					<td valign="top">
+						<table width="98%" cellpadding="0"  cellspacing="0" align="center"  class="left_menu_table">	
+							<tr>  
+								<td id ="id_vbdagui" class="level1">						
+									<a href="<?php echo $this->baseUrl;?>../sendReceived/sendDocument/index/?htn_leftmodul=SENT-DOCUMENT">Văn bản đã gửi</a>
+								</td>
+							</tr>
+							<tr>  
+								<td id ="id_nhanvb" class="level1">						
+									<a href="<?php echo $this->baseUrl;?>../sendReceived/receivedDocument/index/?htn_leftmodul=RECEIVED-DOCUMENT">Nhận văn bản</a>
+								</td>
+							</tr>
+						</table>   
+					</td>
+				</tr>
+			</table>
+		</div>			
+		<table width="98%" cellpadding="0"  cellspacing="0" align="center"  class="left_menu_table">
+				<tr>  
+					<td id ="id_theodoi" class="level0_doc">														
+						<a href="#" onclick="showHideMenu('Iddiv_rop')">THEO DÕI THỐNG KẾ</a>
+					</td>
+				</tr>
+		</table>
+		<div id ="Iddiv_rop" style="display:none;"  value="true">
+			<table width="100%" cellpadding="0" cellspacing="0" class="body3">		
+				<tr>
+					<td valign="top">
+						<table width="98%" cellpadding="0"  cellspacing="0" align="center"  class="left_menu_table">
+							<tr>  
+								<td id ="id_kqxlvbden" class="level1">						
+									<a href="<?php echo $this->baseUrl;?>../statistics/received/index/">Kết quả xử lý VB đến</a>
+								</td>
+							</tr>
+							<tr>  
+								<td id ="id_thkqxlvbden" class="level1">						
+									<a href="<?php echo $this->baseUrl;?>../statistics/generalresult/index/">Tổng hợp KQXL VB đến</a>
+								</td>
+							</tr><?php
+						if ($arrPermission['THEO_DOI_CONG_VIEC_DON_VI'] || $arrPermission['THEO_DOI_CONG_VIEC_PHONG_BAN']){?>
+							<!--<tr>  
+								<td id ="id_thxlcongviec" class="level1">						
+									<a href="<?php echo $this->baseUrl;?>../statistics/work/index/">Kết quả xử lý công việc</a>
+								</td>
+							</tr>--><?php
+						}?>
+						</table>   
+					</td>
+				</tr>
+			</table>
+		</div>				
+		<table width="98%" cellpadding="0"  cellspacing="0" align="center"  class="left_menu_table">
+				<tr>  
+					<td id ="id_hosoluu" class="level0_doc">														
+						<a href="#" onclick="showHideMenu('Iddiv_record')">HỒ SƠ LƯU</a>
+					</td>
+				</tr>
+		</table>
+		<div id ="Iddiv_record" style="display:none;"  value="true">
+			<table width="100%" cellpadding="0" cellspacing="0" class="body3">		
+				<tr>
+					<td valign="top">
+						<table width="98%" cellpadding="0"  cellspacing="0" align="center"  class="left_menu_table">	
+							<tr>  
+								<td id ="id_ListRecord" class="level1">						
+									<a href="<?php echo $this->baseUrl;?>../record/archives/index/">Hồ sơ đã tạo lập</a>
+								</td>
+							</tr>
+							<tr>  
+								<td id ="id_SearchRecord" class="level1">						
+									<a href="<?php echo $this->baseUrl;?>../record/archives/findrecord/?htn_leftmodul=FIND-RECORD">Tra cứu hồ sơ</a>
+								</td>
+							</tr>
+						</table>   
+					</td>
+				</tr>
+			</table>
+		</div>
+	<table width="98%" cellpadding="0"  cellspacing="0" align="center"  class="left_menu_table">
+				<tr>  
+					<td id ="id_qlcongviec" class="level0_doc">														
+						<a href="#" onclick="showHideMenu('Iddiv_calendar')">LỊCH LÀM VIỆC</a>
+					</td>
+				</tr>
+		</table>
+		<div id ="Iddiv_calendar" style="display:none;"  value="true">
+			<table width="100%" cellpadding="0"  cellspacing="0" class="body3">		
+				<tr>
+					<td valign="top">
+						<table width="98%" cellpadding="0"  cellspacing="0" align="center"  class="left_menu_table">											
+							<tr>  
+								<td id ="Iddiv_calendar_1" class="level1">						
+									<a href="<?php echo $this->baseUrl;?>../calendar/unit/index/status/0">Lịch tuần</a>
+								</td>
+							</tr>
+							<tr>  
+								<td id ="Iddiv_calendar_2" class="level1">						
+									<a href="<?php echo $this->baseUrl;?>../calendar/staff/unitleader/status/1">Lịch lãnh đạo</a>
+								</td>
+							</tr>
+							<tr>  
+								<td id ="Iddiv_calendar_3" class="level1">						
+									<a href="<?php echo $this->baseUrl;?>../calendar/staff/departments/status/2">Lịch lãnh đạo phòng</a>
+								</td>
+							</tr>
+							<tr>  
+								<td id ="Iddiv_calendar_user" class="level1">						
+									<a href="<?php echo $this->baseUrl;?>../calendar/staff/index/status/3">Lịch cá nhân</a>
+								</td>
+							</tr>
+							
+					</table>
+			</table>
+		</div>
+		<table width="98%" cellpadding="0"  cellspacing="0" align="center"  class="left_menu_table">
+				<tr>  
+					<td id ="id_sms" class="level0_doc">														
+						<a href="#" onclick="showHideMenu('Iddiv_work')">TRAO ĐỔI CÔNG VIỆC</a>
+					</td>
+				</tr>
+		</table>
+		<div id ="Iddiv_work" style="display:none;"  value="true">
+			<table width="100%" cellpadding="0" cellspacing="0" class="body3">		
+				<tr>
+					<td valign="top">
+						<table width="98%" cellpadding="0"  cellspacing="0" align="center"  class="left_menu_table">	
+							<tr>  
+								<td id ="id_smschonhan" class="level1">						
+									<a href="<?php echo $this->baseUrl;?>../exchangework/received/index/ ">Công việc đến</a>
+								</td>
+							</tr>
+							<tr>  
+								<td id ="id_smsdagui" class="level1">						
+									<a href="<?php echo $this->baseUrl;?>../exchangework/sent/index/">Công việc đã gửi</a>
+								</td>
+							</tr>							
+						</table>   
+					</td>
+				</tr>
+			</table>
+		</div>
+					
+</div>	 
+<?php 
+	echo $sCurrentModulCode; 
+?>
+<script type="text/javascript">
+ function showHideMenu(p_id){	 	
+	var objfrm = document.getElementsByTagName('div');
+	for(i=0; i<objfrm.length; i++){
+		e = objfrm[i].getAttribute('id');
+		if (objfrm[i].getAttribute('value') == "true"){
+	 		if(e == p_id){		
+	 			var pStyle	= eval("document.getElementById('" + p_id + "').style.display");	 			
+	 			if (pStyle == "none"){
+	 				eval("document.getElementById('" + p_id + "').style.display = '" + "block'"); 
+	 			}else{
+	 				eval("document.getElementById('" + p_id + "').style.display = '" + "none'"); 
+	 			}				 						 			
+	 		}
+ 		}	
+ 	}
+ } 												
+try{<?php
+	$sCurrentModulCode = $this->currentModulCode;	
+	$getModulLeft = $this->getStatusLeftMenu;
+	$scurrentModulCodeForLeft = $this->currentModulCodeForLeft;			
+	try {
+		if ($sCurrentModulCode == "RECEIVED"){?>
+			document.getElementById('Iddiv_received_doc').style.display = "block";
+			document.getElementById('id_vanbanden').className = "level0_doc_visited";		
+			<?if($scurrentModulCodeForLeft == "DOCUMENT-RECEIVED-DOC"){?>
+				document.getElementById('id_vsvbden').className = "level1_visited";		
+			<?}if($scurrentModulCodeForLeft == "EMAIL-RECEIVED-DOC"){?>
+				document.getElementById('id_email_vb').className = "level1_visited";	
+			<?} 
+			if($scurrentModulCodeForLeft == "DISTRIBUTION-RECEIVED-DOC") {?>
+	 			document.getElementById('id_ppvb').className = "level1_visited";
+	 			document.getElementById('iddiv_phanphoi_vb').style.display = "block";	
+	 		<?}if($getModulLeft == "CHO_PHAN_PHOI") {?>
+	 			document.getElementById('id_chophanphoivb').className = "level2_visited";
+	 		<?}if($getModulLeft == "DA_PHAN_PHOI") {?>
+	 			document.getElementById('id_daphanphoivb').className = "level2_visited";
+	 		<?}
+	 		if($scurrentModulCodeForLeft == "ASSIGN-RECEIVED-DOC") {?>
+	 			document.getElementById('id_pcxlvb').className = "level1_visited";
+	 			document.getElementById('iddiv_phancongxuly_vb').style.display = "block";	
+	 		<?}if($getModulLeft == "CHO_PHAN_CONG") {?>
+	 			document.getElementById('id_chophancongxulyvb').className = "level2_visited";
+	 		<?}if($getModulLeft == "DA_PHAN_CONG") {?>
+	 			document.getElementById('id_daphancongxulyvb').className = "level2_visited";
+	 		<?}	
+	 		if($scurrentModulCodeForLeft == "PROCESS-DOC") {?>
+	 			document.getElementById('id_processDoc').className = "level1_visited";
+	 			document.getElementById('iddivSub_processDoc').style.display = "block";	
+	 		<?}if($getModulLeft == "CAN_XU_LY") {//Can xu ly?>
+	 			document.getElementById('id_WaitProcess').className = "level2_visited"; 
+	 		<?}if($getModulLeft == "DA_XU_LY") {//Da xu ly?>
+	 			document.getElementById('id_Processed').className = "level2_visited";
+	 		<?}if($getModulLeft == "PHXL") {//Phoi hop xu ly?>
+	 			document.getElementById('id_CoordinateProcess').className = "level2_visited";		
+	 		//Bao cao 
+			<?}if($scurrentModulCodeForLeft == "REPORTS"){ ?>	
+				document.getElementById('id_bcvb_den').className = "level1_visited";
+			<?}			
+			if($scurrentModulCodeForLeft == "SEARCH-RECEIVED-DOC"){?>
+				document.getElementById('id_tcvb').className = "level1_visited";	
+	 			document.getElementById('id_tcvb').style.display = "block";
+			<?}	
+		}	
+	}catch (Exception $ex){;};		
+	try {
+		if ($sCurrentModulCode == "SENT"){?>
+			document.getElementById('id_vanbandi').className = "level0_doc_visited";	
+			document.getElementById('Iddiv_sent_doc').style.display = "block";
+			<?if($scurrentModulCodeForLeft == "DOCUMENTS") {?>
+			document.getElementById('id_vaosovbdi').className = "level1_visited";
+			<?}if($scurrentModulCodeForLeft == "REPORTS") {?>
+			document.getElementById('id_sent_report').className = "level1_visited";
+			<?}if($scurrentModulCodeForLeft == "DRAFF") {?>
+			document.getElementById('id_duthaovb').className = "level1_visited";
+			document.getElementById('iddiv_sent_draff').style.display = "block";
+			document.getElementById('id_cb_duthao').className = "level2_visited" ;
+			<?}if($scurrentModulCodeForLeft == "ASSIGN") {?>
+			document.getElementById('iddiv_sent_assign_ph').style.display = "block";
+			document.getElementById('id_pcxl').className = "level1_visited";				
+			<?}if($scurrentModulCodeForLeft == "REGISTRATION") {?>
+				try{					
+					document.getElementById('iddiv_sent_doc_ph').style.display = "block";
+					document.getElementById('id_dkph').className = "level1_visited";
+				}catch(e){;}
+				try{
+					document.getElementById('id_chph').className = "level1_visited";
+				}catch(e){;}	
+				//document.getElementById('id_chph').className = "level1_visited";	
+	 		<?}if($getModulLeft == "CHO_BAN_HANH") {?>
+	 			document.getElementById('id_wait').className = "level2_visited";	 			
+	 		<?}if($getModulLeft == "DA_BAN_HANH") {?>
+	 			document.getElementById('id_finish').className = "level2_visited";
+	 		<?}if($getModulLeft == "CHO_PHAN_CONG") {?>
+	 			document.getElementById('id_wait_assign').className = "level2_visited" 	;		
+	 		<?}if($getModulLeft == "DA_PHAN_CONG") {?>
+	 			document.getElementById('id_finish_assign').className = "level2_visited";
+	 		<? }if($scurrentModulCodeForLeft == "PROCESS") {?>
+	 			document.getElementById('iddiv_sent_process').style.display = "block";
+				document.getElementById('id_process').className = "level1_visited";
+	 		<?}if($getModulLeft == "XU_LY_CHINH") {?>
+	 			document.getElementById('id_xlc_process').className = "level2_visited" 	;		
+	 		<?}if($getModulLeft == "PHXL") {?>
+	 			document.getElementById('id_phxl_process').className = "level2_visited";
+	 		<?}if($scurrentModulCodeForLeft == "SUBMITORDER" && $getModulLeft != "CBDT_DA_TRINH_KY" && $getModulLeft != "CBDT_DA_DUYET") {?>				
+				document.getElementById('id_duyetvbduthao').className = "level1_visited";
+				document.getElementById('iddiv_sent_approve').style.display = "block";
+			<?}if($scurrentModulCodeForLeft == "SUBMITORDER" && ($getModulLeft == "CBDT_DA_TRINH_KY" || $getModulLeft == "CBDT_DA_DUYET")) {?>
+				document.getElementById('iddiv_sent_draff').style.display = "block";					
+			<?}if($getModulLeft == "CBDT_DA_TRINH_KY") {?>	
+				document.getElementById('id_duthaovb').className = "level1_visited";
+				document.getElementById('id_cb_datrinh').className = "level2_visited" ;	
+				//document.getElementById('iddiv_sent_approve').style.display = "none";
+			<?}if($getModulLeft == "DA_TRINH_KY") {?>	
+				document.getElementById('id_ld_datrinh').className = "level2_visited" ;
+				document.getElementById('id_duyetvbduthao').className = "level1_visited";
+				document.getElementById('iddiv_sent_draff').style.display = "none";
+			<?}if($getModulLeft == "CBDT_DA_DUYET") {?>	
+				document.getElementById('id_duthaovb').className = "level1_visited";
+				document.getElementById('id_cb_daduyet').className = "level2_visited" ;	
+				//document.getElementById('iddiv_sent_approve').style.display = "none";
+			<?}if($getModulLeft == "DA_DUYET") {?>	
+				document.getElementById('id_duyetvbduthao').className = "level1_visited";
+				document.getElementById('id_ld_daduyet').className = "level2_visited" ;	
+				document.getElementById('iddiv_sent_draff').style.display = "none";
+			<?}if($getModulLeft == "CHO_DUYET") {?>	
+				document.getElementById('id_duyetvbduthao').className = "level1_visited";
+				document.getElementById('id_ld_choduyet').className = "level2_visited" ;
+				document.getElementById('iddiv_sent_draff').style.display = "none";		
+	 		<? }		 		
+			if($scurrentModulCodeForLeft == "SEARCH-SENT-DOC"){?>
+				document.getElementById('id_tcvbdi').className = "level1_visited";	
+	 			document.getElementById('id_tcvbdi').style.display = "block"; 				
+			<?}
+		}	
+	}catch (Exception $ex){;};		
+	try {
+		if ($sCurrentModulCode == "RECORD"){?>
+			document.getElementById('Iddiv_record').style.display = "block";
+			document.getElementById('id_hosoluu').className = "level0_doc_visited";	
+			//Khi kiem tra dieu kien thi ta doi ten class cua phan tu day thanh 1 class co thuoc tinh moi
+			<?if(/*$sArchivesPermission && */$scurrentModulCodeForLeft == "DOCUMENT-RECORD-DOC"){?>
+				document.getElementById('id_ListRecord').className = "level1_visited";		
+			<?}?>
+			<?if(/*$sArchivesPermission && */$scurrentModulCodeForLeft == "FIND-RECORD"){?>
+				document.getElementById('id_SearchRecord').className = "level1_visited";		
+			<?}
+			
+		}	
+	}catch (Exception $ex){;};		
+	try {
+		if ($sCurrentModulCode == "ROP"){?>
+			document.getElementById('Iddiv_rop').style.display = "block";
+			document.getElementById('id_theodoi').className = "level0_doc_visited";	
+			<? if($scurrentModulCodeForLeft == "DOCUMENT-RECEIVED-DOC") {?>
+				document.getElementById('id_kqxlvbden').className = "level1_visited";
+			<?}if($scurrentModulCodeForLeft == "GENERAL-RESULT-DOC"){ ?>
+				document.getElementById('id_thkqxlvbden').className = "level1_visited";
+			<?}if($scurrentModulCodeForLeft == "WORK-DOC"){ ?>
+				document.getElementById('id_thxlcongviec').className = "level1_visited";
+			<?}
+		}
+	}catch (Exception $ex){;};	
+	try {
+		if ($sCurrentModulCode == "AUTHORIED"){?>
+			document.getElementById('Iddiv_received_doc').style.display = "block";
+			document.getElementById('id_vanbanden').className = "level0_doc_visited";	
+			<? if($scurrentModulCodeForLeft == "AUTHORIED-DOC") {?>
+				document.getElementById('id_uy_quyen').className = "level1_visited";
+			<?}
+		}
+	}catch (Exception $ex){;};		
+	try {
+		if ($sCurrentModulCode == "SENDRECEIVED"){?>
+			document.getElementById('Iddiv_sentreceived_doc').style.display = "block";
+			document.getElementById('id_guinhanvb').className = "level0_doc_visited";	
+			<?if($scurrentModulCodeForLeft == "SENT-DOCUMENT") {?>
+				document.getElementById('id_vbdagui').className = "level1_visited";
+			<?}?>
+			<?if($scurrentModulCodeForLeft == "SEND-DOCUMENT") {?>
+				document.getElementById('id_guivb').className = "level1_visited";
+			<?}?>
+			<?if($scurrentModulCodeForLeft == "RECEIVED-DOCUMENT") {?>				 
+			document.getElementById('id_nhanvb').className = "level1_visited";
+			<?}
+		}
+	}catch (Exception $ex){;};		
+	try {
+		if ($sCurrentModulCode == "SMS"){?>
+			document.getElementById('Iddiv_work').style.display = "block";
+			document.getElementById('id_sms').className = "level0_doc_visited";	
+			<?if($scurrentModulCodeForLeft == "SUB_MENU_RECEIVED") {?>
+				document.getElementById('id_smschonhan').className = "level1_visited";
+			<?}?>
+			<?if($scurrentModulCodeForLeft == "SUB_MENU_SENT") {?>
+				document.getElementById('id_smsdagui').className = "level1_visited";
+			<?}
+		}
+	}catch (Exception $ex){;};	
+	try {
+		if ($sCurrentModulCode == "SCHEDULE_UNIT" or $sCurrentModulCode == "SCHEDULE_STAFF"){?>
+			document.getElementById('Iddiv_calendar').style.display = "block";
+			document.getElementById('id_qlcongviec').className = "level0_doc_visited";	
+			<?if($scurrentModulCodeForLeft == "SCHEDULE_UNIT_WEEK") {?>
+				document.getElementById('Iddiv_calendar_1').className = "level1_visited";
+			<?}?>
+			<?if($scurrentModulCodeForLeft == "SCHEDULE_STAFF" && $getModulLeft == 1) {?>
+				document.getElementById('Iddiv_calendar_2').className = "level1_visited";
+			<?}?>
+			<?if($scurrentModulCodeForLeft == "SCHEDULE_STAFF" && $getModulLeft == 2) {?>
+				document.getElementById('Iddiv_calendar_3').className = "level1_visited";
+			<?}?>
+			<?if($scurrentModulCodeForLeft == "SCHEDULE_STAFF" && $getModulLeft == 3) {?>
+				document.getElementById('Iddiv_calendar_user').className = "level1_visited";
+			<?}
+		}
+	}catch (Exception $ex){;};
+	
+	?>
+}catch(e){;}
+
+</script>
+<script type="text/javascript">
+	shortcut.add("Enter",function() {
+		if(document.activeElement.name == 'FullTextSearchLeft'){
+			checkvalue1();
+		}else{
+			var scriptFileName = '<?=$_SERVER['REQUEST_URI']?>';
+			if(scriptFileName.search('index') >= 0){
+				checkvalue();
+			}else
+				shortcut.remove("Enter");
+		}
+	});
+	function addEnter(){
+		shortcut.add("Enter",function() {
+			if(document.activeElement.name == 'FullTextSearchLeft'){
+				checkvalue1();
+			}else{
+				var scriptFileName = '<?=$_SERVER['REQUEST_URI']?>';
+				if(scriptFileName.search('index') >= 0)
+					checkvalue();
+				else
+					shortcut.remove("Enter");
+			}
+		});
+	}
+	function checkvalue1(){
+		if(document.getElementById('FullTextSearchLeft').value != ''){
+			var p_Url = '<?=$this->baseUrl?>' + '../search/search/index/?key=' + document.getElementById('FullTextSearchLeft').value;
+			actionUrl(p_Url);
+		}
+	}
+</script>

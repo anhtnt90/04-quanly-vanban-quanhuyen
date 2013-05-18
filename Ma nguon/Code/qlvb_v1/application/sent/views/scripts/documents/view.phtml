@@ -1,0 +1,135 @@
+<form action="index" method="POST" id="frmAddReceived" enctype="multipart/form-data">
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<!--tao tac hidden!-->
+		<tr>
+			<td>
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>
+				<?php echo $this->formHidden("hdnCode","",null); ?>
+				<?php echo $this->formHidden("hdn_xml_tag_list","",null); ?>
+				<?php echo $this->formHidden("hdn_xml_value_list","",null); ?>
+				<?php echo $this->formHidden("hdn_XmlTagValueList","",null); ?>
+				<?php echo $this->formHidden("hdh_option",$this->option,null); ?>
+				<!--Sinh mot hidden luu ID VB!-->
+				<?php echo $this->formHidden("hdn_object_id",$this->sentID,null); ?>	
+				<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+				<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>	
+				<?php echo $this->formHidden("hdnListId","",null); ?>
+				<?php echo $this->formHidden("hdn_doc_type","",null); ?>
+				<?php echo $this->formHidden("hdn_signer_position_name","",null); ?>
+				<?php echo $this->formHidden("showModalDialog","",null); ?>
+				<?php echo $this->formHidden("fromDate",$this->fromDate,null);?>
+				<?php echo $this->formHidden("toDate",$this->toDate,null);?>
+				<?php echo $this->formHidden("FullTextSearch",$this->sFullTextSearch,null);?>
+			</td>
+		</tr>
+	</table>
+	<?php 
+		$urlCalendar = $this->urlCalendar; 
+		$arrSent = $this->arrSent;
+		$arrConst = $this->arrConst;
+	?>
+	<!--HIen thi tieu de man hinh danh sach!-->
+	<div id ="content" >
+		<div id="header_conten" style="height: 30px;border:none;"></div>
+		<div  id="body_conten1">
+				
+			<div id ="body_conten1_left" >
+					<div>
+							<label >1. &nbsp;<?=$arrConst['_LOAI_VAN_BAN'] ?> </label>
+							<?= $arrSent[0]['C_DOC_TYPE'] ?>&nbsp; 						
+					</div>
+					<div>
+							<label><?=$arrConst['_SO'] ?>/<?=$arrConst['_KY_HIEU'] ?></label>
+							<?=$arrSent[0]['C_NUMBER'].$arrSent[0]['C_SYMBOL'] ?>
+					</div>
+					<div>
+							<label>2. &nbsp; <?=$arrConst['_NGAY_PHAT_HANH'] ?></label>
+							<?=$arrSent[0]['C_SENT_DATE'] ?>&nbsp;					
+					</div>
+					<div>
+							<label  >3. &nbsp; <?=$arrConst['_TRICH_YEU'] ?> </label>
+							<div class="content" style="clear:right;float:left;display:block;width:65%;text-align:justify;margin-right:2%;"><?= $arrSent[0]['C_SUBJECT'] ?>				</div>
+					</div>
+					<div>
+							<label >4.&nbsp; <?=$arrConst['_LINH_VUC'] ?></label>
+							<?= $arrSent[0]['C_DOC_CATE'] ?> &nbsp;
+					</div>
+				</div><!-- End #body_conten1_left-->
+				<div id="body_conten1_right" >
+					<div>
+							<label >5.&nbsp; <?=$arrConst['_SO_VAN_BAN'] ?></label>
+							<?= $arrSent[0]['C_TEXT_BOOK_NAME'] ?>&nbsp;
+					</div>
+					<div>
+							<label >6. &nbsp; <?=$arrConst['_TINH_CHAT'] ?></label>
+							<?= $arrSent[0]['C_NATURE_NAME'] ?>&nbsp;	
+					</div>
+					<div>
+							<label >7. &nbsp; <?=$arrConst['_DO_KHAN'] ?></label>
+							<?= $arrSent[0]['C_TEXT_OF_EMERGENCY'] ?>&nbsp;
+					</div>						
+					<div>					
+							<label >8. &nbsp; <?=$arrConst['_SO_BAN']?></label>		
+							<?= $arrSent[0]['SO_BAN'] ?> 			
+							<label style="float:none;clear:none;display:inline;margin:0 30px ;"><?=$arrConst['_SO_TRANG'] ?> </label>	
+							<?= $arrSent[0]['SO_TRANG'] ?>					
+					</div>
+					<div>
+							<label >9. &nbsp; <?=$arrConst['_FILE_DINH_KEM'] ?></label>
+							<?php	
+								$strFileName 	= $arrSent[0]['C_FILE_NAME'];
+								$sFile = Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+								echo $sFile;
+							?>
+					</div>
+				</div><!-- End #body_conten1_right-->
+		</div>
+		<div id="body_conten4">
+			<div style="float:left; padding:5px 0 0 0; width:100%">	
+				<label style="width:180px;">10.&nbsp; <?=$arrConst['_NGUOI_KY'] ?></label>
+				<?= $arrSent[0]['C_SIGNER_POSITION_NAME'] ?>
+			</div>		
+			<div style="float:left;padding:5px 0 0 0; width:50%">
+				<label style="width:180px;">11.&nbsp;<?=$arrConst['_PHONG_BAN_SOAN_THAO']?></label>
+					<?php
+						$arrUnit = $_SESSION['arr_all_unit'];
+						echo Sys_Library::_getItemAttrById($arrUnit,$arrSent[0]['FK_UNIT'],'name');
+					?>	
+			</div>
+			<div style="float:left; padding:5px 0 0 0; width:50%">
+				<label style="width:220px;">12.&nbsp;<?=$arrConst['_CAN_BO_SOAN_THAO'] ?></label>
+				<?= $arrSent[0]['C_STAFF_POSITION_NAME']; ?>&nbsp;
+				
+			</div>
+			<div style="float:left; padding:5px 0 5px 0; width:100%">
+					<label style="width:180px;">13.&nbsp; <?=$arrConst['_NOI_NHAN'] ?></label>
+					<?= $arrSent[0]['C_RECEIVE_PLACE'] ?>
+			</div>		
+			<br clear="all">
+		</div>
+		<div class="normal_label" style="padding:5px;"><b>LƯU TRỮ HỒ SƠ</b></div>
+		<div style="float:left; width:50% ;padding:5px 0 0 0;" class="normal_label">
+			<label style="width:160px;">1. &nbsp;<?=$arrConst['_GIA_SO'] ?></label>
+			&nbsp; <?= $arrSent[0]['GIA_SO'] ?>
+		</div>
+		<div style="float:left; width:50%; padding:5px 0 0 0;" class="normal_label">
+			<label style="width:200px;">2. &nbsp;<?=$arrConst['_HOP_CAP_SO'] ?></label>
+			&nbsp; <?= $arrSent[0]['CAP_SO'] ?>
+		</div>
+	</div>	
+	<!--Hien thi nut!-->		
+	<table width='99%'  border='0' cellspacing='0' cellpadding='0' align='center' class='normal_label'>	
+		<tr>
+			<td align="center" style="padding-bottom:10px;">	
+				<input id="btn_print" name="btn_print" type="button" class="add_large_button" value="In" onclick="btn_print_infor_onclick(document.getElementById('hdn_object_id'),'../print');">
+				<?=$this->formsubmit('button','Quay lại',array("onClick"=>"document.getElementById('hdh_option').value='QUAY_LAI';actionUrl('../index/');","class"=>"add_large_button"))?>
+			</td>
+		</tr>			
+	</table>	
+</form>
+<script type="text/javascript">
+	$(function(){$('#body_conten1').equalHeights();});
+</script>

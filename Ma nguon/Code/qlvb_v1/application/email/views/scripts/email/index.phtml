@@ -1,0 +1,88 @@
+<?	
+
+		$mailboxes =$this->mailboxes;				
+		function decode_imap_text($str){
+		    $result = '';
+		    $decode_header = imap_mime_header_decode($str);
+		    foreach ($decode_header AS $obj) {
+		        $result .= htmlspecialchars(rtrim($obj->text, "\t"));
+			}
+		    return $result;
+		}
+?>
+	<form action="index" method="POST" id="frmReceived">
+	<?php echo $this->formHidden("hdn_object_id","",null); ?>
+	<table>
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<?=$this->bodyTitle;?>				
+			</td>
+		</tr>
+	</table>
+	<div id="main">
+		<div id="mailboxes">
+	  <? if (!count($mailboxes)) { ?>
+	  <p>Chưa cấu hình thông tin Email.</p>
+	  <? } else { 
+		foreach ($mailboxes as $current_mailbox) {
+			//var_dump($current_mailbox); exit; 
+			?>
+	  <div class="mailbox">
+	    <h2><?=$current_mailbox['label']?></h2>
+	    <?
+			if (!$current_mailbox['enable']) {
+			?>
+	    <p>This mailbox is disabled.</p>
+	    <?
+			} else {
+				
+				// Open an IMAP stream to our mailbox
+				$stream = @imap_open($current_mailbox['mailbox'], $current_mailbox['username'], $current_mailbox['password']);
+				
+				if (!$stream) { 
+				?>
+	    <p>Không thể kết nối đến máy chủ Email: <?=$current_mailbox['label']?>. Error: <?=imap_last_error()?></p>
+	    <?
+				} else {
+					// Get our messages from the last week
+					// Instead of searching for this week's message you could search for all the messages in your inbox using: $emails = imap_search($stream,'ALL');
+					$emails = imap_search($stream, 'SINCE '. date('d-M-Y',strtotime("-1 week")));
+					
+					if (!count($emails)){
+					?>
+	    <p>Không có Email nào cả.</p>
+	    <?
+					} else {
+
+						// If we've got some email IDs, sort them from new to old and show them
+						rsort($emails);
+						
+						foreach($emails as $email_id){	
+							//echo $email_id;						
+							// Fetch the email's overview and show subject, from and date. 
+							$overview = imap_fetch_overview($stream,$email_id,0);	
+							/*
+							$no = 5;
+							$text = imap_fetchbody($mailboxes, $no, 1);
+							var_dump($text); exit;
+							*/					
+							?>
+				      <div class="email_item clearfix <?=$overview[0]->seen?'read':'unread'?>" onclick="row_onclick_read_mail('<?=$email_id?>');"> <? // add a different class for seperating read and unread e-mails ?>
+				      	 <span class="subject" title="<?=decode_imap_text($overview[0]->subject)?>"><?=decode_imap_text($overview[0]->subject)?></span>
+				     	 <span class="from" title="<?=decode_imap_text($overview[0]->from)?>"><?=decode_imap_text($overview[0]->from)?></span>
+				         <span class="date"><?=$overview[0]->date?></span>	        
+			       	 </div>
+	    <?
+						} 
+					} 
+					imap_close($stream); 
+				}
+				
+			} 
+			?>
+      </div>
+	  <? } // end foreach 
+	  } ?>
+    </div>	
+</div>
+</form>

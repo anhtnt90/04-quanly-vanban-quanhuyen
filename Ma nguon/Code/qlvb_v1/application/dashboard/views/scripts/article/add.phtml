@@ -1,0 +1,149 @@
+<?php 
+$arrMenu = $this->arrMenuEdit;
+if(sizeof($arrMenu))
+{?>
+<form action="index" method="POST" id="frmAddReceived" enctype="multipart/form-data" autocomplete="off" onsubmit="return checkform()">
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+		<!--tao tac hidden!-->
+		<tr>
+			<td>	
+				<?php echo $this->formHidden("hdn_article_id",'',null); ?>		
+				<?php echo $this->formHidden("hdn_object_id",$this->sReceiveDocumentId,null); ?>				
+				<?php echo $this->formHidden("hdn_history_back",$this->sUrl,null); ?>
+				<?php echo $this->formHidden("hdn_xml_tag_list","",null); ?>
+				<?php echo $this->formHidden("hdn_xml_value_list","",null); ?>
+				<?php echo $this->formHidden("hdn_XmlTagValueList","",null); ?>
+				<?php echo $this->formHidden("hdn_approved_status","1",null); ?>
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+				<?php echo $this->formHidden("hdn_deleted_new_image_file_id_list","",null); ?>	
+				<?php echo $this->formHidden("hdh_option",$this->option,null); ?>
+				
+				<?php echo $this->formHidden("hdn_status","",null); ?>
+				<?php echo $this->formHidden("hdn_current_page",$this->iCurrentPage,null); ?>
+				<?php echo $this->formHidden("hdn_record_number_page",$this->iNumRowOnPage,null); ?>
+				<?php echo $this->formHidden("C_MENU",$this->sMenuID,null); ?>
+				<?php echo $this->formHidden("C_STATUS",$this->iStatus,null); ?>
+				<?php echo $this->formHidden("FullTextSearch",$this->FullTextSearch,null); ?>
+			</td>
+		</tr>
+	</table>
+	<?php 
+		$urlCalendar = $this->urlCalendar; 
+		$arrConst = $this->arrConst; 
+		//var_dump($this->arrMenu);
+	?>
+	<div id ="content">
+		<div>			
+		</div>
+		<table width='100%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+			<!--tao tac hidden!-->
+			<tr>
+				<td class="large_title" style="padding-left:7px;text-align:left;">
+					<?=$this->bodyTitle;?>	
+				</td>
+			</tr>
+		</table>
+		<div class="box container c1">
+			<div class="pad">			
+				<table cellpadding="0" cellspacing="0" width="100%" border="0">
+					<col width="20%"/><col width="80%"/>
+					<tr>
+						<td class="normal_label" align="left">
+							<label>1.&nbsp;<?=$arrConst['_TIEU_DE'] ?><span class="requiein">*</span></label>
+						</td>
+						<td>
+							<input style="width:99%;" type="text" id="C_TITLE" name="C_TITLE" option = "true" value="" message="<?php echo "Phải xác định TIÊU ĐỀ!";?>">
+						</td>
+					</tr>
+					<tr>
+						<td class="normal_label" align="left">
+							<label>2.&nbsp;<?=$arrConst['_CHUYEN_MUC'] ?><span class="requiein">*</span></label>
+						</td>
+						<td>
+							<select style="width:99%;" id="PK_WEB_MENU" name="PK_WEB_MENU" class="textbox normal_label" onchange="showhideapprovecheckbox(this,'<?=$this->sarrApprove?>');" onblur="showhideapprovecheckbox(this,'<?=$this->sarrApprove?>');" option = "true" message="<?php echo "Phải xác định thuộc CHUYÊN MỤC!";?>" >
+							<option id="" name = "" value="">-- Chọn chuyên mục --</option>
+								<?php
+									echo Sys_Library::_generateSelectOption($arrMenu,'PK_WEB_MENU','PK_WEB_MENU','C_NAME','');?>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="normal_label" align="left">
+							<label>3.&nbsp;Nội dung ngắn gọn</label>
+						</td>
+						<td colspan="3">
+							<textarea style="width:99%;" class="textbox normal_textarea" id="C_SUBJECT" optional = "true" rows="2" name="C_SUBJECT" ></textarea>
+						</td>
+					</tr>
+					<tr>
+						<td class="normal_label" align="left">
+							<label>4.&nbsp;Nội dung chi tiết</label>
+						</td>
+						<td colspan="3">
+							<!-- <textarea style="width:100%;" class="mceEditor" id="C_CONTEN" optional = "true" rows="2" name="C_CONTEN"></textarea> -->
+							<?php echo $this->editor;?>
+						</td>
+					</tr>
+					<tr>
+						<td class="normal_label" align="left">5.&nbsp;Ảnh đính kèm</td>
+						<td><?=$this->AttachImageFile;?>
+						</td>
+					</tr>
+					<tr>
+						<td class="normal_label" align="left">
+							<label>6.&nbsp;Chú thích ảnh</label>
+						</td>
+						<td>
+							<input style="width:60%;" type="text" id="C_IMAGE_TITLE" name="C_IMAGE_TITLE" optional = "true" value="" message="<?php echo "Phai xac dinh TEN chuyen muc!";?>">
+						</td>
+					</tr>
+					<tr>
+						<td class="normal_label" align="left">7.&nbsp;<?=$arrConst['_FILE_DINH_KEM'] ?></td>
+						<td><?=$this->AttachFile;?>
+						</td>
+					</tr>
+					<tr name = 'tr_status' id='tr_status' style='display:none'>
+						<td class="normal_label" align="left">&nbsp;</td>
+						<td class="normal_label" align="left">
+							<input type="checkbox" name="chk_status" id="chk_status" optional = "true" value="" checked = 'false'>
+							<label for = "chk_status" class = "normal_label" style = "display:inline;float:none; cursor:pointer;">Duyệt tin</label>
+						</td>
+					</tr>
+				</table>		
+			</div>
+		</div>
+	</div>	
+	<!--Hien thi nut!-->		
+	<table width='99%'  border='0' cellspacing='0' cellpadding='0' align='center' class='normal_label'>
+		<tr><td style="height:20px;"></td></tr>		
+		<tr>
+			<td align="center" style="padding-bottom:10px;">	
+				<button name="btn_ghivathemmoi" id="btn_ghivathemmoi" type="button" value="<?=$arrConst['_GHI_THEM_MOI'] ?>" class="add_large_button" onClick="document.getElementById('hdh_option').value='GHI_THEMMOI';btn_save_article('');"><?=$arrConst['_GHI_THEM_MOI'] ?></button>
+				<button name="btn_ghivaquaylai" id="btn_ghivaquaylai" type="button" value="<?=$arrConst['_GHI_QUAY_LAI'] ?>" class="add_large_button" onClick="document.getElementById('hdh_option').value='GHI_QUAYLAI';btn_save_article('');"><?=$arrConst['_GHI_QUAY_LAI'] ?></button>
+				<?=$this->formsubmit('button',$arrConst['_QUAY_LAI'],array("onClick"=>"actionUrl('../index/')","class"=>"add_large_button"))?>
+			</td>
+		</tr>			
+	</table>	
+</form>
+<script type="text/javascript">
+//An hien checkbox duyet tin
+function showhideapprovecheckbox(objmenu,arrappromenu){	
+	var strAppromenu = arrappromenu.split(',');			
+	if(objmenu.value != '' || objmenu.value != null){				
+		for(i =0; i < strAppromenu.length - 1; i++){
+			if(objmenu.value == strAppromenu[i]){
+				document.getElementById('tr_status').style.display = "";
+				document.forms[0].chk_status.checked = false;
+				return;
+			}else{
+				document.getElementById('tr_status').style.display = "none";
+				document.forms[0].chk_status.checked = false;
+			}
+		}
+	}				
+}	
+</script>
+<?php } 
+else 
+	echo 'Bạn không có quyền truy cập chức năng này';
+?>

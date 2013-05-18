@@ -1,0 +1,182 @@
+<script src="/Sys-doc-boxd/public/Sys-js/jquery-1.4.2.min.js" type="text/javascript"></script>
+<base target=_self>
+<form action="index" method="POST" id="frmReceived" autocomplete="off">
+<div>
+	
+	<!--Cac doi tuong hidden tren form-->
+	<?php echo $this->formHidden("hdn_docrelate_id_list","",null); ?>
+	<?php echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); ?>
+	<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+	<?php echo $this->formHidden("hdn_object_id",$this->sRecordArchiveId,null); ?>
+	<?php echo $this->formHidden("hdn_save","",null); ?>
+	<?php echo $this->formHidden("hdn_doc_type","",null); ?>
+	<?php echo $this->formHidden("hdn_doc_cate","",null); ?>
+	<?php echo $this->formHidden("hdn_XmlTagValueList",$this->XmlTagValueList,null); ?>
+	<?php echo $this->formHidden("hdn_docrelate_type",$this->sDocRelateType,null); ?>
+	<?php
+		$arrConst = $this->arrConst;
+		$arrResul = $this->arrResul;
+	?>
+	<table>
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<?=$this->bodyTitle;?>				
+			</td>
+		</tr>
+	</table>
+	<div class="box container c1">
+		<div class="pad" style="padding:4px;">			
+			<table align="center" cellpadding="0" cellspacing="0" width="90%" border="0" style="padding-left:0%;">
+				<col align="left" width="12%" /><col align="left" width="25%" /><col align="center" width="10%" /><col align="left" width="20%" /><col align="center" width="10%" /><col align="left" width="23%" />
+				<tr>
+					<td><label class="normal_label"><?=$arrConst['_LOAI_VAN_BAN']?></label></td>
+					<td><input style="width:100%;" type="text" id="C_DOC_TYPE" name="C_DOC_TYPE" class="textbox" value="<?= $this->sfullTextSearch ?>" /></td>
+					<td align="center"><label class="normal_label"><?=$arrConst['_LINH_VUC']?></label></td>
+					<td><input style="width:100%;" type="text" id="C_DOC_CATE" name="C_DOC_CATE" class="textbox"value="<?= $this->sfullTextSearch ?>" /></td>
+					<td align="center"><label class="normal_label"><?=$arrConst['_NAM']?></label></td>
+					<td>
+						<select id="year">
+							<?php 
+								for($i = 2011; $i <= date(Y); $i++)
+									echo '<option value='.$i.'>'.$i.'</option>';
+							?>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="5"><input style="width:97%;" type="text" id="txtfullTextSearch" name="txtfullTextSearch" class="textbox" value="<?= $this->sfullTextSearch ?>" /></td>
+					<td><input type="button" name="timkiem" value="Tìm Kiếm" class="add_large_button"  onclick="getAllReceivedDocAjax('<?=$this->UrlAjax;?>','getreceiveddoc','<?=$_SESSION['OWNER_ID']?>');"></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	
+	<div style="width:98%;">
+	<table cellpadding="0" cellspacing="0" border="0" width="98%%" align="center" class="list_table2" style="border-bottom:none;">
+			<col width='4%'><col width='10%'><col width='11%'><col width='15%'><col width='30%'><col width='31%'>
+			<tr class='header'>
+				<td class = 'title' style = 'text-align:center;'><input type="checkbox" name="chk_all_item_id" value="" onclick="checkbox_all_item_id_docrelate(document.forms[0].chk_item_id);"></td>
+				<td class = 'title' style = 'text-align:center;'><?=$arrConst['_SO_DEN']?></td>
+				<td class = 'title' style = 'text-align:center;'><?=$arrConst['_NGAY_DEN']?></td>
+				<td class = 'title' style = 'text-align:center;'><?=$arrConst['_SO_KY_HIEU']?></td>
+				<td class = 'title' style = 'text-align:center;'><?=$arrConst['_TRICH_YEU']?></td>
+				<td class = 'title' style = 'text-align:center;'>Đơn vị xử lý</td>
+			</tr>
+	</table>
+	</div>
+	<div id="divtable">
+		<div style="height:200px;overflow:auto;border-bottom:1px solid black;margin-left:1%;width:98%;">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%" align="center" class="list_table2" id="table1">
+				<col width='4%'><col width='10%'><col width='11%'><col width='15%'><col width='30%'><col width='36%'>
+				<?php			
+				$delimitor = $this->delimitor;//Lay ky tu phan cach giua cac phan tu
+				//Dinh nghia URL
+					$sUrlEdit  = "../edit/";
+					$sUrlView  = "../view/";
+					$v_current_style_name = "round_row";
+					$arrResul = $this->arrResul;
+					$objFunction =	new	Sys_Function_DocFunctions()	;	
+						
+					//Tu dien cac dong trang trong truong hop du lieu tra ve < so row _CONST_NUMBER_OF_ROW_PER_LIST		
+					if(sizeof($arrResul) < 15){	
+						echo $this->addEmptyRow($this->iCountElement,15 - sizeof($arrResul),$v_current_style_name,6);		
+					}	
+				?>			
+			</table>	
+		</div>
+		<div>
+			<table width="98%" style="margin-left:1%;">
+				<col width="30%" align="left"></col><col width="10%"></col><col width="30%" align="right"></col>
+				<tr>
+					<td class="normal_label"><small class="small_starmark">Danh sách này không có văn bản nào</small></td>
+					<td></td>
+					<td class="normal_label" align="right">Hiển thị <select id="cboRowOnPage" onchange="shownumberpage()">
+							<option value="15">15</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+						</select> Văn bản/Trang
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<!--Hien thi trang can xem!-->
+	
+	<table width="100%" cellpadding="0" cellspacing="0" border="0">
+		<tr>
+			<td style="color:red;width:30%;padding-left:1%;" class="small_label">
+				<small class="small_starmark"><?=$this->sdocpertotal;?></small>
+			</td>
+			<td align="center" style="width="50%">
+				<table width="10%"><?php
+					//Hien thi danh sach so trang
+					echo $this->generateStringNumberPage;?>
+				</table>
+			</td>
+			<td width="30%" align="right" style="font-size:13px; padding-right:1%; font:tahoma" class="normal_label"><?php
+				//Hien thi so trang
+				echo $this->generateHtmlSelectBoxPage;?>
+			</td>
+		</tr>
+	</table>
+	
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' align="center">
+		<tr>
+			<td style="padding-top: 10px; padding-bottom: 10px;" align="center" valign="middle">
+				<input type="button" class="add_large_button" value="<?=$arrConst['_CHON']?>" onclick="window.returnValue='CHON';btn_select_onclick('<?=$this->UrlAjax;?>',document.getElementsByName('chk_item_id'),'../getreceived/?showModalDialog=1/',document.getElementById('hdn_docrelate_id_list'),document.getElementById('hdn_object_id'));">
+				<input type="button" class="add_large_button" value="<?=$arrConst['_QUAY_LAI']?>" onclick="window.returnValue='QUAY_LAI';window.close()">
+			</td>	
+		</tr>
+	</table>
+	<div id="check" style="display:none;"></div>
+</div>
+</form>
+<?php echo $this->search_textselectbox_doc_type;?>
+<?php echo $this->search_textselectbox_doc_cate;?>
+<script type="text/javascript">
+$(document).ready(function() {
+	var key = 'RecordArchiveId=' + document.getElementById('hdn_object_id').value;
+	postAJAXHTTPText('<?=$this->UrlAjax?>' + '/Record/generatehtml/archives/checkrelatedoc.php',key,document.getElementById('check'), null);
+});
+document.getElementById('year').value = '<?=date("Y")?>';
+shortcut.add("Ctrl+K",function() {
+	document.getElementById('txtfullTextSearch').focus();
+	document.getElementById('txtfullTextSearch').select();
+});
+shortcut.add("Enter",function() {
+	getAllReceivedDocAjax('<?=$this->UrlAjax;?>','getreceiveddoc','<?=$_SESSION['OWNER_ID']?>');
+});
+//Ham them khoang trang neu NSD khong nhap gia tri trong o tim kiem
+function checkvalue(){
+	if(document.getElementById('txtfullTextSearch').value == ""){
+		
+		document.getElementById('txtfullTextSearch').value = " ";
+	}
+	actionUrl('');
+}
+function gotopage(page){
+	try{
+		var coutnchk = document.getElementsByName('chk_item_id').length;
+		for(i = 0; i< (coutnchk); i++)
+			if(document.getElementsByName('chk_item_id')[i].checked)
+				listId +=document.getElementsByName('chk_item_id')[i].value + ',';
+		//alert(listId);
+	}catch(e){;}
+	var sOwnerId = '<?=$_SESSION['OWNER_ID']?>';
+	var key = 'fullTextSearch=' + document.getElementById('txtfullTextSearch').value + '&curentPage=' + page + '&rowOnPage=' + document.getElementById('cboRowOnPage').value + '&doctype=' + document.getElementById('C_DOC_TYPE').value + '&doccate=' + document.getElementById('C_DOC_CATE').value + '&OwnerId=' + sOwnerId + '&year=' + document.getElementById('year').value;
+	postAJAXHTTPText('<?=$this->UrlAjax;?>' + '/Record/generatehtml/archives/getreceiveddoc.php',key, document.getElementById('divtable'), null);	
+}
+function shownumberpage(){
+	page = 1;
+	try{
+		var coutnchk = document.getElementsByName('chk_item_id').length;
+		for(i = 0; i< (coutnchk); i++)
+			if(document.getElementsByName('chk_item_id')[i].checked)
+				listId +=document.getElementsByName('chk_item_id')[i].value + ',';
+		//alert(listId);
+	}catch(e){;}
+	var sOwnerId = '<?=$_SESSION['OWNER_ID']?>';
+	var key = 'fullTextSearch=' + document.getElementById('txtfullTextSearch').value + '&curentPage=' + page + '&rowOnPage=' + document.getElementById('cboRowOnPage').value + '&doctype=' + document.getElementById('C_DOC_TYPE').value + '&doccate=' + document.getElementById('C_DOC_CATE').value + '&OwnerId=' + sOwnerId + '&year=' + document.getElementById('year').value;
+	postAJAXHTTPText('<?=$this->UrlAjax;?>' + '/Record/generatehtml/archives/getreceiveddoc.php',key, document.getElementById('divtable'), null);	
+}
+</script>

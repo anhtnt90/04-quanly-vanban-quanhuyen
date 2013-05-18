@@ -1,0 +1,222 @@
+<form action="index" method="POST" id="frmAddReceived" enctype="multipart/form-data" autocomplete="off" onsubmit="return checkform()">
+<?php 
+	
+?>
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<!--tao tac hidden!-->
+		<tr>
+			<td>
+				<?php echo $this->formHidden("hdnCode","",null); ?>
+				<?php echo $this->formHidden("hdn_xml_tag_list","",null); ?>
+				<?php echo $this->formHidden("hdn_xml_value_list","",null); ?>
+				<?php echo $this->formHidden("hdn_XmlTagValueList","",null); ?>
+				<!--Bien luu trang thai ung voi tung nut "Ghi va Them moi;..."!-->
+				<?php echo $this->formHidden("hdh_option",$this->option,null); ?>
+				<!--Sinh mot hidden luu ID VB!-->
+				<?php echo $this->formHidden("hdn_object_id",$this->sSendReceiveDocumentId,null); ?>		
+				<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+				<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>	
+				<!--Bien luu loai VB"!-->
+				<?php echo $this->formHidden("hdn_doc_type","",null); ?>
+				<?php echo $this->formHidden("hdn_signer_position_name","",null); ?>
+				<?php echo $this->formHidden("hdn_staff_id_list","",null); ?>
+				<?php echo $this->formHidden("hdn_unit_id_list","",null); ?>
+				<?php echo $this->formHidden("htn_leftModule",$this->currentModulCodeForLeft,null); ?>	
+
+			</td>
+		</tr>
+	</table>
+	<?php 
+		$urlCalendar = $this->urlCalendar; 
+		$arrCount = $this->arrCount;
+	?>
+	<!--HIen thi tieu de man hinh danh sach!-->
+	<div id ="content">
+		<table style="width:100%;">
+			<tr>
+				<td class="large_title" style="padding-left:0px;text-align:left; width:40%;">
+						<?=$this->bodyTitle;?>
+					</td>
+					<td style="text-align:right; float:right; width:auto;">
+						<a class="small_link" onClick="document.getElementById('hdh_option').value='GHI_THEMMOI';btn_save_sendreceived(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'','<?=date("d/m/Y");?>');"><?=$arrCount['_GHI_THEM_MOI']?> </a> 
+						<a class="small_link" onClick="document.getElementById('hdh_option').value='GHI_THEMTIEP';btn_save_sendreceived(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'','<?=date("d/m/Y");?>');"><?=$arrCount['_GHI_THEM_TIEP']?> </a> 
+						<a class="small_link" onClick="document.getElementById('hdh_option').value='GHI_QUAYLAI';btn_save_sendreceived(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'','<?=date("d/m/Y");?>');"><?=$arrCount['_GHI_QUAY_LAI']?> </a> 
+						<a class="small_link" onClick="document.getElementById('hdh_option').value='GHI_TAM';btn_save_sendreceived(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'','<?=date("d/m/Y");?>');"><?=$arrCount['_GHI_TAM']?></a> 
+						<a class="small_link" onclick="document.getElementById('htn_leftModule').value = 'SENT-DOCUMENT'; btn_back_onclick('../index/')"><?=$arrCount['_QUAY_LAI']?></a>	
+					</td>
+			</tr>
+	</table>						
+		<div id="body_conten1">
+				<div id ="body_conten1_left">
+					<div style ="margin-top:5px;">
+						<label>1. &nbsp;<?=$arrCount['_LOAI_VAN_BAN']?><span class="requiein">*</span></label>
+						<input class="textbox" style="width:64%" id ="C_DOC_TYPE" name="C_DOC_TYPE" type="text" autocomplete="off" option = "false"  xml_tag_in_db="" xml_data="false" column_name="C_DOC_TYPE" message="<?php echo "Phai xac dinh LOAI VAN BAN!";?>" onKeyDown="change_focus(document.forms[0],this)" onblur="showinvation(this);">
+					</div>
+					<div>
+						<label>2. &nbsp;<?=$arrCount['_NGAY_PHAT_HANH']?><span class="requiein">*</span></label>
+						<input class="textbox" style="width:20%;"  id ="C_RELEASE_DATE" name="C_RELEASE_DATE" type="text" isdate="true" option = "false"  xml_tag_in_db="" xml_data="false" column_name="C_RELEASE_DATE" onkeyup = "DateOnkeyup('C_RELEASE_DATE',this,event)" message="<?php echo "NGAY PHAT HANH khong dung dinh dang ngay/thang/nam!";?>" onKeyDown="change_focus(document.forms[0],this)" />						
+					</div>
+					<div>
+						<label>3. &nbsp;<?=$arrCount['_SO_KY_HIEU']?></label>
+						<input class="textbox" style="width:64%;" id ="C_SYMBOL" name="C_SYMBOL" type="text"  optional = "true"  xml_tag_in_db="" xml_data="false" column_name="C_SYMBOL" onKeyDown="change_focus(document.forms[0],this)">
+					</div>
+					<div id="thoigianhop" style="display:none;">
+							<label>4. &nbsp;<?=$arrCount['_THOI_GIAN_HOP']?><span class="requiein">*</span> </label>
+							<input class="textbox" style="width:18%;" type="text" name="C_HOURS" id="C_HOURS" option ="" optional = "true"   xml_tag_in_db="" xml_data="false" column_name="C_HOURS" message="<?php echo "Phai xac dinh THOI GIAN HOP!";?>" onKeyDown="change_focus(document.forms[0],this)" />
+							<label style="float:none;clear:none; display:inline;">5. &nbsp;<?=$arrCount['_NGAY_HOP']?><span class="requiein">*</span> </label>
+							<input class="textbox" style="width:16%;" id ="C_DATE" name="C_DATE" type="text" isdate="false" option ="" optional = "true"  xml_tag_in_db="" xml_data="false" column_name="C_DATE" message="<?php echo "NGAY HOP khong dung dinh dang ngay/thang/nam!";?>" onKeyDown="change_focus(document.forms[0],this)">
+							<img src="<?= $this->baseUrl?>images/calendar.gif" border="0" onclick="DoCal('<?= $urlCalendar;?>',document.getElementById('C_DATE'));" style="cursor:pointer">	 
+					</div>
+					<div id="diadiem" style="display:none;">
+						<label>6. &nbsp;<?=$arrCount['_DIA_DIEM_HOP']?><span class="requiein">*</span> </label>
+						<input class="textbox" style="width:64%;" type="text" name="C_ADDRESS" id="C_ADDRESS" option ="" optional = "true"  xml_tag_in_db="" xml_data="false" column_name="C_ADDRESS" message="<?php echo "Phai xac dinh DIA DIEM HOP!";?>" onKeyDown="change_focus(document.forms[0],this)" />
+					</div>
+					<div>
+						<label id="1">4. &nbsp;<?=$arrCount['_TRICH_YEU']?><span class="requiein">*</span> </label>
+						<textarea style="width:64%"  class="textbox normal_textarea" id="C_SUBJECT" option = "false" rows="2" name="C_SUBJECT" xml_tag_in_db="" xml_data="false" column_name="C_SUBJECT" message="<?php echo "Phai xac dinh TRICH YEU van ban!";?>" ></textarea>
+					</div>
+					<div>
+						<label id="2">5. &nbsp;<?=$arrCount['_DO_KHAN']?></label>
+						<select class="textbox" id="C_TEXT_OF_EMERGENCY" name="C_TEXT_OF_EMERGENCY" optional ="true" class="textbox normal_label"  xml_tag_in_db="" xml_data="false" column_name="C_TEXT_OF_EMERGENCY" message="<?php echo "Phai xac dinh DO KHAN van ban!";?>">
+							<option id="" name = "" value="">-- Chọn độ khẩn --</option><?php
+							$arrUrgent = $this->arrUrgent;
+							echo Sys_Library::_generateSelectOption($arrUrgent,'C_CODE','C_CODE','C_NAME','');?>
+						</select>
+					</div>
+					<div>
+						<label id="3">6. &nbsp;<?=$arrCount['_NGUOI_KY']?><span class="requiein">*</span> </label>
+						<input class="textbox" style="width:64%" id ="C_SIGNER_POSITION_NAME" name="C_SIGNER_POSITION_NAME" type="text"  option = "false"  xml_tag_in_db="" xml_data="false" column_name="C_SIGNER_POSITION_NAME" message="<?php echo "Phai xac dinh NGUOI KY van ban!";?>" onKeyDown="change_focus(document.forms[0],this)">
+					</div>
+					<div>
+						<label id="4">7. &nbsp;<?=$arrCount['_SO_BAN']?></label>
+						<input class="textbox" style="width:20%;" id ="C_NUMBER_SHEET" name="C_NUMBER_SHEET" type="text" isnumeric = "true"  option = "" optional ="true"  xml_tag_in_db="" xml_data="false" column_name="C_NUMBER_SHEET" message="<?php echo "SO BAN phai la so nguyen duong (1,2,3,…)!";?>"  onKeyDown="change_focus(document.forms[0],this)">
+					
+						<label style="float:none;clear:none; display:inline;" id="5">8. &nbsp;<?=$arrCount['_SO_TRANG']?></label>
+						<input class="textbox" style="width:21%;" id ="C_NUMBER_PAGE" name="C_NUMBER_PAGE" type="text" isnumeric = "true"  option = "" optional ="true"  xml_tag_in_db="" xml_data="false" column_name="C_NUMBER_PAGE" message="<?php echo "SO TRANG phai la so nguyen duong (1,2,3,…)!";?>" onKeyDown="change_focus(document.forms[0],this)">
+					</div>
+				</div><!-- End #body_conten1_left-->
+				<div id="body_conten1_right">
+					<div>
+						<label line-height:12px;" id="6">9. &nbsp;<?=$arrCount['_THONG_TIN_KHAC']?></label>
+						<textarea style="width:64%; margin-left:1%;"  class="textbox normal_textarea" id="C_OTHER" optional = "true" rows="2" name="C_OTHER" ></textarea>
+					</div>
+					<div>
+						<label  id="7">10. <?=$arrCount['_CAN_BO_NHAN']?></label>
+						<textarea style="width:64%;margin-left:1%;"  class="textbox normal_textarea" id="C_STAFF_ID_LIST" optional = "true" rows="2" name="C_STAFF_ID_LIST"></textarea>
+					</div>
+					<div>
+						<label id="8">11. <?=$arrCount['_DON_VI_PHONG_BAN_NHAN']?></label>
+						<textarea style="width:64%;margin-left:1%;"  class="textbox normal_textarea" id="C_UNIT_ID_LIST" optional = "true" rows="2" name="C_UNIT_ID_LIST"></textarea>
+					</div>
+					<div>
+						<label id="9">12. <?=$arrCount['_FILE_DINH_KEM']?></label><?=$this->AttachFile;?>
+					</div>					
+				</div><!-- End #body_conten1_right-->
+				<div id="clear"></div>
+		</div>
+		
+	</div>	
+	<!--Hien thi nut!-->		
+	<table style="margin-top:10px; border-top: #3399FF 1px solid;" width='98%'  border='0' cellspacing='0' cellpadding='0' align='center' class='normal_label'>	
+		<tr>
+			<td align="center" style="padding:10px 0;">	
+				<button name="btn_ghivathemmoi" id="btn_ghivathemmoi" type="button" value="Ghi&amp;Thêm mới" class="add_large_button" onClick="document.getElementById('hdh_option').value='GHI_THEMMOI';btn_save_sendreceived(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'','<?=date("d/m/Y");?>');"><?=$arrCount['_GHI_THEM_MOI']?></button>
+				<button name="btn_ghivathemtiep" id="btn_ghivathemtiep" type="button" value="Ghi&amp;Thêm tiếp" class="add_large_button" onClick="document.getElementById('hdh_option').value='GHI_THEMTIEP';btn_save_sendreceived(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'','<?=date("d/m/Y");?>');"><?=$arrCount['_GHI_THEM_TIEP']?></button>
+				<button name="btn_ghivaquaylai" id="btn_ghivaquaylai" type="button" value="Ghi&amp;Quay lại" class="add_large_button" onClick="document.getElementById('hdh_option').value='GHI_QUAYLAI';btn_save_sendreceived(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'','<?=date("d/m/Y");?>');"><?=$arrCount['_GHI_QUAY_LAI']?></button>
+				<button name="btn_ghitam" id="btn_ghitam" type="button" value="Ghi tạm" class="add_large_button" onClick="document.getElementById('hdh_option').value='GHI_TAM';btn_save_sendreceived(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'','<?=date("d/m/Y");?>');"><?=$arrCount['_GHI_TAM']?></button>
+				<input type="button" style="margin-left:0px;" name="quaylai" id="quaylai" value="<?=$arrCount['_QUAY_LAI']?>" onClick="document.getElementById('htn_leftModule').value = 'SENT-DOCUMENT'; btn_back_onclick('../index/')" class="add_large_button">
+			</td>
+		</tr>			
+	</table>
+</form>
+<?php echo $this->search_textselectbox_doc_type; ?>
+<?php echo $this->search_textselectbox_signer; ?>
+<?php echo $this->search_textselectbox_staff; ?>
+<?php echo $this->search_textselectbox_unit; ?>
+
+<script type="text/javascript"> 
+//Mac dinh gia tri DO KHAN VB, neu la them moi thi defaul la THUONG
+document.getElementById('C_TEXT_OF_EMERGENCY').value = "THUONG";
+//Bat su kien khi NSD nhan cac phim tat sau
+shortcut.add("Ctrl+M",function() {
+	document.getElementById('hdh_option').value='GHI_THEMMOI';
+	btn_save_sendreceived(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'','<?=date("d/m/Y");?>');
+});
+shortcut.add("Ctrl+E",function() {
+	document.getElementById('hdh_option').value='GHI_THEMTIEP';
+	btn_save_sendreceived(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'','<?=date("d/m/Y");?>');
+});
+shortcut.add("Ctrl+Q",function() {
+	document.getElementById('hdh_option').value='GHI_QUAYLAI';
+	btn_save_sendreceived(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'','<?=date("d/m/Y");?>');
+});
+
+shortcut.add("Ctrl+G",function() {
+	document.getElementById('hdh_option').value='GHI_TAM';
+	btn_save_sendreceived(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'','<?=date("d/m/Y");?>');
+});
+function checkform(){
+	if(!verify(document.forms[0])){
+		return false;
+	}
+}
+function checkvalue(){
+}
+//Hien thi form truong hop loai van ban la giay moi
+function showinvation(obj){
+		if(obj.value =='Giấy mời'){
+			document.getElementById('thoigianhop').style.display = "block";
+			document.getElementById('diadiem').style.display = "block";
+			
+			document.getElementById('C_HOURS').setAttribute("option","false");
+			document.getElementById('C_HOURS').setAttribute("optional","");
+			
+			document.getElementById('C_DATE').setAttribute("option","false");
+			document.getElementById('C_DATE').setAttribute("optional","");
+			document.getElementById('C_DATE').setAttribute("isdate","true");
+			
+			document.getElementById('C_ADDRESS').setAttribute("option","false");
+			document.getElementById('C_ADDRESS').setAttribute("optional","");
+			var start = 6;
+			for(var i = 1; i<=9; i++){
+				start +=1;
+				var str = start +'. '+ document.getElementById(i).innerHTML.slice(3);
+				document.getElementById(i).innerHTML = str;
+			}
+		}
+		else{
+			var start = 3;
+			for(var i = 1; i<=9; i++){
+				start +=1;
+				var str = start +'. '+ document.getElementById(i).innerHTML.slice(3);
+				document.getElementById(i).innerHTML = str;
+			}
+			document.getElementById('thoigianhop').style.display = "none";
+			document.getElementById('diadiem').style.display = "none";
+			
+			document.getElementById('C_HOURS').setAttribute("option","");
+			document.getElementById('C_HOURS').setAttribute("optional","true");
+			
+			document.getElementById('C_DATE').setAttribute("option","");
+			document.getElementById('C_DATE').setAttribute("optional","true");
+			document.getElementById('C_DATE').setAttribute("isdate","false");
+			
+			document.getElementById('C_ADDRESS').setAttribute("option","");
+			document.getElementById('C_ADDRESS').setAttribute("optional","true");
+		}
+}
+</script>
+<script type = "text/javascript">
+$(function() {
+	$( "#C_RELEASE_DATE" ).datepicker({
+		changeMonth: true,
+		gotoCurrent: true,
+		maxDate: '+1m +1w',
+		minDate: new Date(1945, 1 - 1, 1),
+		changeYear: true
+	});	
+});
+</script>
+

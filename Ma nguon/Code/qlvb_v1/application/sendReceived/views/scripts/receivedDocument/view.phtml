@@ -1,0 +1,188 @@
+<form action="index" method="POST" id="frmAddReceived" enctype="multipart/form-data"><?php 	
+	$urlCalendar = $this->urlCalendar; 
+	$arrSendReceived = $this->arrSendReceived;
+	$arrInfoReceived = $this->arrInfoReceived;
+	$arrSigner = $this->arrSigner;
+	$arrUrgent = $this->arrUrgent;
+	$arrLoaiVB = $this->arrLoaiVB;
+	$sOwnerCode  = $this ->Owner;
+	$arrConst  = $this->arrConst;
+	$dspgiaymoi = 'none';
+	if($arrSendReceived[0]['C_DOC_TYPE'] == 'Giấy mời'){
+		$dspgiaymoi = 'block';
+	}
+?>
+	<!--tao tac hidden!-->
+				<?php echo $this->formHidden("hdnCode","",null); ?>
+				<!--Sinh mot hidden luu ID loai danh muc!-->
+				<?php echo $this->formHidden("hdn_object_id",$this->sSendReceiveDocumentId,null); ?>		
+				<!--Bien hdn_xml_tag_list dung de luu danh sach cac THE XML tuong ung voi cac THUOC TINH cua mot doi tuong dang duoc cap nhat-->			
+				<?php echo $this->formHidden("hdn_xml_tag_list",'',null); ?>			
+				<!--Bien hdn_xml_value_list dung de luu danh sach cac gia tri cua cac THE XML tuong ung voi cac THUOC TINH cua mot doi tuong-->			
+				<?php echo $this->formHidden("hdn_xml_value_list",'',null); ?>			
+				<!--Sinh mot hidden luu list ID ma NSD chon!-->
+				<?php echo $this->formHidden("hdn_object_id_list","",null); ?>	
+				<!--Hidden luu gia tri cua list tag va list value (TagList|{*^*}|ValueList) -->
+				<?php echo $this->formHidden("hdn_XmlTagValueList",$this->XmlTagValueList,null); ?>
+				<!--Bien hdn_page dung de luu chi so trang hien thi hien thoi-->			
+				<?php echo $this->formHidden("hdn_current_page",$this->currentPage,null); ?>	
+				<!--Sinh mot hidden luu gia tri xac dinh so ban ghi / 1 trang!-->	
+				<?php echo $this->formHidden("hdn_record_number_page",$this->numRowOnPage,null); ?>	
+				<!--Bien hdn_filter_xml_tag_list dung de luu danh sach cac THE XML tuong ung voi cac tieu thuc loc tren giao dien DANH SACH DOI TUONG-->
+				<?php echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); ?>
+				<!--Bien hdn_filter_xml_tag_list dung de luu gia tri cua cac THE XML tuong ung voi cac tieu thuc loc tren giao dien DANH SACH DOI TUONG-->	
+				<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+				<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+				<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>	
+				<?php echo $this->formHidden("hdh_option",$this->option,null); ?>	
+				<?php echo $this->formHidden("hdn_doc_type","",null); ?>
+				<?php echo $this->formHidden("hdn_signer_position_name","",null); ?>
+				<?php echo $this->formHidden("hdn_staff_id_list","",null); ?>
+				<?php echo $this->formHidden("hdn_unit_id_list","",null); ?>
+				<?php echo $this->formHidden("showModalDialog","",null); ?>
+
+	<!--HIen thi tieu de man hinh danh sach!-->
+	<script type="text/javascript">
+		$(function(){$('#body_conten1').equalHeights();});
+	</script>
+	<div id ="content">
+		<div>
+			<h1 class="large_label1">THÔNG TIN CHUNG</h1>
+		</div>
+		<table class="table_detail_doc" border="1">
+			<col width="14%"><col width="20%"><col width="11%"><col width="55%">
+			<tr>
+				<td><?=$arrConst['_LOAI_VAN_BAN']?></td>
+				<td><?=$arrSendReceived[0]['C_DOC_TYPE'].'&nbsp;'?></td>
+				<td><?=$arrConst['_NGAY_GUI']?></td>
+				<td><?=$arrSendReceived[0]['C_SEND_DATE'].'&nbsp;'?></td>
+			</tr>
+			<tr>
+				<td><?=$arrConst['_NGAY_PHAT_HANH']?></td>
+				<td><?=Sys_Library::_yyyymmddToDDmmyyyy($arrSendReceived[0]['C_RELEASE_DATE']).'&nbsp;'?></td>
+				<td><?=$arrConst['_SO_KY_HIEU']?></td>
+				<td><?=$arrSendReceived[0]['C_SYMBOL'].'&nbsp;'?></td>
+			</tr>
+			<tr>
+				<td ><?=$arrConst['_NGUOI_KY']?></td>
+				<td><?=$arrSendReceived[0]['C_SIGNER_POSITION_NAME'].'&nbsp;'?></td>
+				<td><?=$arrConst['_DO_KHAN']?></td>
+				<td><?=$arrSendReceived[0]['C_TEXT_OF_EMERGENCY'].'&nbsp;'?></td>
+			</tr>
+			<tr>
+				<td><?=$arrConst['_TRICH_YEU']?></td>
+				<td colspan="3"><?=$arrSendReceived[0]['C_SUBJECT'].'&nbsp;'?></td>
+			</tr>
+			<tr>
+				<td><?=$arrConst['_THONG_TIN_KHAC']?></td>
+				<td colspan="3"><?=$arrSendReceived[0]['C_OTHER'].'&nbsp;'?></td>
+			</tr>
+			<?php
+				$strFileName 				= $arrSendReceived[0]['C_FILE_NAME'];
+				if($strFileName != ""){
+					$sFile 					= Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+					$dsp = '';
+				}else{
+					$sFile = "";
+					$dsp = 'none';
+				}
+			?>
+			<tr style="display:<?=$dsp?>;">
+				<td><?=$arrConst['_FILE_DINH_KEM']?></td>
+				<td colspan="3"><?=$sFile?></td>
+			</tr>
+		</table>
+			
+	</div><!-- End #content-->	
+	<div style="clear:both;">
+		<h1 style="color:red;font-size:16px;font-weight:bold;vertical-align:middle;font-family:Arial;padding:0px 0px;margin:5px 0px;margin-left:1%;">THÔNG TIN NƠI NHẬN</h1>
+	</div>
+	<div style="clear:both;">
+		<table cellpadding="0" cellspacing="0" border="0" width="98%" align="center" class="list_table2" id="table1">
+			<?php			
+			$delimitor = $this->delimitor;//Lay ky tu phan cach giua cac phan tu
+			//Hien thi cac cot cua bang hien thi du lieu
+			$StrHeader = explode("!~~!",$this->GenerateHeaderTable("3%" . $delimitor ."40%". $delimitor . "47%" . $delimitor . "10%" 
+											,'STT' . $delimitor . $arrConst['_NOI_NHAN']. $delimitor . $arrConst['_CHI_TIET_NGUOI_XEM'] . $delimitor . $arrConst['_TRANG_THAI']
+											,$delimitor));
+			echo $StrHeader[0];					
+			echo $StrHeader[1]; //Hien thi <col width = 'xx'><...		
+				//Dinh nghia URL
+				$sUrlView  = "../view/";
+				$v_current_style_name = "round_row";
+				$objFunction =	new	Sys_Function_DocFunctions()	;	
+				for($index = 0;$index < sizeof($arrInfoReceived);$index++){
+					//Noi nhan
+					$sreceivedPlace = $arrInfoReceived[$index]['C_NAME'];
+					//Chi tiet noi nhan
+					$sViewDetail    = $arrInfoReceived[$index]['C_VIEW_DETAIL'];
+					//trang thai xem van ban
+					$sViewStatus	= $arrInfoReceived[$index]['C_STATUS'];
+					if($sViewStatus == 'CHUA_XEM')
+							$sViewStatus = '<font color=#AF816C>Chưa xem</font>';
+					else 	$sViewStatus = '<font color=blue>Đã xem</font>';
+					if ($v_current_style_name == "odd_row"){
+						$v_current_style_name = "round_row";
+					}else{
+						$v_current_style_name = "odd_row";					
+					}?>
+					<tr class="<?=$v_current_style_name?>">	
+						<td align="center" style="padding-left:3px;padding-right:3px;" class="normal_label">						
+							<?=$index + 1;?>					
+						</td>
+						<td align="left"  style="padding-left:3px;padding-right:3px;" class="normal_label" >
+						<?=$sreceivedPlace?>
+						</td>													
+						<td align="left"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sViewDetail.'&nbsp;';?></td>
+						<td align="center" valign="middle"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sViewStatus;?></td>
+						
+					</tr><?php
+				}					
+				//Tu dien cac dong trang trong truong hop du lieu tra ve < so row _CONST_NUMBER_OF_ROW_PER_LIST		
+				if(sizeof($arrInfoReceived) < 3){	
+					echo $this->addEmptyRow($this->iCountElement,3 - sizeof($arrResul),$v_current_style_name,4);		
+				}	
+			?>			
+		</table>	
+	</div>
+	<!--Hien thi nut!-->		
+	<div class="divButton" style="margin-top:10px;text-align:center;margin-bottom:10px;clear:both;">
+		<input type="submit" name="quaylai" id="quaylai" value="Quay lại" onClick="btn_back_onclick('../index/')" class="add_large_button">
+	</div>
+</form>
+<style>
+	#content div label{
+		font-family:Tahoma;
+		font-size:13px;
+		line-height:25px;
+		display:block;
+		width:12%;
+	}
+	#content div h1.large_label1{
+		color:red;
+		font-size:16px;
+		font-weight:bold;
+		vertical-align:middle;
+		font-family:Arial;
+		padding:0px 0px;
+		margin:5px 0px;
+	}
+	.table_detail_doc{
+		border:1px solid #E1E1E1;
+		color:#000000;
+		cursor:pointer;
+		font-family:Tahoma,Arial,Helvetica,sans-serif;
+		font-size:13px;
+		width:100%;
+		border-collapse:collapse;
+	}
+	.table_detail_doc tr{
+		border-collapse:collapse;
+	}
+	.table_detail_doc tr td{
+		padding:3px 10px 3px 10px;
+	}
+</style>
+

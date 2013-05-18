@@ -1,0 +1,236 @@
+<?php 
+$arrMenu = $this->arrMenu;
+if(sizeof($arrMenu))
+{
+?>
+<form action="index" method="POST" id="frmReceived">
+<div>
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<!--Cac doi tuong hidden tren form-->
+				<?php echo $this->formHidden("hdn_object_id_list","",null); ?>
+				<?php echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); ?>
+				<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+				<?php echo $this->formHidden("hdn_object_id","",null); ?>
+				<?php echo $this->formHidden("hdn_move_order","",null); ?>
+				<?php echo $this->formHidden("hdn_move","",null); ?>
+				<?php echo $this->formHidden("hdn_XmlTagValueList",$this->XmlTagValueList,null); ?>
+				<?php echo $this->formHidden("hdn_history_back",$this->sUrl,null); ?>				
+				<?php echo $this->formHidden("hdn_status","",null); ?>
+				<?php echo $this->formHidden("hdn_current_page",$this->iCurrentPage,null); ?>
+				<?php echo $this->formHidden("hdn_record_number_page",$this->iNumRowOnPage,null); ?>
+				
+				<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+				
+				<?=$this->bodyTitle;?>	
+				
+			</td>
+		</tr>
+	</table>
+	<?php
+		$arrConst = $this->arrConst;
+		//var_dump($this->arrMenu);
+	?>
+	<div class="box container c1">
+		<div class="pad">			
+			<table cellpadding="0" cellspacing="0" width="98%" border="0">
+				<col width="10%"/><col width="40%"/><col width="10%"/><col width="35%"/>
+				<tr>
+					<td class="normal_label" align="left">
+						&nbsp;<?=$arrConst['_CHUYEN_MUC'] ?>
+					</td>
+					<td>
+						<select style="width:50%;" id="C_MENU" name="C_MENU" onchange="actionUrl('');" class="textbox normal_label" >
+						<option id="" name = "" value="">-- Chọn chuyên mục --</option>
+						<?php
+							echo Sys_Library::_generateSelectOption($this->arrMenu,'PK_WEB_MENU','PK_WEB_MENU','C_NAME',$this->sMenuID);?>
+						</select>
+					</td>
+					<td class="normal_label" align="left">
+						&nbsp;Trạng thái
+					</td>
+					<td>
+						<select style="width:60%;" id="C_STATUS" name="C_STATUS" onchange="actionUrl('');" class="textbox normal_label" >
+						<option id="" name = "" value="">-- Chọn trạng thái --</option>
+						<?php
+							$arrStatus= $this->arrStatus;
+							echo Sys_Library::_generateSelectOption($arrStatus,'C_CODE','C_CODE','C_NAME',$this->iStatus);?>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="normal_label" align="left">
+						&nbsp;
+					</td>
+					<td colspan="2">
+						<input class="textbox c1" id="FullTextSearch" name="FullTextSearch" value="<?=$this->FullTextSearch?>" class="textbox c2">
+					</td>
+					<td>
+						<input type="button" value="<?=$arrConst['_TIM_KIEM'] ?>" class="add_large_button" size="100%" onclick="actionUrl('');">
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	
+<!--  	
+	<div style="margin-left:1%;text-align:right;width:98%;">
+		<label>
+		<?php if($this->sShowEdit){
+		?>
+			<a style="cursor:pointer;" class="small_link" onclick="actionUrl('../add/');"><?=$arrConst['_THEM'] ?>&nbsp;</a> 
+			<a style="cursor:pointer;" class="small_link" onclick="btn_update_onclick(document.getElementsByName('chk_item_id'),'../edit/');">&nbsp;<?=$arrConst['_SUA'] ?>&nbsp;</a> 	 
+		<?php } 
+			if($this->sShowApprove){
+		?>
+			<a style="cursor:pointer;" class="small_link" onclick="btn_approved_article_onclick11(document.getElementsByName('chk_item_id'),document.getElementsByName('hdn_menuid'),'<?=$this->sarrApprove;?>',document.getElementById('hdn_object_id_list'),'../approved/');">&nbsp;Duyệt&nbsp;</a>
+		<?php } 
+			if($this->sShowEdit){
+		?>
+			<a style="cursor:pointer;" class="small_link" onclick="btn_delete_onclick(document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id_list'),'../delete','<?=$this->UrlAjax?>','VB_DEN','T_DOC_RECEIVED_DOCUMENT');">&nbsp;<?=$arrConst['_XOA'] ?>&nbsp;</a>
+		<?php } 
+		?>
+		</label>
+	</div>	
+-->			
+	<table cellpadding="0" cellspacing="0" border="0" width="98%" align="center" class="list_table2" id="table1">
+		<?php			
+		//echo $this->sarrApprove;
+		$delimitor = $this->delimitor;//Lay ky tu phan cach giua cac phan tu
+		//Hien thi cac cot cua bang hien thi du lieu
+		$StrHeader = explode("!~~!",$this->GenerateHeaderTable("5%" . $delimitor ."10%". $delimitor . "30%" . $delimitor . "12%". $delimitor . "12%". $delimitor . "16%" . $delimitor . "15%" 
+										,'<input type="checkbox" name="chk_all_item_id" value="" onclick="checkbox_all_item_id(document.forms[0].chk_item_id);">' . $delimitor . 'Dịch chuyển' . $delimitor .$arrConst['_TIEU_DE']. $delimitor . 'Trạng thái' . $delimitor . 'Ngày tạo' . $delimitor . 'Người tạo' . $delimitor . 'Người duyệt'
+										,$delimitor));
+		echo $StrHeader[0];						
+		echo $StrHeader[1]; //Hien thi <col width = 'xx'><...		
+			//Dinh nghia URL
+			$sUrlEdit  = "../edit/";
+			$arrResul = $this->arrResul;
+			//var_dump($arrResul);
+			$objFunction =	new	Sys_Function_DocFunctions()	;
+			$v_current_style_name = "round_row";
+			$iCount = sizeof($arrResul) - 1;
+			$sDocumentIdStart 				= $arrResul[0]['PK_ARTICLE'];
+			$sDocumentIdEnd 				= $arrResul[$iCount]['PK_ARTICLE'];
+			$iOrderLastUp					= $arrResul[0]['C_ORDER'];
+			$iOrderLastDown					= $arrResul[$iCount]['C_ORDER'];
+			//echo $sDocumentIdEnd;
+			for($index = 0;$index <= $iCount;$index++){
+				$sDocumentId 				= $arrResul[$index]['PK_ARTICLE'];
+				$smenuid					= $arrResul[$index]['FK_WEB_MENU'];
+				// Xu ly order de phuc vu viec di chuyen row
+				//$iOrder						= $arrResul[$index]['C_ORDER'];
+				$iOrderUp					= $arrResul[$index - 1]['C_ORDER'];
+				$iOrderDown					= $arrResul[$index + 1]['C_ORDER'];
+				//echo $iOrderUp; 
+				if($sDocumentId != $sDocumentIdStart){
+					$sUrlMoveUpOne				= '<a onclick="move_row(\''.$sDocumentId.'\',\''.$iOrderUp.'\')"><img src = "'.$this->baseUrl.'images/up.gif" ></a>&nbsp;';
+					$sUrlMoveUpPage				= '<a onclick="move_row(\''.$sDocumentId.'\',\''.$iOrderLastUp.'\')"><img src = "'.$this->baseUrl.'images/uppage.gif" ></a>&nbsp;';		
+				}else{
+					$sUrlMoveUpOne				= '';
+					$sUrlMoveUpPage				= '';					
+				}
+				
+				if($sDocumentId != $sDocumentIdEnd){
+					$sUrlMoveDownOne			= '<a onclick="move_row(\''.$sDocumentId.'\',\''.$iOrderDown.'\')"><img src = "'.$this->baseUrl.'images/down.gif" ></a>&nbsp;';	
+					$sUrlMoveDownPage			= '<a onclick="move_row(\''.$sDocumentId.'\',\''.$iOrderLastDown.'\')"><img src = "'.$this->baseUrl.'images/downpage.gif" ></a>';	
+				}else{
+					$sUrlMoveDownOne				= '';
+					$sUrlMoveDownPage				= '';					
+				}
+				$sUrlMove					= $sUrlMoveUpPage.$sUrlMoveUpOne.$sUrlMoveDownOne.$sUrlMoveDownPage;
+				
+				$sTitle						= $objFunction->searchCharColor($this->FullTextSearch,$arrResul[$index]['C_TITLE']);
+				$sCreateID 					= $objFunction->searchCharColor($this->FullTextSearch,$arrResul[$index]['FK_CREATE_STAFF']);
+				$sCreateName				= $objFunction->searchCharColor($this->FullTextSearch,$objFunction->getNamePositionStaffByIdList($sCreateID));
+				
+				$sCreateID 					= $arrResul[$index]['FK_APPROVE_STAFF'];
+				$sApproveName = '';
+				if($sCreateID != ''){
+					$sApproveName				= $objFunction->searchCharColor($this->FullTextSearch,$objFunction->getNamePositionStaffByIdList($sCreateID));
+				}
+				$sDate						= $arrResul[$index]['C_CREATE_DATE'];
+				$sStatus					= $arrResul[$index]['C_STATUS'];
+				if($sStatus=='1'){
+					$sStatus = 'Đã duyệt';
+				}else{
+					$sStatus = 'Chưa duyệt';
+				}
+				if ($v_current_style_name == "odd_row"){
+					$v_current_style_name = "round_row";
+				}else{
+					$v_current_style_name = "odd_row";					
+				}
+				?>
+				<tr class="<?=$v_current_style_name?>">	
+					<td align="center" style="padding-left:3px;padding-right:3px;" class="normal_label">
+						<?=$this->formCheckbox('chk_item_id',$arrResul[$index]['PK_ARTICLE'], array('checked' => false,'onclick' =>'selectrow(this)'));?>
+						<?php echo $this->formHidden("hdn_menuid",$smenuid,null); ?>					
+					</td>
+					<td align="center"  style="padding-left:10px;padding-right:3px;" class="normal_label" ><?=$sUrlMove.'&nbsp;'?></td>													
+					<td ondblclick="item_onclick('<?=$sDocumentId?>','<?=$sUrlEdit?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="left"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sTitle.'&nbsp;';?></td>
+					<td ondblclick="item_onclick('<?=$sDocumentId?>','<?=$sUrlEdit?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="center"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sStatus.'&nbsp;';?></td>
+					<td ondblclick="item_onclick('<?=$sDocumentId?>','<?=$sUrlEdit?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="center" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sDate.'&nbsp;';?></td>		
+					<td ondblclick="item_onclick('<?=$sDocumentId?>','<?=$sUrlEdit?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="left" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sCreateName.'&nbsp;';?></td>
+					<td ondblclick="item_onclick('<?=$sDocumentId?>','<?=$sUrlEdit?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="left" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sApproveName.'&nbsp;';?></td>
+				</tr><?php
+			}		
+			//Tu dien cac dong trang trong truong hop du lieu tra ve < so row _CONST_NUMBER_OF_ROW_PER_LIST		
+			if(sizeof($arrResul) < 15){	
+				echo $this->addEmptyRow($this->iCountElement,15 - sizeof($arrResul),$v_current_style_name,7);		
+			}				
+		?>			
+	</table>	
+	<!--Hien thi trang can xem!-->	
+	<table width="100%" cellpadding="0" cellspacing="5" border="0">
+		<tr>
+			<td width="30%" style="color:red;padding-left:1%;" class="normal_label">
+				<?=$this->sdocpertotal;?>
+			</td>
+			<td align="center" style="width="50%">
+				<table width="10%"><?php
+					//Hien thi danh sach so trang
+					echo $this->generateStringNumberPage;?>
+				</table>
+			</td>
+			<td width="30%" align="right" style="font-size:13px; padding-right:1%; font:tahoma" class="normal_label"><?php
+				//Hien thi so trang
+				echo $this->generateHtmlSelectBoxPage;?>
+			</td>
+		</tr>
+	</table>
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' align="center">
+		<tr>
+			<td style="padding-top: 10px; padding-bottom: 10px;" align="center" valign="middle">				
+		<?php if($this->sShowEdit){
+		?>
+				<input id="btn_add" name="btn_add" type="button" class="add_large_button" value="<?=$arrConst['_THEM'] ?>" onclick="actionUrl('../add/');">
+				<input type="button" class="add_large_button" value="<?=$arrConst['_SUA'] ?>" onclick="btn_update_onclick(document.getElementsByName('chk_item_id'),'../edit/');">
+		<?php } 
+			if($this->sShowApprove){
+		?>
+				<input type="button" class="add_large_button" value="Duyệt" onclick="btn_approved_article_onclick11(document.getElementsByName('chk_item_id'),document.getElementsByName('hdn_menuid'),'<?=$this->sarrApprove;?>',document.getElementsByName('hdn_object_id_list'),'../approved/');">
+		<?php } 
+			if($this->sShowEdit){
+		?>
+				<input type="button" class="add_large_button" value="<?=$arrConst['_XOA'] ?>" onclick="btn_delete_onclick(document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id_list'),'../delete/','<?=$this->UrlAjax?>','VB_DEN','T_DOC_RECEIVED_DOCUMENT');">
+		<?php } 
+		?>
+			</td>	
+		</tr>
+	</table>
+</div>
+</form>
+<script type="text/javascript">
+function move_row(articleid,order){	
+	document.forms[0].hdn_object_id.value = articleid;		
+	document.forms[0].hdn_move_order.value = order;	
+	document.forms[0].hdn_move.value = 'MOVE';	
+	actionUrl('../move/');
+}	
+</script>
+<?php } 
+else 
+	echo '<div class ="warning"><h1>Bạn không có quyền truy cập chức năng này :(</h1></div>';
+?>

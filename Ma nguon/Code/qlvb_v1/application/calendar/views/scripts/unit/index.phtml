@@ -1,0 +1,272 @@
+<form action="index" method="POST" id="frmsheduleUnit" autocomplete="off">	
+	<?php echo $this->formHidden("hdn_object_id_list","",null); ?>		
+	<?php echo $this->formHidden("hdn_object_id",$this->scheduleID,null); ?>			
+	<?php echo $this->formHidden("htn_leftModule",$this->currentModulCodeForLeft,null); ?>	
+	<?php echo $this->formHidden("htn_schedule_update",$this->currentUpdate,null); ?>		
+	<?php echo $this->formHidden("hdn_week",$this->$v_week); ?>
+	<?php echo $this->formHidden("hdn_week_text",$this->$v_week_text); ?>
+	<?php echo $this->formHidden("hdn_year",$this->$v_year); ?>
+	<?php echo $this->formHidden("hdn_exporttype","1"); ?>		
+	<?php echo $this->formHidden("hdn_edit",$this->iEdit); ?>
+	<?php echo $this->formHidden("hdn_approve",$this->iApprove); ?>	
+	<?php echo $this->formHidden("hdn_owner_code",$this->sOwner_name); ?>			
+	<?php echo $this->formHidden("hdn_schedule_type_owner","",null); ?>	
+	<?php echo $this->formHidden("hdn_print_for_owner","",null); ?>		
+	<?php
+		$arrCount = $this->arrCount;
+		$arryWekk = $this->arryWekk;
+		$arryYear = $this->arryYear;	
+		$arrDateInWeek = $this->arrDateInWeek;
+		$arry_date_in_week = explode('!@#',$arrDateInWeek);				
+		$arrySchedule_Unit = $this->arrySchedule_Unit;	
+		$ojbSysLib = new Sys_Library();				
+		//LAY GIA TRI CUA NGAY			
+		$p_year = date('Y');
+		$sUrEdit  = "../edit/";	
+		//LAY QUYEN NSD
+		$iEdit = $this->iEdit;
+		$iApprove = $this->iApprove;			
+		$v_shedule_type = $this->v_shedule_type;				
+		$sOwner_name = $this->sOwner_name; 		
+		//echo $sOwner_name;			
+	?>
+	<table>
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<?=$this->bodyTitle;?>				
+			</td>
+		</tr>
+	</table>
+	<!--Phan hien thi Tuan trong nam va Nam -->
+	<div class="box container c1">
+		<div class="pad">			
+			<table cellpadding="0" cellspacing="0" width="100%" border="0" style="padding-left:0%;">				
+				<tr>
+					<td width="4%" class="normal_label" valign="middle"><?=$arrCount['_TUAN']?>	</td>
+					<td  valign="top" width="18%" valign="top">
+						
+					<select name="cbo_week" id="cbo_week" style="width:auto;" class="textbox"  onchange="document.getElementById('hdn_week').value = this.value; document.forms['frmsheduleUnit'].submit();" >					
+						<? echo $arryWekk; ?>				
+					</select>
+			 </td>
+			<td width="3%" class="normal_label" valign="middle"><?=$arrCount['_NAM']?></td>
+						<td  style="padding-left:10px;">
+							<select name="cbo_year" id="cbo_year" class="textbox" valign="top" style="width:auto;" onchange="document.getElementById('hdn_year').value = this.value;  document.forms['frmsheduleUnit'].submit();" >
+								<? echo $arryYear;?>
+							</select>											
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>	
+	<!--Phan hien thi Link cap nhat -->	
+	<!-- 
+	<table width='99%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+		<col width="85%" align="left"/><col width="15%" align="right"/>
+		<tr>
+			<td align="right" colspan="2">
+				<div style="text-align:right; width:98%;  height: 23px; ">
+					<label>
+					<?php if($iEdit){?>
+						<a class="small_link" onclick="actionUrl('../add/');"><?=$arrCount['_THEM']?>&nbsp;</a>
+						<a class="small_link" onclick="btn_update_onclick(document.getElementsByName('chk_item_id'),'../edit/');"><?=$arrCount['_SUA']?>&nbsp;</a>	
+						<a class="small_link" onclick="btn_delete_onclick(document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id_list'),'../delete','','','');""><?=$arrCount['_XOA']?>&nbsp;</a>
+					<? } if($iApprove){ ?>						
+						<a class="small_link" onclick="btn_aprrove_onclick(document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id_list'),'../approve');"><?=$arrCount['_DUYET_LICH']?>&nbsp;</a>		
+					<? } ?>
+						<a class="small_link" onclick="btn_print_schedule_onclick('../print/',document.getElementById('hdn_week').value,document.getElementById('hdn_year').value,document.getElementById('cbo_week').options[document.getElementById('cbo_week').selectedIndex].text,'LICH_UBND','1',document.getElementById('hdn_print_for_owner').value);"><?=$arrCount['_IN_DANG_WEB']?>&nbsp;</a> 
+						<a class="small_link" onclick="btn_print_schedule_onclick('../print/',document.getElementById('hdn_week').value,document.getElementById('hdn_year').value,document.getElementById('cbo_week').options[document.getElementById('cbo_week').selectedIndex].text,'LICH_UBND','2',document.getElementById('hdn_print_for_owner').value);"><?=$arrCount['_IN_DANG_WORD']?>&nbsp;</a> 												
+					</label>
+				</div>	
+			</td>
+		</tr>
+	</table>	
+	 -->
+	 <br/>
+<!--Phan hien thi Noi dung lich -->		
+<table class="schedule_staff" cellpadding="0" cellspacing="0" width="98%" id="table1">			
+	<col width="3%">
+	<col width="8%">
+	<col width="8%">
+	<col width="33%">
+	<col width="18%">
+	<col width="18%">
+	<?php if($iEdit){ ?>
+	<col width="10%">
+	<?php } ?>
+	<tr class="header" style="height:10px;">
+		<td class="title" style="padding:0px; border-top: solid 1px #BACAD7;" align="center"><input type="checkbox" name="chk_all_item_id" value="" onclick="checkbox_all_item_id(document.forms[0].chk_item_id);"></td>
+		<td colspan="2" class="title" style="padding:0px; border-top: solid 1px #BACAD7;" align="center"><?=$arrCount['_THOI_GIAN']?></td>		
+		<td class="title" style="padding:0px; border-top: solid 1px #BACAD7;" align="center"><?=$arrCount['_NOI_DUNG_CONG_VIEC']?></td>
+		<td class="title" style="padding:0px; border-top: solid 1px #BACAD7;" align="center"><?=$arrCount['_CHU_TRI']?></td>
+		<td class="title" style="padding:0px; border-top: solid 1px #BACAD7; border-bottom: 1px solid #BACAD7;" align="center"><?=$arrCount['_DIA_DIEM']?></td>
+	<?php if($iEdit){ ?>	
+		<td class="title" style="padding:0px; border-top: solid 1px #BACAD7; border-bottom: 1px solid #BACAD7;" align="center"><?=$arrCount['_TRANG_THAI']?></td>
+	<?php } ?>	
+	</tr>	
+<? 
+//Dinh nghia cac ngay trong tuan
+$arrDayInWeek = array();	
+$arrDayInWeek['1']['C_CODE'] ='THU_2'; 		$arrDayInWeek['1']['C_NAME'] ='Th&#7913; hai';
+$arrDayInWeek['2']['C_CODE'] ='THU_3'; 		$arrDayInWeek['2']['C_NAME'] ='Th&#7913; ba';
+$arrDayInWeek['3']['C_CODE'] ='THU_4'; 		$arrDayInWeek['3']['C_NAME'] ='Th&#7913; t&#432;';
+$arrDayInWeek['4']['C_CODE'] ='THU_5'; 		$arrDayInWeek['4']['C_NAME'] ='Th&#7913; n&#259;m';
+$arrDayInWeek['5']['C_CODE'] ='THU_6'; 		$arrDayInWeek['5']['C_NAME'] ='Th&#7913; s&#225;u';
+$arrDayInWeek['6']['C_CODE'] ='THU_7'; 		$arrDayInWeek['6']['C_NAME'] ='Th&#7913; b&#7843;y';
+$arrDayInWeek['7']['C_CODE'] ='THU_8'; 		$arrDayInWeek['7']['C_NAME'] ='Ch&#7911; nh&#7853;t';
+$arrDay = array();
+$arrPartDay = array();
+for ($i=1; $i<= 7; $i++){
+	for ($j=0; $j< sizeof($arrySchedule_Unit) ; $j++){			
+		if($arrDayInWeek[$i]['C_CODE']==$arrySchedule_Unit[$j]['C_DAY']){
+			$arrDay[$i] = $arrDay[$i] + 1;
+				if($arrySchedule_Unit[$j]['C_DAY_PART']=='BUOI_SANG'){
+					$arrPartDay[0][$i] = $arrPartDay['0'][$i] + 1;
+				}
+				if($arrySchedule_Unit[$j]['C_DAY_PART']=='BUOI_CHIEU'){
+					$arrPartDay[1][$i] = $arrPartDay['1'][$i] + 1;
+				}
+
+		}
+	}
+}
+// rowspan thu trong tuan 
+$arrThursday[0] = $arrDay[1]; //3
+$arrThursday[$arrDay[1]] = $arrDay[2];
+$arrThursday[$arrDay[1]+$arrDay[2]] = $arrDay[3];
+$arrThursday[$arrDay[1]+$arrDay[2]+$arrDay[3]] = $arrDay[4];
+$arrThursday[$arrDay[1]+$arrDay[2]+$arrDay[3]+$arrDay[4]] = $arrDay[5];
+$arrThursday[$arrDay[1]+$arrDay[2]+$arrDay[3]+$arrDay[4]+$arrDay[5]] = $arrDay[6];
+$arrThursday[$arrDay[1]+$arrDay[2]+$arrDay[3]+$arrDay[4]+$arrDay[5]+$arrDay[6]] = $arrDay[7];
+// rowspan thu va buoi sang trong tuan
+$arrAm[0] = $arrPartDay[0][1]; //3
+$arrAm[$arrPartDay[0][1]+$arrPartDay[1][1]] = $arrPartDay[0][2];//2
+$arrAm[$arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]+$arrPartDay[1][2]] = $arrPartDay[0][3];
+$arrAm[$arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]+$arrPartDay[1][2]+$arrPartDay[0][3]+$arrPartDay[1][3]] = $arrPartDay[0][4];
+$arrAm[$arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]+$arrPartDay[1][2]+$arrPartDay[0][3]+$arrPartDay[1][3]+$arrPartDay[0][4]+$arrPartDay[1][4]] = $arrPartDay[0][5];
+$arrAm[$arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]+$arrPartDay[1][2]+$arrPartDay[0][3]+$arrPartDay[1][3]+$arrPartDay[0][4]+$arrPartDay[1][4]+$arrPartDay[0][5]+$arrPartDay[1][5]] = $arrPartDay[0][6];
+$arrAm[$arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]+$arrPartDay[1][2]+$arrPartDay[0][3]+$arrPartDay[1][3]+$arrPartDay[0][4]+$arrPartDay[1][4]+$arrPartDay[0][5]+$arrPartDay[1][5]+$arrPartDay[0][6]+$arrPartDay[1][6]] = $arrPartDay[0][7];
+// rowspan thu va buoi chieu trong tuan
+$arrPm[$arrPartDay[0][1]] = $arrPartDay[1][1];
+$arrPm[$arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]] = $arrPartDay[1][2];
+$arrPm[$arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]+$arrPartDay[1][2]+$arrPartDay[0][3]] = $arrPartDay[1][3];
+$arrPm[$arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]+$arrPartDay[1][2]+$arrPartDay[0][3]+$arrPartDay[1][3]+$arrPartDay[0][4]] = $arrPartDay[1][4];
+$arrPm[$arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]+$arrPartDay[1][2]+$arrPartDay[0][3]+$arrPartDay[1][3]+$arrPartDay[0][4]+$arrPartDay[1][4]+$arrPartDay[0][5]] = $arrPartDay[1][5];
+$arrPm[$arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]+$arrPartDay[1][2]+$arrPartDay[0][3]+$arrPartDay[1][3]+$arrPartDay[0][4]+$arrPartDay[1][4]+$arrPartDay[0][5]+$arrPartDay[1][5]+$arrPartDay[0][6]] = $arrPartDay[1][6];
+$arrPm[$arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]+$arrPartDay[1][2]+$arrPartDay[0][3]+$arrPartDay[1][3]+$arrPartDay[0][4]+$arrPartDay[1][4]+$arrPartDay[0][5]+$arrPartDay[1][5]+$arrPartDay[0][6]+$arrPartDay[1][6]+$arrPartDay[0][7]] = $arrPartDay[1][7];
+for ($i=1; $i<= 7 ; $i++){	
+	if($arrDay[$i]>0){
+		for ($j=0; $j< sizeof($arrySchedule_Unit) ; $j++){
+			$sContent ='';
+			$iStatus  ='';
+			$iStarttime  = $arrySchedule_Unit[$j]['C_START_TIME']; 
+			$iFinishtime = $arrySchedule_Unit[$j]['C_FINISH_TIME']; 
+			$sStarttime  = "<font color='#FF0000' size='2'><i><u>" . $iStarttime ."</i></u></font>";
+			$sFinishtime = "<font color='#FF0000' size='2'><i><u> -> " . $iFinishtime ."</i></u></font>&nbsp;";				
+			if($iFinishtime == ''){
+				$sStarttime = "<font color='#FF0000' size='2'><i><u>" . $iStarttime ."</i></u></font>&nbsp;";
+				$sFinishtime ='';
+			}	
+			
+			$iC_name =  $ojbSysLib->_replaceBadChar($arrySchedule_Unit[$j]['C_WORK_NAME']);
+			$sContent = $sStarttime.$sFinishtime.$iC_name;
+			$iStatus = $arrySchedule_Unit[$j]['C_STATUS']; 
+			$sStatus='';
+			if($iStatus == 1){ $sStatus ='Đã duyệt'; }else{ $sStatus ='<span style="color:#FF0000;">Chưa duyệt</span>'; }
+			if($arrDayInWeek[$i]['C_CODE']==$arrySchedule_Unit[$j]['C_DAY']){
+			?>	
+			 <tr>		 		    	 		
+				<td><?=$this->formCheckbox('chk_item_id',$arrySchedule_Unit[$j]['PK_SCHEDULE_UNIT'], array('checked' => false,'onclick' =>'selectrow(this);'));?></td>
+				<?php
+					if($j==0||$j==$arrDay[1]||$j==$arrDay[1]+$arrDay[2]||$j==$arrDay[1]+$arrDay[2]+$arrDay[3]||$j==$arrDay[1]+$arrDay[2]+$arrDay[3]+$arrDay[4]
+					||$j==$arrDay[1]+$arrDay[2]+$arrDay[3]+$arrDay[4]+$arrDay[5]||$j==$arrDay[1]+$arrDay[2]+$arrDay[3]+$arrDay[4]+$arrDay[5]+$arrDay[6]
+					){ 
+				?>	 			 			 			
+					<td style="background-color:#FFFFFF;" rowspan="<?php echo $arrThursday[$j] ;?>"><? echo  "<b>".$arrDayInWeek[$i]['C_NAME'] ?></td>
+				<?php }
+				if(($arrySchedule_Unit[$j]['C_DAY_PART']=='BUOI_SANG')&& ($j==0||$j==$arrPartDay[0][1]+$arrPartDay[1][1]
+					||$j== $arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]+$arrPartDay[1][2]
+					||$j== $arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]+$arrPartDay[1][2]+$arrPartDay[0][3]+$arrPartDay[1][3]
+					||$j== $arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]+$arrPartDay[1][2]+$arrPartDay[0][3]+$arrPartDay[1][3]+$arrPartDay[0][4]+$arrPartDay[1][4]
+					||$j== $arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]+$arrPartDay[1][2]+$arrPartDay[0][3]+$arrPartDay[1][3]+$arrPartDay[0][4]+$arrPartDay[1][4]+$arrPartDay[0][5]+$arrPartDay[1][5]
+					||$j== $arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]+$arrPartDay[1][2]+$arrPartDay[0][3]+$arrPartDay[1][3]+$arrPartDay[0][4]+$arrPartDay[1][4]+$arrPartDay[0][5]+$arrPartDay[1][5]+$arrPartDay[0][6]+$arrPartDay[1][6]
+				)){ 
+				?>
+					<td style="background-color:#FFFFFF;" rowspan="<?php echo $arrAm[$j] ;?>"><?php echo "<b><i>Buổi sáng";?></td> 	
+				<?php }
+				if(($arrySchedule_Unit[$j]['C_DAY_PART']=='BUOI_CHIEU')&& ($j==$arrPartDay[0][1]||$j==$arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]
+					||$j==  $arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]+$arrPartDay[1][2]+$arrPartDay[0][3]
+					||$j==  $arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]+$arrPartDay[1][2]+$arrPartDay[0][3]+$arrPartDay[1][3]+$arrPartDay[0][4]
+					||$j==  $arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]+$arrPartDay[1][2]+$arrPartDay[0][3]+$arrPartDay[1][3]+$arrPartDay[0][4]+$arrPartDay[1][4]+$arrPartDay[0][5]
+					||$j==  $arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]+$arrPartDay[1][2]+$arrPartDay[0][3]+$arrPartDay[1][3]+$arrPartDay[0][4]+$arrPartDay[1][4]+$arrPartDay[0][5]+$arrPartDay[1][5]+$arrPartDay[0][6]
+					||$j==  $arrPartDay[0][1]+$arrPartDay[1][1]+$arrPartDay[0][2]+$arrPartDay[1][2]+$arrPartDay[0][3]+$arrPartDay[1][3]+$arrPartDay[0][4]+$arrPartDay[1][4]+$arrPartDay[0][5]+$arrPartDay[1][5]+$arrPartDay[0][6]+$arrPartDay[1][6]+$arrPartDay[0][7]
+				)){ 
+				?>	
+					<td style="background-color:#FFFFFF;" rowspan="<?php echo $arrPm[$j] ;?>"><?php echo "<b><i>Buổi chiều";?></td> 				
+				<?php }?>		
+				<td onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$arrySchedule_Unit[$j]['PK_SCHEDULE_UNIT']?>');" style="text-align:justify;" ondblclick="item_onclick('<?=$arrySchedule_Unit[$j]['PK_SCHEDULE_UNIT']; ?>','<?=$sUrEdit?>')"><?  echo $sContent; ?>&nbsp;</td> 		
+			    <td onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$arrySchedule_Unit[$j]['PK_SCHEDULE_UNIT']?>');" style="text-align:justify;" ondblclick="item_onclick('<?=$arrySchedule_Unit[$j]['PK_SCHEDULE_UNIT']; ?>','<?=$sUrEdit?>')"><?  echo $ojbSysLib->_replaceBadChar($arrySchedule_Unit[$j]['C_NAME_JOINER']); ?>&nbsp;</td>
+			    <td onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$arrySchedule_Unit[$j]['PK_SCHEDULE_UNIT']?>');" style="text-align:justify;" ondblclick="item_onclick('<?=$arrySchedule_Unit[$j]['PK_SCHEDULE_UNIT']; ?>','<?=$sUrEdit?>')"><?  echo $ojbSysLib->_replaceBadChar($arrySchedule_Unit[$j]['C_PLACE']); ?>&nbsp;</td>
+			   <?php if($iEdit){ ?>
+			    <td onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$arrySchedule_Unit[$j]['PK_SCHEDULE_UNIT']?>');" style="text-align:Center;"  ondblclick="item_onclick('<?=$arrySchedule_Unit[$j]['PK_SCHEDULE_UNIT']; ?>','<?=$sUrEdit?>')"><?  echo $sStatus; ?>&nbsp;</td>					   		  
+			</tr>	 
+			<? }
+			}			
+		} 
+	}
+	else{ ?>
+		<tr>
+			<td>&nbsp;</td>
+			<td style="font-weight:bold;"><?php echo $arrDayInWeek[$i]['C_NAME']?></td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<?php if($iEdit){ ?>
+			<td>&nbsp;</td>			
+		</tr>
+	<?php } }
+}
+?>
+</table>	
+<table width='100%'  border='0' cellspacing='0' cellpadding='0' align="center">		
+		<tr>
+			<td style="padding-top: 10px; padding-bottom: 10px;" align="center" valign="middle">											
+			<?php if($iEdit){?>
+				<input id="btn_add" name="btn_add" type="button" class="add_large_button" value="<?=$arrCount['_THEM']?>" onclick="actionUrl('../add/'); document.getElementById('hdn_schedule_type_owner').value">
+				<input id="btn_edit" name="btn_edit" type="button" class="add_large_button" value="<?=$arrCount['_SUA']?>" onclick="btn_update_onclick(document.getElementsByName('chk_item_id'),'../edit/');">								
+				<input id="btn_delete" name="btn_delete" type="button" class="add_large_button" value="<?=$arrCount['_XOA']?>" onclick="btn_delete_onclick(document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id_list'),'../delete','','','');">				
+			<? } if($iApprove){ ?>						
+				<input id="btn_approve" name="btn_approve" type="button" class="add_large_button" value="<?=$arrCount['_DUYET_LICH']?>" onclick="btn_aprrove_onclick(document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id_list'),'../approve');">
+			<? } ?>	
+				<input id="btn_print_web" name="btn_print_web" type="button" class="add_large_button" value="<?=$arrCount['_IN_DANG_WEB']?>" onclick="btn_print_schedule_onclick('../print/',document.getElementById('hdn_week').value,document.getElementById('hdn_year').value,document.getElementById('cbo_week').options[document.getElementById('cbo_week').selectedIndex].text,'LICH_UBND','1',document.getElementById('hdn_print_for_owner').value);">
+				<input id="btn_print_word" name="btn_print_word" type="button" class="add_large_button" value="<?=$arrCount['_IN_DANG_WORD']?>" onclick="btn_print_schedule_onclick('../print/',document.getElementById('hdn_week').value,document.getElementById('hdn_year').value,document.getElementById('cbo_week').options[document.getElementById('cbo_week').selectedIndex].text,'LICH_UBND','2',document.getElementById('hdn_print_for_owner').value);">												
+			</td>	
+		</tr>
+	</table>
+</div>
+</form>
+<script type="text/javascript">
+shortcut.add("Ctrl+K",function() {
+	document.getElementById('txtfullTextSearch').focus();
+	document.getElementById('txtfullTextSearch').select();
+});
+function ResetSearch(){
+	document.getElementById('hdn_current_page').value = "1";	
+}
+function checkvalue(){
+	if(document.getElementById('txtfullTextSearch').value != ""){
+		actionUrl('');
+	}
+}
+function setType(){
+	
+	document.getElementById('hdn_schedule_type_owner').value;
+}
+//document.getElementById('hdn_week_text').value = document.getElementById('cbo_week').options[document.getElementById('cbo_week').selectedIndex].text;
+document.getElementById('hdn_week').value = document.getElementById('cbo_week').value ;
+document.getElementById('hdn_year').value = document.getElementById('cbo_year').value;
+document.getElementById('hdn_object_id').value ='<? echo $arrySchedule_Staff[0]['PK_SCHEDULE_UNIT']; ?>' 
+document.getElementById('hdn_schedule_type_owner').value = '<? echo $v_shedule_type; ?>';
+document.getElementById('hdn_print_for_owner').value = '<? echo $sOwner_name; ?>';
+</script>

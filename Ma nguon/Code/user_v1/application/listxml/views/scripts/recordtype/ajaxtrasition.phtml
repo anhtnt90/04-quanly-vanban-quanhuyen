@@ -1,0 +1,14 @@
+<?php 
+	if($this->sRecordType == "LIEN_THONG"){;	
+		global $dspDiv, $readonlyInEditMode, $disabledInEditMode, $formFielName;
+		$this->dspDiv = 1;
+		$this->readonlyInEditMode = true; $this->disabledInEditMode = true;
+		$this->formFielName	= "C_TRASITION_OWNER_CODE_LIST";				
+		$spRetHtml = "<div style='display:none'><input type='textbox' id='$this->formFielName' name='$this->formFielName' value='' hide='true' readonly optional = true xml_data=false xml_tag_in_db='' message=''></div>";
+		echo $spRetHtml . Sys_Xml::_generateHtmlForMultipleCheckboxFromSession('SesGetAllOwnerNotCurrentOwner', 'code','name',$arrRecordTypeGetSingle['C_OWNER_LIST'],'auto');
+?>
+	<div>
+		<label>Số ngày thụ lý hồ sơ</label>
+		<input style="width:33%"  type="text"  id ="C_PROCESS_DATE_NUMBER" name="C_PROCESS_DATE_NUMBER"  optional="true" >			
+	</div>
+<?php }	exit; ?>

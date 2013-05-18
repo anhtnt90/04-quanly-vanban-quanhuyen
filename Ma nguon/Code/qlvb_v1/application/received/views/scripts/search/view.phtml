@@ -1,0 +1,121 @@
+<form action="index" method="POST" id="frmreceived">
+<?php
+	$arrReceived = $this->arrReceived;
+	$arrConst = $this->arrConst;
+	if($this->getStatusLeftMenu == 'QUAN')
+			$sUrlBack = '../index/modul/QUAN';
+	else 	$sUrlBack = '../index/modul/DONVI';
+?>
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<!--tao tac hidden!-->
+		<tr>
+			<td>
+				<!--Sinh mot hidden luu gia tri!-->
+				<?php echo $this->formHidden("hdn_object_id",$this->sReceiveDocumentId,null); ?>	
+				
+				<?php echo $this->formHidden("hdn_current_page",$this->currentPage,null); ?>
+				<?php echo $this->formHidden("hdn_record_number_page",$this->numRowOnPage,null); ?>
+				<?php echo $this->formHidden("fromDate",$this->fromDate,null); ?>	
+				<?php echo $this->formHidden("toDate",$this->toDate,null); ?> 
+				<?php echo $this->formHidden("FullTextSearch",$this->FullTextSearch,null); ?>
+			</td>
+		</tr>
+	</table>
+	<!--HIen thi tieu de man hinh danh sach!-->
+	<script type="text/javascript">
+		$(function(){$('#body_conten1').equalHeights();});
+	</script>
+	<div id ="content">
+		<div style=" margin:10px 0 5px 0;font-size:16px;color:red;font-weight: bold;vertical-align: middle;" align="center">
+			<h1 class="large_label"><?=$this->bodyTitle;?></h1>
+		</div>
+		<div id="body_conten1">
+				<div id ="body_conten1_left">
+					<div>
+						<label>1.&nbsp;<?=$arrConst['_SO_KY_HIEU'] ?></label>
+						<label style="float:none;clear:none;display:inline;"><?=$arrReceived[0]['C_SYMBOL'].'&nbsp;'?></label>
+					</div>
+					<div>
+						<label>2.&nbsp;<?=$arrConst['_NGAY_PHAT_HANH'] ?></label>
+						<label style="float:none;clear:none;display:inline;"><?=$arrReceived[0]['C_RELEASE_DATE'].'&nbsp;'?></label>
+					</div>
+					<div>
+						<label id="l3">3.&nbsp;<?=$arrConst['_COQUAN_PHAT_HANH'] ?></label>
+						<div>
+							<label class="lbc2"><?=$arrConst['_CAP_GUI'] ?></label>
+							<div >
+								<label style="float:none;clear:none;display:inline;"><?=$arrReceived[0]['C_AGENTCY_GROUP'].'&nbsp;'?></label>
+							</div>
+						</div>
+						<div>
+							<label class="lbc2"><?=$arrConst['_NOI_GUI'] ?></label>
+							<div>
+								<label style="float:none;clear:none;display:inline;"><?=$arrReceived[0]['C_AGENTCY_NAME'].'&nbsp;'?></label>
+							</div>
+						</div>
+					</div>
+					<div>
+						<label>4.&nbsp;<?=$arrConst['_LOAI_VAN_BAN'].'&nbsp;'?></label>
+						<div>
+							<label style="float:none;clear:none;display:inline;"><?=$arrReceived[0]['C_DOC_TYPE'].'&nbsp;'?></label>
+						</div>	
+					</div>
+					<div>
+						<label>5.&nbsp;<?=$arrConst['_TRICH_YEU'] ?></label>
+						<label style="float:right;clear:none;display:inline;width:67%;"><?=$arrReceived[0]['C_SUBJECT'].'&nbsp;'?></label>
+					</div>
+				</div>
+				<div id="body_conten1_right">
+					<div>
+						<label>6.&nbsp;<?=$arrConst['_SO_VAN_BAN'] ?></label>
+						<label style="float:none;clear:none;display:inline;"><?=$arrReceived[0]['C_TEXT_BOOK_NAME'].'&nbsp;'?></label>
+					</div>
+					<div>
+						<label>7.&nbsp;<?=$arrConst['_SO_DEN'] ?></label>
+						<div id="docNumber">
+							<label style="float:none;clear:none;display:inline;"><?=$arrReceived[0]['C_NUM'].'&nbsp;'?></label>	
+						</div>
+					</div>
+					<div>
+						<label>8.&nbsp;<?=$arrConst['_NGAY_DEN'] ?></label>
+						<label style="float:none;clear:none;display:inline;"><?=$arrReceived[0]['C_RECEIVED_DATE'].'&nbsp;'?></label>
+					</div>
+					<div>
+						<label>9.&nbsp;<?=$arrConst['_TINH_CHAT'] ?></label>
+						<label style="float:none;clear:none;display:inline;"><?=$arrReceived[0]['C_NATURE'].'&nbsp;'?></label>
+					</div>
+					<div>
+						<label>10.&nbsp;<?=$arrConst['_DO_KHAN'] ?></label>
+						<label style="float:none;clear:none;display:inline;"><?=$arrReceived[0]['C_TEXT_OF_EMERGENCY'].'&nbsp;'?></label>
+					</div>
+					<div>
+						<label>11.&nbsp;<?=$arrConst['_HINH_THUC_XU_LY'] ?></label>
+						<label style="float:none;clear:none;display:inline;"><?=$arrReceived[0]['C_TYPE_PROCESSING_NAME'].'&nbsp;'?></label>
+					</div>
+					<div>
+						<label>12.&nbsp;<?=$arrConst['_FILE_DINH_KEM'] ?></label>
+						<?php
+							$strFileName 				= $arrReceived[0]['C_FILE_NAME'];
+							$sFile 						= Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+						 ?>
+						 <label style="width:95%;"><?=$sFile.'&nbsp;'?></label>
+					</div>						
+					
+				</div>
+				
+		</div>
+	</div>	
+	<!--Hien thi nut!-->		
+	<table width='99%'  border='0' cellspacing='0' cellpadding='0' align='center' class='normal_label'>
+		<tr><td> &nbsp; </td></tr>		
+		<tr>
+			<td align="center" style="padding-bottom:10px;">	
+				<input id="btn_print" name="btn_print" type="button" class="add_large_button" value="<?=$arrConst['_IN'] ?>" onclick="btn_print_infor_onclick(document.getElementById('hdn_object_id'),'../printdoc');">
+				<input type="submit" name="quaylai" id="quaylai" value="<?=$arrConst['_QUAY_LAI'] ?>" onClick="btn_back_onclick('<?=$sUrlBack?>')" class="add_large_button">
+			</td>
+		</tr>			
+	</table>	
+</form>
+
+
+

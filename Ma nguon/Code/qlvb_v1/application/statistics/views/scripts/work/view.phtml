@@ -1,0 +1,188 @@
+<form action="index" method="POST" id="frmAddReceived" enctype="multipart/form-data" autocomplete="off">
+<?php 
+	
+?>
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<!--tao tac hidden!-->
+		<tr>
+			<td>
+				<?php echo $this->formHidden("hdnCode","",null); ?>
+				<?php echo $this->formHidden("hdn_xml_tag_list","",null); ?>
+				<?php echo $this->formHidden("hdn_xml_value_list","",null); ?>
+				<?php echo $this->formHidden("hdn_XmlTagValueList","",null); ?>
+				<!--Sinh mot hidden luu ID VB!-->
+				<?php echo $this->formHidden("hdn_object_id",$this->sWorkId,null); ?>		
+				<!--Bien luu loai VB"!-->
+				<?php echo $this->formHidden("hdn_is_update",$this->is_update,null); ?>
+				<?php echo $this->formHidden("hdn_is_delete",$this->is_delete,null); ?>
+				<?php echo $this->formHidden("hdn_object_id_list","",null); ?>
+				<?php echo $this->formHidden("hdn_processs_work_id","",null);?>
+				<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+				<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>	
+				<?php echo $this->formHidden("status",$this->status,null); ?>
+			</td>
+		</tr>
+	</table>
+	<?php 
+		if($this->getStatusLeftMenu == 'DA_XU_LY')
+				$UrlBack	= '../index/modul/DA_XU_LY';
+		else 	$UrlBack	= '../index/modul/CAN_XU_LY';
+		$urlCalendar = $this->urlCalendar; 
+		$arrConst = $this->arrConst;
+		$arrWork  = $this->arrWork;
+	?>
+	<!--HIen thi tieu de man hinh danh sach!-->
+	<div style="margin:auto;padding-top:10px 0px;width:98%;">
+		<div>
+			<h1 class="info"><?=$this->infowork?></h1>
+		</div>
+		<table class="table_detail_doc" border="1">
+			<col width="14%"><col width="11%"><col width="20%"><col width="55%">
+			<tr>
+				<td><?=$arrConst['_NGAY_GIAO_VIEC']?></td>
+				<td><?=$arrWork[0]['C_APPROVE_DATE'].'&nbsp;'?></td>
+				<td><?=$arrConst['_LANH_DAO_GIAO_VIEC']?></td>
+				<td><?=$arrWork[0]['C_LEADER_POSITION_NAME'].'&nbsp;'?></td>
+			</tr>
+			<tr>
+				<td><?=$arrConst['_NOI_DUNG_CONG_VIEC']?></td>
+				<td colspan="3"><?=$arrWork[0]['C_WORK_CONTENT'].'&nbsp;'?></td>
+			</tr>
+			<tr>
+				<td><?=$arrConst['_GHI_CHU']?></td>
+				<td colspan="3"><?=$arrWork[0]['C_NOTES'].'&nbsp;'?></td>
+			</tr>
+			<?php
+				$strFileName 				= $arrWork[0]['C_FILE_NAME'];
+				if($strFileName != ""){
+					$sFile 					= Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+					$dsp = '';
+				}else{
+					$sFile = "";
+					$dsp = 'none';
+				}
+			?>
+			<tr style="display:<?=$dsp?>;">
+				<td><?=$arrConst['_FILE_DINH_KEM']?></td>
+				<td colspan="3"><?=$sFile?></td>
+			</tr>
+		</table>
+	</div>
+	<?php $sarrAppointedUnitList = explode('!~!',$arrWork[0]['C_APPOINTED_DATE_UNIT_LIST']);?>
+	<div id="header_conten" style="height: 10px;padding-bottom:10px;border-bottom:none;">
+		<h1 class="info" style="color:#CA1010;text-align:left;margin-left:10px;margin-top:10px;"><?=$this->infoprocess;?></h1>
+	</div>	
+	<table cellpadding="0" cellspacing="0" border="0" width="98%" align="center" class="list_table2" id="table1">
+		<?php			
+		$delimitor = $this->delimitor;//Lay ky tu phan cach giua cac phan tu
+		//Hien thi cac cot cua bang hien thi du lieu
+		$StrHeader = explode("!~~!",$this->GenerateHeaderTable("5%" . $delimitor . "15%" . $delimitor . "50%" . $delimitor . "30%" 
+									,'STT' . $delimitor . $arrConst['_NGAY_THUC_HIEN'] . $delimitor . $arrConst['_KET_QUA_XU_LY']. $delimitor . $arrConst['_CAN_BO_XU_LY'] 
+									,$delimitor));
+		echo $StrHeader[0];	
+									
+		echo $StrHeader[1]; //Hien thi <col width = 'xx'>
+			$v_current_style_name = "round_row";
+			$arrProcesResultAll	= $this->arrProcesResultAll;
+			if(sizeof($arrProcesResultAll) > 0){
+				$arrUnitName		= array();
+				$countName			= 0;
+				$sUnitName			= '';
+				for($i = 0; $i < sizeof($arrProcesResultAll); $i++){
+					if(!in_array($arrProcesResultAll[$i]['C_UNIT_NAME'],$arrUnitName)){
+						$arrUnitName[$countName] = $arrProcesResultAll[$i]['C_UNIT_NAME'];
+						$countName++;
+					}
+				}
+				for($i = 0; $i < sizeof($arrUnitName); $i++){
+					$sUnitName = '<b>'.$arrUnitName[$i].'</b>';
+					$count = 0;
+					for($k = 0; $k< sizeof($sarrAppointedUnitList); $k++){
+						$sarrAppointedUnit = explode(':',$sarrAppointedUnitList[$k]);
+						if($arrUnitName[$i] == ($sarrAppointedUnit[0])){
+							$sUnitName .= '&nbsp;<i>'.$sarrAppointedUnit[1].'</i>&nbsp;';
+						}
+					}?>
+					<tr style="background:#DBDEE9">					
+							<td colspan="5" align="left" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sUnitName?></td>													
+					</tr>
+			<?php	for($j = 0; $j < sizeof($arrProcesResultAll); $j++){
+						if($arrProcesResultAll[$j]['C_UNIT_NAME'] == $arrUnitName[$i]){
+							$count++;
+							//Lay file dinh kem
+							$strFileName 				= $arrProcesResultAll[$j]['C_FILE_NAME'];
+							$sFile 	= Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+							//ID CONG VIEC
+							$sPkDocWorkId 				= $arrProcesResultAll[$j]['PK_DOC_WORK'];			
+							//Ngay thuc hien
+							$dWorkDate					= $arrProcesResultAll[$j]['C_PROCESS_DATE'].'&nbsp;';			
+							//Ket qua xu ly
+							if($strFileName == '' || $strFileName == null){
+								$sResult				= $arrProcesResultAll[$j]['C_RESULT'].'&nbsp;';
+							}else {
+								$sResult				= $arrProcesResultAll[$j]['C_RESULT'] .'<br>'. $sFile;
+								$sFile = "";
+							}
+							$sDisable = "";
+							if($arrProcesResultAll[$j]['FK_STAFF'] != $_SESSION['staff_id']){
+								$sDisable = "disabled";
+							}
+							//Can bo xu ly
+							$sStaffPositionName 		= $arrProcesResultAll[$j]['C_STAFF_POSITION_NAME'] .'&nbsp;';	
+							if ($v_current_style_name == "odd_row"){
+								$v_current_style_name = "round_row";
+							}else{
+								$v_current_style_name = "odd_row";					
+							}?>
+							<tr class="<?=$v_current_style_name?>">		
+								<td align="center" style="padding-left:3px;padding-right:3px;" class="normal_label">
+									<?=$count?>					
+								</td>													
+								<td  onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_processs_work_id'),'<?=$sPkDocWorkId?>');" align="center"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$dWorkDate;?></td>
+								<td  onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_processs_work_id'),'<?=$sPkDocWorkId?>');" align="left"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sResult;?></td>
+								<td  onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_processs_work_id'),'<?=$sPkDocWorkId?>');" align="left" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sStaffPositionName?></td>		
+							</tr>
+<?php						//Loai bo phan tu khoi mang vaf Reset lai chi so cua mang
+							unset($arrProcesResultAll[$j]);
+							$arrProcesResultAll = array_merge($arrProcesResultAll);
+							$j--;
+						} 
+					}
+				}
+				$arrProcesResultAll	= $this->arrProcesResultAll;			
+			}
+			//onclick = "getSingleWorkValue('<?=$sPkDocWorkId						
+			//Tu dien cac dong trang trong truong hop du lieu tra ve < so row _CONST_NUMBER_OF_ROW_PER_LIST		
+			if(sizeof($arrProcesResultAll) < 7){	
+				echo $this->addEmptyRow($this->iCountElement,7 - sizeof($arrProcesResultAll),$v_current_style_name,4);		
+			}	
+		?>			
+	</table>
+	<!--Hien thi nut!-->		
+	<table style="margin-top:10px;" width='98%'  border='0' cellspacing='0' cellpadding='0' align='center' class='normal_label'>	
+		<tr>
+			<td align="center">	
+				<input type="submit" name="quaylai" id="quaylai" value="<?=$arrConst['_QUAY_LAI'] ?>" onClick="btn_back_onclick('../index/')" class="add_large_button">
+			</td>
+		</tr>			
+	</table>
+</form>
+
+<script type="text/javascript"> 
+
+function checkvalue(){
+}
+</script>
+<style>
+	h1.info{
+		color:#CA1010;
+		font-size:16px;
+		font-weight:bold;
+		vertical-align:middle;
+		font-family:Arial;
+		padding:0px 0px;
+		margin:5px 0px;
+	}
+</style>

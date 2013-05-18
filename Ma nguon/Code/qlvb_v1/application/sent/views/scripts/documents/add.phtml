@@ -1,0 +1,266 @@
+<?php 
+$arrPermission = $_SESSION['arrStaffPermission'];
+if($arrPermission['CAP_NHAT_VB_DI_DON_VI'] || $arrPermission['CAP_NHAT_VB_BH_PB'] || $arrPermission['CAP_NHAT_VB_BH_PX'])
+{
+?>
+<form action="index" method="POST" id="frmAddSent" enctype="multipart/form-data" autocomplete="off">
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<!--tao tac hidden!-->
+		<tr>
+			<td>
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>
+				<?php echo $this->formHidden("hdnCode","",null); ?>
+				<?php echo $this->formHidden("hdn_xml_tag_list","",null); ?>
+				<?php echo $this->formHidden("hdn_xml_value_list","",null); ?>
+				<?php echo $this->formHidden("hdn_XmlTagValueList","",null); ?>
+				<?php echo $this->formHidden("hdh_option",$this->option,null); ?>
+				<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+				<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>	
+				<?php echo $this->formHidden("hdnListId","",null); ?>	
+				<?php echo $this->formHidden("number",'',null); ?>
+				<?php echo $this->formHidden("hdnNhomChinh","",null); ?>				
+				<?php echo $this->formHidden("hdn_received_place","",null); ?>
+				<?php echo $this->formHidden("hdn_signer_position_name","",null); ?>
+				<?php echo $this->formHidden("hdn_doc_cate_name","",null); ?>
+				<?php echo $this->formHidden("hdn_doc_type_name","",null); ?>
+				<?php //echo $this->formHidden("C_DOC_TYPE",$this->sDocType,null);?>
+			</td>
+		</tr>
+	</table>
+	<?php 
+		$arrSent = $this->arrSent;
+		$urlCalendar = $this->urlCalendar;
+		$arrConst = $this->arrConst;
+	?>
+	<!--HIen thi tieu de man hinh danh sach!-->
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+			<!--tao tac hidden!-->
+			<tr>
+				<td class="large_title" style="padding-left:1%;text-align:left;">
+					<?=$this->bodyTitle;?>
+				</td>				
+			</tr>
+		</table>		
+	<div id ="content">		
+		<div id="body_conten1">
+				<div id ="body_conten1_left">
+					<div>
+						<label>1.&nbsp;<?=$arrConst['_LOAI_VAN_BAN'] ?><span class="requiein">*</span></label>
+						<input class="textbox" style="width:65%" id ="C_DOC_TYPE" name="C_DOC_TYPE" type="text"  option = "false"  xml_tag_in_db="" xml_data="false" column_name="C_DOC_TYPE" message="Phai xac dinh LOAI van ban!" onblur="getDocType(document.getElementById('docNumber'),document.getElementById('C_TEXT_BOOK'),'<?= $_SESSION['OWNER_ID'] ?>');" onKeyDown="change_focus(document.forms[0],this)">			
+					</div>
+					<div id="docNumber"> 
+							<label >&nbsp;<?=$arrConst['_SO'] ?> <span class="requiein">*</span></label>
+							<input class="textbox" style="width:20%;" isnumeric = "false"   type="text" id="C_NUMBER" name="C_NUMBER"  <?php If(sizeof($arrSent) > 0){ ?> value="<?=  $arrSent[0]['C_NUMBER'] + $this->ghi_themtiep  ?>" <?php } ?> align="right" optional = "true"   xml_data="false" column_name="C_NUMBER" message="<?php echo "SO VB khong duoc de trong";?>" >
+							<label style="float:none;clear:none; display:inline;">&nbsp;<?=$arrConst['_KY_HIEU'] ?><span class="requiein">*</span></label>
+							<input style="width:21%;" class="textbox"   type="text" id="C_SYMBOL" name="C_SYMBOL" value="<?= $arrSent[0]['C_SYMBOL'] ?>" align="right" optional = "true" xml_data="false" column_name="C_SYMBOL" message="<?php echo "KY HIEU VB khong duoc de trong";?>">
+					</div>
+					<div>
+						<label>2. &nbsp;<?=$arrConst['_NGAY_PHAT_HANH'] ?><span class="requiein">*</span></label>
+						<input style="width:20%;" class="textbox c2" id ="C_SENT_DATE" name="C_SENT_DATE" value="<?= $arrSent[0]['C_SENT_DATE'] ?>" onchange="getNowYear(this);"  type="text" isdate="true" option = "false"  xml_tag_in_db="" xml_data="false" column_name="C_SENT_DATE" message="<?php echo "NGAY PHAT HANH khong dung dinh dang ngay/thang/nam!";?>" onKeyDown="change_focus(document.forms[0],this)">						 					
+					</div>
+					<div>
+						<label>3. &nbsp;<?=$arrConst['_TRICH_YEU'] ?><span class="requiein">*</span></label>
+						<textarea style="width:65%"  class="normal_textarea" id="C_SUBJECT"  option = "true" rows="2" name="C_SUBJECT"  xml_tag_in_db="" xml_data="false" column_name="C_SUBJECT" message="<?php echo "Phai nhap vao TRICH YEU van ban!";?>"><?= $arrSent[0]['C_SUBJECT']?></textarea>
+					</div>
+					<div>
+						<label>4. &nbsp;<?=$arrConst['_LINH_VUC'] ?><span class="requiein">*</span></label>
+						<input style="width:65%" id ="C_DOC_CATE" name="C_DOC_CATE" type="text"  option = "false"  xml_tag_in_db="" xml_data="false" value="<?= $arrSent[0]['C_DOC_CATE'] ?>" column_name="C_DOC_CATE" message="<?php echo "Phai xac dinh LINH VUC van ban!";?>" onKeyDown="change_focus(document.forms[0],this)">
+					</div>
+				</div><!-- End #body_conten1_left-->
+				<div id="body_conten1_right">
+					<div>
+						<label>5. &nbsp;<?=$arrConst['_SO_VAN_BAN'] ?><span class="requiein">*</span></label>
+						<select id="C_TEXT_BOOK" name="C_TEXT_BOOK" optional = "true" style="width:59%;" class="textbox normal_label"  xml_tag_in_db="" xml_data="false" column_name="C_TEXT_BOOK" value=" ">
+								<option id="" name = "" value="">-- chọn sổ văn bản --</option><?php
+									$arrInputBooks = $this->arrInputBooks;
+									echo Sys_Library::_generateSelectOption($arrInputBooks,'C_CODE','C_CODE','C_NAME',$arrInputBooks[0]['C_CODE']);?>
+						</select>
+					</div>
+					<div>
+						<label>6. &nbsp;<?=$arrConst['_TINH_CHAT'] ?><span class="requiein">*</span></label>
+						<select id="C_NATURE" name="C_NATURE"  option = "true"  style="width:59%;" class="textbox normal_label" xml_tag_in_db="" xml_data="false" column_name="C_NATURE" message="<?php echo "Ban phai chon TINH CHAT VB!";?>">
+								<option id="" name = "" value="">-- chọn &nbsp;<?=$arrConst['_TINH_CHAT'] ?> --</option><?php
+								$arrNature = $this->arrNature;
+								echo Sys_Library::_generateSelectOption($arrNature,'C_CODE','C_CODE','C_NAME',$arrSent[0]['C_NATURE']);?>
+						</select>
+					</div>
+					<div>
+						<label >7. &nbsp;<?=$arrConst['_DO_KHAN'] ?></label>
+						<select id="C_TEXT_OF_EMERGENCY" name="C_TEXT_OF_EMERGENCY"  optional = "true"  style="width:59%;" class="textbox normal_label" xml_tag_in_db="" xml_data="false" column_name="C_TEXT_OF_EMERGENCY" message="">
+								<option id="" name = "" value="">-- chọn &nbsp;<?=$arrConst['_DO_KHAN'] ?> --</option><?php
+								$arrTextOfEmergency = $this->arrTextOfEmergency;
+								echo Sys_Library::_generateSelectOption($arrTextOfEmergency,'C_NAME','C_NAME','C_NAME',$arrSent[0]['C_TEXT_OF_EMERGENCY']);?>
+						</select>	
+					</div>
+					<div>
+						<label>8. &nbsp;<?=$arrConst['_SO_BAN'] ?></label>
+						<input class="textbox" style="width:20%;" id ="so_ban" name="so_ban" type="text"  isnumeric = "false" optional = "false"  xml_tag_in_db="so_ban"  xml_data="true" column_name=""  onKeyDown="change_focus(document.forms[0],this)" value="<?=$arrSent[0]['SO_BAN'] ?>">				
+						<label style="float:none;clear:none; display:inline;"><?=$arrConst['_SO_TRANG'] ?></label>
+						<input class="textbox" style="width:21%;" id ="so_trang" name="so_trang" type="text"  optional = "false"   xml_tag_in_db="so_trang"  xml_data="true" column_name="" onKeyDown="change_focus(document.forms[0],this)" value="<?=$arrSent[0]['SO_TRANG'] ?>">
+					</div>
+					<div>
+						<label>9. &nbsp;<?=$arrConst['_FILE_DINH_KEM'] ?></label><?=$this->AttachFile;?>
+					</div>		
+				</div>
+				<div id="clear"></div>
+		</div>
+		<div id="body_conten4">
+			<!-- <div style="margin:0 0 8px 0px;">
+					<label style="width:160px;">10. &nbsp;<?=$arrConst['_NGUOI_KY'] ?><span class="requiein">*</span></label>
+					<div id="divLeaderID">	
+						<input style="width:24%" id ="C_SIGNER_POSITION_NAME" name="C_SIGNER_POSITION_NAME" value="<?= $arrSent['FK_SIGNER'] ?>" type="text"  option = "false"  xml_tag_in_db="" xml_data="false" column_name="C_SIGNER_POSITION_NAME" message="<?php echo "Phai xac dinh NGUOI KY van ban!";?>" onKeyDown="change_focus(document.forms[0],this)">
+					</div>	
+			</div> -->
+			<div style="margin:0 0 8px 0px;">
+					<label style="width:160px;">10. &nbsp;<?=$arrConst['_NGUOI_KY'] ?><span class="requiein">*</span></label>
+					<select id="C_SIGNER_POSITION_NAME" name="C_SIGNER_POSITION_NAME" option = "true" style="width:30%" class="textbox normal_label" xml_tag_in_db="" xml_data="false" column_name="C_SIGNER_POSITION_NAME" message = "Phai xac dinh NGUOI KY van ban!" onKeyDown="change_focus(document.forms[0],this)">
+						<option id="" name = "" value="">-- chọn người ký --</option><?php
+						$arrSigner = $this->arrSigner;
+						echo Sys_Library::_generateSelectOption($arrSigner,'C_CODE','C_CODE','C_NAME',$arrSent[0]['FK_SIGNER']);?>
+					</select>	
+			</div>
+			<div style="float:left; width:50%">
+					<label style="width:160px;">11.&nbsp;<?=$arrConst['_PHONG_BAN_SOAN_THAO'] ?><span class="requiein">*</span>:</label>
+					<select id="FK_UNIT_SOANTHAO" name="FK_UNIT_SOANTHAO" onchange="getAllStaff(document.getElementById('objView'),this);" option = "true" style="width:300px;" class="textbox normal_label" xml_tag_in_db="" xml_data="false" column_name="FK_UNIT_SOANTHAO" message = "Ban phai chon DON VI SOAN THAO van ban!">
+						<option id="" name = "" value="">-- chọn phòng ban --</option><?php
+						$arrUnit = $_SESSION['arr_all_unit'];//$this->arrAllDonVi;					
+						echo Sys_Library::_generateSelectOption($arrUnit,'id','id','name',$arrSent[0]['FK_UNIT']);?>
+					</select>	
+			</div>
+			<div style="float:left; width:50%">
+				<label style="width:180px;">12.&nbsp;<?=$arrConst['_CAN_BO_SOAN_THAO'] ?> <span class="requiein">*</span></label>
+				<div id="objView">
+					<select id="FK_STAFF" name="FK_STAFF" option = "true" style="width:200px;" class="textbox normal_label" xml_tag_in_db="" xml_data="false" column_name="FK_STAFF" message = "Ban phai chon CHUYEN VIEN SOAN THAO van ban!">
+						<option id="" name = "" value="">-- chọn chuyên viên--</option><?php
+						$arrDraff = array();
+						$k = 0;
+						foreach ($_SESSION['arr_all_staff'] as $staff){
+							if($staff['unit_id'] == $arrSent[0]['FK_UNIT']){
+								$arrDraff[$k]['C_CODE'] = $staff['id'];
+								$arrDraff[$k]['C_NAME'] = $staff['name'];
+								$k ++;
+							}
+						}
+						echo Sys_Library::_generateSelectOption($arrDraff,'C_CODE','C_CODE','C_NAME',$arrSent[0]['FK_STAFF']);?>
+					</select>	
+				</div>
+			</div>
+			<div>
+				<label style="width:160px;">13. &nbsp;<?=$arrConst['_NOI_NHAN'] ?></label>
+				<textarea style="width:77%" id="C_RECEIVE_PLACE" name="C_RECEIVE_PLACE" optional="true" class="textbox normal_textarea" ></textarea>
+			</div>
+			<div>
+				<label style="width:160px;">14. &nbsp;<?=$arrConst['_GUI_VB_DIEN_TU'] ?></label>
+				<textarea style="width:77%" id="C_SENT_OWNER_CODE_LIST" name="C_SENT_OWNER_CODE_LIST" optional="true" class="textbox normal_textarea" ></textarea>
+			</div>
+			<div style="float:left; width:50%">
+				<label style="width:160px;">15. &nbsp;<?=$arrConst['_GIA_SO'] ?></label>
+				<input optional = "true" class="textbox"  type="text" id="gia_so" name="gia_so" value="<?= $arrSent[0]['GIA_SO'] ?>" align="right" option = "true" xml_tag_in_db="gia_so" xml_data="true" column_name="">
+			</div>
+			<div style="float:left; width:50%">
+				<label style="width:200px;">16. &nbsp;<?=$arrConst['_HOP_CAP_SO'] ?></label>
+				<input optional = "true" class="textbox"  type="text" id="cap_so" name=cap_so" value="<?=  $arrSent[0]['CAP_SO']  ?>" align="right" option = "true" xml_tag_in_db="cap_so" xml_data="true" column_name="">
+			</div>
+			<br clear="all">
+		</div>
+	</div>	
+	<!--Hien thi nut!-->			
+	<table 	width='99%'  border='0' cellspacing='0' cellpadding='0' align="center" class="table_title">			
+		<tr>
+			<td align="center" style="padding-bottom:10px;">			
+				<!-- 
+				<button name="btn_ghivathemmoi" id="btn_ghivathemmoi" type="button" value="<?=$arrConst['_GHI_THEM_MOI'] ?>" class="add_large_button" onClick="document.getElementById('hdh_option').value='GHI_THEMMOI';btn_save_period(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'');"><?=$arrConst['_GHI_THEM_MOI'] ?></button>
+				<button name="btn_ghivathemtiep" id="btn_ghivathemtiep" type="button" value="<?=$arrConst['_GHI_THEM_TIEP'] ?>" class="add_large_button" onClick="document.getElementById('hdh_option').value='GHI_THEMTIEP';btn_save_period(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'');"><?=$arrConst['_GHI_THEM_TIEP'] ?></button>
+				<button name="btn_ghinhan" id="btn_ghinhan" type="button" value="<?=$arrConst['_GHI_TAM'] ?>" class="add_large_button" onClick="document.getElementById('hdh_option').value='GHI_TAM';btn_save_period(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'');"><?=$arrConst['_GHI_TAM'] ?></button>
+				 -->
+				 
+				<button name="btn_ghivaquaylai" id="btn_ghivaquaylai" type="button" value="<?=$arrConst['_GHI_QUAY_LAI'] ?>" class="add_large_button" onClick="document.getElementById('hdh_option').value='GHI_QUAYLAI';btn_save_period(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'');">Cập nhật</button>				
+				<?=$this->formsubmit('button','Trở lại',array("onClick"=>"actionUrl('index/');","class"=>"add_large_button"))?>
+			</td>
+		</tr>			
+	</table>
+	<div id="getSysbolforNowYear" style="display:none;"></div>
+</div>		
+</form>
+<?php 
+	 //echo $this->search_textselectbox_signer;  
+	 echo $this->search_doc_cate_name; 
+	 echo $this->search_doc_type_name; 
+	 echo $this->search_textselectbox_ownerCodeList;
+?>
+<script type="text/javascript">
+
+	//lay ngay/thang/nam hien tai cua he thong
+	document.getElementById('C_SENT_DATE').value = '<?=date("d/m/Y");?>';
+	var key='date=' + document.getElementById('C_SENT_DATE').value + '&sysbol=';
+	postAJAXHTTPText('<?=$this->UrlAjax;?>' + '/sent/generatehtml/documents/getSysbol.php', key, document.getElementById('getSysbolforNowYear'), null);
+	//ham lay ra cac lanh dao theo nhom
+	function getLeader(rdoLeader, objView){	
+		document.getElementById('nhom_LD').value = rdoLeader.value;
+		var key = "groupLeader=" + rdoLeader.value;
+		postAJAXHTTPText('<?=$this->UrlAjax;?>' + '/sent/generatehtml/documents/getLeader.php', key, objView, null);
+	}	
+
+	//ham lay ra danh sach nhan vien trong mot don vi hien thoi cua selectbox don vi
+	function getAllStaff(objView, unitID){
+		var strAllStaffUnitID = '';
+		var strAllStaffID = '';
+		var strAllStaffName = '';<?php
+		$strAllDepartment = '';
+		$strParentUnitID = '';
+		for($j =0; $j < sizeof($_SESSION['arr_all_unit']); $j ++){
+			$strAllDepartment .= $_SESSION['arr_all_unit'][$j]['id'] . '@~@';
+			$strParentUnitID .= $_SESSION['arr_all_unit'][$j]['parent_id'] . '@~@';
+		}
+		$strAllStaffID = "";
+		$strAllStaffName = "";
+		for($i =0; $i <sizeof($_SESSION['arr_all_staff']); $i ++){
+			$strAllStaffID .= $_SESSION['arr_all_staff'][$i]['id'] . '@~@';
+			$strAllStaffUnitID .= $_SESSION['arr_all_staff'][$i]['unit_id'] . '@~@';
+			$strAllStaffName .= $_SESSION['arr_all_staff'][$i]['position_code'] . ' - ' . $_SESSION['arr_all_staff'][$i]['name'] . '@~@';
+		}?>
+		var key = 'unitID=' + unitID.value + '&arr_all_unit=' + '<?=$strAllDepartment?>' + '!@@!' + '<?=$strParentUnitID?>';
+		key += '&arr_all_staff=' + '<?=$strAllStaffID?>' + '!@@!' + '<?=$strAllStaffUnitID?>' + '!@@!' + '<?=$strAllStaffName?>';
+		postAJAXHTTPText('<?=$this->UrlAjax;?>' + '/sent/generatehtml/documents/getStaff.php', key, objView, null);	
+	}
+	
+	if(document.getElementById('C_NATURE').value == ''){
+	document.getElementById('C_NATURE').value = 'THUONG';
+	}
+	//
+	function getDocType(objView,sTextBook,iUnitId){
+		vObj = document.getElementById('hdn_doc_type_name')
+		if(vObj.value == '' ){
+			document.getElementById('C_NUM').value = '';
+			return;
+		}
+		var key = 'IdDoctype=' + vObj.value  +'&TextBook='+sTextBook.value +'&UnitId='+ iUnitId;
+		//alert(key);		
+		postAJAXHTTPText('<?=$this->UrlAjax;?>' + '/sent/generatehtml/documents/getNumberSymbol.php', key, objView, null);	
+	}
+</script>
+<?php } 
+else 
+	echo 'Bạn không có quyền truy cập chức năng này';
+?>
+<script type = "text/javascript">
+$(function() {
+	$( "#C_SENT_DATE" ).datepicker({
+		changeMonth: true,
+		gotoCurrent: true,
+		maxDate: '+1m +1w',
+		minDate: new Date(1945, 1 - 1, 1),
+		changeYear: true
+	});
+	$( "#C_SENT_DATE" ).datepicker({
+		changeMonth: true,
+		gotoCurrent: true,
+		maxDate: '+1m +1w',
+		minDate: new Date(1945, 1 - 1, 1),
+		changeYear: true
+	});
+});
+</script>

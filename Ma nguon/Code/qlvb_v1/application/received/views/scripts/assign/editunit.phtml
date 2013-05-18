@@ -1,0 +1,122 @@
+<form action="index" method="POST" id="frmAddReceived" enctype="multipart/form-data" autocomplete="off">
+<?php 
+	$arrReceived = $this->arrReceived;
+	//Kiem tra han xu ly VB
+	$sAppointedDate = '';
+	if($arrReceived[0]['C_APPOINTED_DATE'] !='' and $arrReceived[0]['C_APPOINTED_DATE'] != '01/01/1900'){
+		$sAppointedDate = $arrReceived[0]['C_APPOINTED_DATE'];
+	}
+	$urlCalendar = $this->urlCalendar;
+	$arrConst = $this->arrConst; 
+?>
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<!--tao tac hidden!-->
+		<tr>
+			<td>
+				<?php echo $this->formHidden("hdn_xml_tag_list","",null); ?>
+				<?php echo $this->formHidden("hdn_xml_value_list","",null); ?>
+				<?php echo $this->formHidden("hdn_XmlTagValueList","",null); ?>
+				<!--Sinh mot hidden luu ID VB!-->
+				<?php echo $this->formHidden("hdn_object_id",$this->sReceiveDocumentId,null); ?>		
+				<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+				<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>	
+		
+				<?php echo $this->formHidden("hdn_current_page",$this->currentPage,null); ?>
+				<?php echo $this->formHidden("hdn_record_number_page",$this->numRowOnPage,null); ?>
+				 
+				<?php echo $this->formHidden("FullTextSearch",$this->FullTextSearch,null); ?>
+				<?php echo $this->formHidden("status",$this->sStatus,null); ?>
+				
+				<?php echo $this->formHidden("hdn_staff_main_process_id_list","",null); ?>
+				<?php echo $this->formHidden("hdn_staff_coordinate_process_id_list","",null); ?>	
+			</td>
+		</tr>
+	</table>
+	<!--HIen thi tieu de man hinh danh sach!-->
+	<div style="margin:auto;padding:10px 5px;width:98%;"><?= Sys_Function_DocFunctions::DocShowInfoDocument($this->sReceiveDocumentId);?></div>
+	<div id ="content">
+		<div id="header_conten" style="height:20px;">
+			<div class="large_title" style="padding-left:1px;text-align:left;float:left;"> <?=$this->bodyTitle;?> </div>
+			<div style="text-align:right;float:right;">
+				<a style="cursor:pointer;" class="small_link" onClick="btn_save_doc_received_unit_assign(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'','<?=date("d/m/Y");?>');"><?=$arrConst['_GHI'] ?>&nbsp;</a> 
+				<a style="cursor:pointer;" class="small_link" onClick="btn_back_onclick('<?=$this->historyBack?>')">&nbsp;<?=$arrConst['_QUAY_LAI']?></a>
+			</div>
+		</div>
+		<div id="body_conten1" style="padding-top:5px;">
+			<div>
+				<label>1.&nbsp;<?=$arrConst['_NGAY_THUC_HIEN']?><span class="requiein">*</span></label> 
+				<input style="width:10%;" class="textbox" id ="C_SENT_DATE" name="C_SENT_DATE" type="text" isdate="true" value="<?=$arrReceived[0]['C_SENT_DATE'];?>" option = "true"  xml_tag_in_db="" xml_data="false" column_name="C_SENT_DATE" message="NGAY THUC HIEN khong dung dinh dang ngay/thang/nam!" onKeyDown="change_focus(document.forms[0],this)">
+					 						
+			</div>				
+			<div>
+				<label>2.&nbsp;<?=$arrConst['_HINH_THUC_XU_LY'] ?><span class="requiein">*</span></label>
+				<select style="width:30%;" id="C_TYPE_PROCESSING" name="C_TYPE_PROCESSING" option = "true" class="textbox normal_label" xml_tag_in_db="" xml_data="false" column_name="C_TYPE_PROCESSING" message="Phai xac dinh thong tin HINH THUC XU LY!" onchange="showHideProcessReceivedUnitPlace(this);">
+					<option id="" name = "" value="">-- Chọn hình thức xử lý --</option><?php
+					$arrProcessType = $this->arrProcessType;
+					echo Sys_Library::_generateSelectOption($arrProcessType,'C_CODE','C_CODE','C_NAME',$arrReceived[0]['C_TYPE_PROCESSING']);?>
+				</select>
+			</div>
+			<div>
+				<label>3.&nbsp;<?=$arrConst['_Y_KIEN_CHI_DAO']?><span class="requiein">*</span></label>
+				<textarea  class="textbox normal_textarea" id="C_LEADER_UNIT_IDEA" name="C_LEADER_UNIT_IDEA" option = "true" rows="2" message="Phai xac dinh Y KIEN CHI DAO!" ><?=$arrReceived[0]['C_LEADER_UNIT_IDEA'];?></textarea>
+			</div>
+			<div id = "StaffMainProcess">
+				<label>4.&nbsp;<?=$arrConst['_CAN_BO_XLC']?><span class="requiein">*</span></label>
+				<textarea class="textbox normal_textarea" id="C_STAFF_PROCESS_MAIN_NAME_LIST" option = "false" optional = "" rows="2" name="C_STAFF_PROCESS_MAIN_NAME_LIST" message="Phai xac dinh thong tin CAN BO XU LY CHINH!"><?=$arrReceived[0]['C_STAFF_PROCESS_MAIN_NAME_LIST'];?></textarea>
+			</div>
+			<div id = "StaffCoordinateProcess">
+				<label>5.&nbsp;<?=$arrConst['_CAN_BO_PHXL']?></span></label>
+				<textarea class="textbox normal_textarea" id="C_STAFF_PROCESS_COORDINATE_NAME_LIST" option = "" optional = "true"  rows="2" name="C_STAFF_PROCESS_COORDINATE_NAME_LIST" message="Phai xac dinh thong tin CAN BO PHOI HOP XU LY!"><?=$arrReceived[0]['C_STAFF_PROCESS_COORDINATE_NAME_LIST'];?></textarea>
+			</div>	
+			<div id = "AppointedDate">
+				<label style="float:none; clear:right;display:inline;">6.&nbsp;<?=$arrConst['_HAN_XU_LY']?></label> 
+				<label style="float:none; clear:none;display:inline;margin-left:23.5%"><?=$arrConst['_SO_NGAY']?></label>
+				<input style="width:6%;" class="textbox" type="text" id="limit_date" name="limit_date" value="<?=$arrReceived[0]['C_LIMIT_DATE'];?>" align="right" optional = "true" xml_tag_in_db="limit_date" xml_data="true" column_name="" message="" onblur="appointed_date(document.getElementById('C_SENT_DATE').value,document.getElementById('limit_date'),document.getElementById('C_APPOINTED_DATE'));">														
+				<label style="float:none; clear:none;display:inline;margin-left:0%"><?=$arrConst['_NGAY']?></label>				
+				<input style="width:10%;" class="textbox" id ="C_APPOINTED_DATE" name="C_APPOINTED_DATE" type="text" isdate="true" value="<?=$sAppointedDate;?>" optional = "true" message="HAN XU LY khong dung dinh dang ngay/thang/nam!" onKeyDown="change_focus(document.forms[0],this)">
+					 										
+			</div>
+		</div>
+		
+	</div>	
+	<!--Hien thi nut!-->		
+	<table width='98%'  border='0' cellspacing='0' cellpadding='0' align='center' class='normal_label' style="margin-top:10px;">	
+		<tr>
+			<td align="center" style="padding:10px 0;border-top: #3399FF 1px solid;">	
+				<button name="btn_ghivaquaylai" id="btn_ghivaquaylai" type="button" value="Ghi" class="add_large_button" onClick="btn_save_doc_received_unit_assign(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'','<?=date("d/m/Y");?>','<?=$sAppointedDate?>');"><?=$arrConst['_GHI'] ?></button>
+				<?=$this->formsubmit('button',$arrConst['_QUAY_LAI'],array("onClick"=>"btn_back_onclick('" . $this->historyBack . "')","class"=>"add_large_button"))?>
+			</td>
+		</tr>			
+	</table>	
+</form>
+<?php echo $this->search_textselectbox_staff_main_process; ?>
+<?php echo $this->search_textselectbox_staff_coordinate_process; ?>
+<script type="text/javascript"> 
+if(document.getElementById('C_SENT_DATE').value == ''){
+	document.getElementById('C_SENT_DATE').value = '<?=date("d/m/Y");?>';		
+}
+if(document.getElementById('C_TYPE_PROCESSING').value == ''){
+	document.getElementById('C_TYPE_PROCESSING').value = 'VB_PHAI_XU_LY';		
+}
+</script>
+<script type = "text/javascript">
+$(function() {
+	$( "#C_SENT_DATE" ).datepicker({
+		changeMonth: true,
+		gotoCurrent: true,
+		maxDate: '+1m +1w',
+		minDate: new Date(1945, 1 - 1, 1),
+		changeYear: true
+	});
+	$( "#C_APPOINTED_DATE" ).datepicker({
+		changeMonth: true,
+		gotoCurrent: true,
+		maxDate: '+1m +1w',
+		minDate: new Date(1945, 1 - 1, 1),
+		changeYear: true
+	});
+});
+</script>
+

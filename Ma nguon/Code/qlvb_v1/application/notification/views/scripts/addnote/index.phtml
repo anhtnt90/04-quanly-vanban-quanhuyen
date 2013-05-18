@@ -1,0 +1,214 @@
+
+<form action="index" method="POST" id="frmRecord">	
+<?php
+	$arrReceived = $this->arrReceived ;
+	$arrSent = $this->arrSent ;
+	$arrSentReceived = $this->arrSentReceived ;	
+	$arrWork	= $this->arrWork;;
+	//Tong so VB cua moi loai
+	$iCountVb_den = $this->iCountVb_den  ;
+	$iCountVb_di  = $this->iCountVb_di ;
+	$iCountGui_nhan = $this->iCountGui_nhan ;
+	$iCountCong_viec	= $this->iCountCong_viec;
+	$iTdGui_nhan	= $iCountCong_viec - $iCountGui_nhan;
+	if($iTdGui_nhan < 0)
+		$iTdCong_viec = 0 - $iTdGui_nhan;
+	$iTdSent = $iCountVb_den  - $iCountVb_di;
+	if($iTdSent < 0){
+		$iTdReceived = $iCountVb_di - $iCountVb_den ;
+	}
+?>
+<!--HIen thi tieu de man hinh danh sach!-->
+	<div class ="reminder_notifi">
+		<h1>NHẮC VIỆC</h1>
+	</div>
+	<table width='100%' border='0' cellspacing='0' cellpadding='0' style="border-right:#000E7B; padding:0 12px;" align="center">
+		<tr>
+			<td id="td1" style="padding-top:4px;" valign="top" width="50%">
+				<table cellpadding="0" cellspacing="0"   width="100%" style="border:1px solid #698fb2; border-collapse: collapse;  border-spacing:inherit; ">
+					<tr>
+						<td  style="line-height:29px;font-family:Tahoma; font-size:14px; font-weight:bold;color:#047FA5; padding-left:10px;">&nbsp;VĂN BẢN ĐẾN</td>
+					</tr>
+					<?php for($vb_den=0;$vb_den<sizeof($arrReceived);$vb_den++){
+							if($arrReceived[$vb_den]['C_STATUS'] == 'CHO_PHAN_PHOI' && $arrReceived[$vb_den]['C_COUNT'] > 0){ ?>
+								<tr>
+									<td style="border-top:1px solid #698fb2; line-height:29px; padding-left:20px;">										
+									<a style="cursor:pointer;" class="small_link_reminder"  href="#" onclick="actionUrl('../../received/distribution/index/status/CHO_PHAN_PHOI')">
+										Có <?=$arrReceived[$vb_den]['C_COUNT'] ?> văn bản chờ phân phối
+									</a>	
+									</td>
+								</tr>
+					<?php	}
+							elseif($arrReceived[$vb_den]['C_STATUS'] == 'CHO_PHAN_CONG' && $arrReceived[$vb_den]['C_COUNT'] > 0){ ?>
+								<tr>
+									<td style="border-top:1px solid #698fb2; line-height:29px; padding-left:20px;">
+									<a style="cursor:pointer;" class="small_link_reminder"  href="#" onclick="actionUrl('../../received/assign/index/status/CHO_PHAN_CONG')">
+										Có <?=$arrReceived[$vb_den]['C_COUNT'] ?> văn bản chờ phân công
+									</a>	
+									</td>	
+								</tr>
+					<?php	}
+							elseif($arrReceived[$vb_den]['C_STATUS'] == 'DA_PHAN_PHOI' && $arrReceived[$vb_den]['C_COUNT'] > 0){ ?>
+								<tr>
+									<td style="border-top:1px solid #698fb2; line-height:29px; padding-left:20px;">
+									<a style="cursor:pointer;" class="small_link_reminder"  href="#" onclick="actionUrl('../../received/assign/index/status/CHO_PHAN_CONG')">
+										Có <?=$arrReceived[$vb_den]['C_COUNT'] ?> văn bản chờ phân công
+									</a>
+									</td>	
+								</tr>
+					<?php	}
+							elseif($arrReceived[$vb_den]['C_STATUS'] == 'CAN_XU_LY' && $arrReceived[$vb_den]['C_COUNT'] > 0){ ?>
+								<tr>
+									<td style="border-top:1px solid #698fb2; line-height:29px; padding-left:20px;">
+									<a style="cursor:pointer;" class="small_link_reminder" href="#"  onclick="actionUrl('../../received/process/index/status/CAN_XU_LY')"> 
+										Có <?=$arrReceived[$vb_den]['C_COUNT'] ?> văn bản cần xử lý
+									</a>	
+									</td>	
+								</tr>
+					<?php	}	
+							elseif($arrReceived[$vb_den]['C_STATUS'] == 'PHXL' && $arrReceived[$vb_den]['C_COUNT'] > 0){ ?>
+								<tr>
+									<td style="border-top:1px solid #698fb2; line-height:29px; padding-left:20px;">
+									<a style="cursor:pointer;" class="small_link_reminder"  href="#" onclick="actionUrl('../../received/process/index/status/PHXL')"> 
+										Có <?=$arrReceived[$vb_den]['C_COUNT'] ?> văn bản cần phối hợp xử lý
+									</a>	
+									</td>	
+								</tr>
+					<?php	}
+						}
+						if($iTdReceived > 0){ 
+					     	for($vb_di=0;$vb_di<$iTdReceived;$vb_di++){	?>
+					     		<tr>
+									<td style="border-top:1px solid #698fb2; line-height:29px; padding-left:20px;">
+										&nbsp;
+									</td>	
+								</tr>
+					  <?php  }
+						} ?> 				
+				</table>
+			</td>
+			<td id="td2" style="padding-top:4px;padding-left:4px" valign="top" width="50%">
+				<table cellpadding="0" cellspacing="0"   width="100%" style="border:1px solid #698fb2; border-collapse: collapse;  border-spacing:inherit; ">
+					<tr>
+						<td  style="line-height:29px;font-family:Tahoma;font-size:14px; font-weight:bold;color:#047FA5; padding-left:10px;">&nbsp;VĂN BẢN ĐI</td>
+					</tr>
+					<?php for($vb_di=0;$vb_di<sizeof($arrSent);$vb_di++){
+							if($arrSent[$vb_di]['C_STATUS'] == 'CHO_DUYET' && $arrSent[$vb_di]['C_COUNT'] > 0){ ?>
+								<tr>
+									<td style="border-top:1px solid #698fb2; line-height:29px; padding-left:20px;">	
+									<a style="cursor:pointer;" class="small_link_reminder"  href="#" onclick="actionUrl('../../sent/submitorder/index/modul/CHO_DUYET')">									
+										Có <?=$arrSent[$vb_di]['C_COUNT'] ?> văn bản chờ duyệt
+									</a>	
+									</td>
+								</tr>
+					<?php	}
+							if($arrSent[$vb_di]['C_STATUS'] == 'CHO_PHAN_CONG' && $arrSent[$vb_di]['C_COUNT'] > 0){ ?>
+								<tr>
+									<td style="border-top:1px solid #698fb2; line-height:29px; padding-left:20px;">
+									<a style="cursor:pointer;" class="small_link_reminder"  href="#" onclick="actionUrl('../../sent/assign/index/modul/CHO_PHAN_CONG')">	
+										Có <?=$arrSent[$vb_di]['C_COUNT'] ?> văn bản chờ phân công cho ý kiến
+									</a>	
+									</td>	
+								</tr>
+					<?php	}
+							if($arrSent[$vb_di]['C_STATUS'] == 'DA_TRINH_KY' && $arrSent[$vb_di]['C_COUNT'] > 0){ ?>
+								<tr>
+									<td style="border-top:1px solid #698fb2; line-height:29px; padding-left:20px;">
+									<a style="cursor:pointer;" class="small_link_reminder"  href="#" onclick="actionUrl('../../sent/submitorder/index/modul/DA_TRINH_KY')">	
+										Có <?=$arrSent[$vb_di]['C_COUNT'] ?> văn bản trả lại
+									</a>	
+									</td>	
+								</tr>
+					<?php	}
+							if($arrSent[$vb_di]['C_STATUS'] == 'CBDT_DA_TRINH_KY' && $arrSent[$vb_di]['C_COUNT'] > 0){ ?>
+								<tr>
+									<td style="border-top:1px solid #698fb2; line-height:29px; padding-left:20px;">
+									<a style="cursor:pointer;" class="small_link_reminder"  href="#" onclick="actionUrl('../../sent/submitorder/index/modul/CBDT_DA_TRINH_KY')">	
+										Có <?=$arrSent[$vb_di]['C_COUNT'] ?> văn bản trả lại
+									</a>	
+									</td>	
+								</tr>
+					<?php	}
+							if($arrSent[$vb_di]['C_STATUS'] == 'XU_LY_CHINH' && $arrSent[$vb_di]['C_COUNT'] > 0){ ?>
+								<tr>
+									<td style="border-top:1px solid #698fb2; line-height:29px; padding-left:20px;">
+									<a style="cursor:pointer;" class="small_link_reminder"  href="#" onclick="actionUrl('../../sent/process/index/modul/XU_LY_CHINH')"> 
+										Có <?=$arrSent[$vb_di]['C_COUNT'] ?> văn bản cần trao đổi ý kiến
+									</a>	
+									</td>	
+								</tr>
+					<?php	}
+							if($arrSent[$vb_di]['C_STATUS'] == 'PHXL' && $arrSent[$vb_di]['C_COUNT'] > 0){ ?>
+								<tr>
+									<td style="border-top:1px solid #698fb2; line-height:29px; padding-left:20px;">
+									<a style="cursor:pointer;" class="small_link_reminder"  href="#" onclick="actionUrl('../../sent/process/index/modul/PHXL')"> 
+										Có <?=$arrSent[$vb_di]['C_COUNT'] ?> văn bản cần phối hợp trao đổi ý kiến
+									</a>
+									</td>
+								</tr>
+					<?php	}
+							if($arrSent[$vb_di]['C_STATUS'] == 'CHO_BAN_HANH' && $arrSent[$vb_di]['C_COUNT'] > 0){ ?>
+								<tr>
+									<td style="border-top:1px solid #698fb2; line-height:29px; padding-left:20px;">
+									<a style="cursor:pointer;" class="small_link_reminder"  href="#" onclick="actionUrl('../../sent/registration/waitrelease/')"> 
+										Có <?=$arrSent[$vb_di]['C_COUNT'] ?> văn bản chờ phát hành
+									</a>
+									</td>
+								</tr>			
+					<?php	}
+							if($arrSent[$vb_di]['C_STATUS'] == 'CHO_DANG_KY' && $arrSent[$vb_di]['C_COUNT'] > 0){ ?>
+								<tr>
+									<td style="border-top:1px solid #698fb2; line-height:29px; padding-left:20px;">
+									<a style="cursor:pointer;" class="small_link_reminder"  href="#" onclick="actionUrl('../../sent/registration/index/modul/CHO_BAN_HANH')"> 
+										Có <?=$arrSent[$vb_di]['C_COUNT'] ?> văn bản chờ đăng ký phát hành
+									</a>
+									</td>
+								</tr>			
+					<?php	}
+						} 
+						if($iTdSent> 0){ 
+					     	for($vb_di=0;$vb_di< $iTdSent; $vb_di++){	?>
+					     		<tr>
+									<td style="border-top:1px solid #698fb2; line-height:29px; padding-left:20px;">
+										&nbsp;
+									</td>	
+								</tr>
+					  <?php  }
+						} ?>	
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td id="td3" colspan="2" style="padding-top:4px;" valign="top" width="50%">
+					<table cellpadding="0" cellspacing="0"   width="100%" style="border:1px solid #698fb2; border-collapse: collapse;  border-spacing:inherit;">
+						<tr>
+							<td  style="line-height:29px; font-family:Tahoma;font-size:14px; font-weight:bold;color:#047FA5; padding-left:10px;">&nbsp;GỬI - NHẬN VĂN BẢN</td>
+						</tr>
+						<?php for($gui_nhan_vb=0;$gui_nhan_vb<sizeof($arrSentReceived);$gui_nhan_vb++){
+								if($arrSentReceived[$gui_nhan_vb]['C_STATUS'] == 'RECEIVED-DOCUMENT' && $arrSentReceived[$gui_nhan_vb]['C_COUNT'] > 0){ ?>
+									<tr>
+										<td style="border-top:1px solid #698fb2; line-height:29px; padding-left:20px;">	
+										<a style="cursor:pointer;" class="small_link_reminder"  href="#" onclick="actionUrl('../../sendReceived/receivedDocument/index/?htn_leftModule=RECEIVED-DOCUMENT')"> 								
+											Có <?=$arrSentReceived[$gui_nhan_vb]['C_COUNT'] ?> văn bản chờ nhận
+										</a>	
+										</td>
+									</tr>
+						<?php	}
+							} 
+							if($iTdGui_nhan > 0){ 
+						     	for($gui_nhan_vb=0;$gui_nhan_vb<$iTdGui_nhan;$gui_nhan_vb++){	?>
+						     		<tr>
+										<td style="border-top:1px solid #698fb2; line-height:29px; padding-left:20px;">
+											&nbsp;
+										</td>	
+									</tr><?php  
+						     	}
+							} ?> 	
+					</table>
+				</td>				
+			</tr>
+			<tr>
+				<td style="padding-top:5px;">&nbsp;</td>
+			</tr>
+	</table>
+</form>

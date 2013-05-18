@@ -1,0 +1,120 @@
+
+<form action="index" method="POST" id="frmAll">
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<!--tao tac hidden!-->
+		<tr>
+			<!--Sinh mot hidden luu list ID ma NSD chon!-->
+			<?php echo $this->formHidden("hdn_object_id_list","",null); ?>			
+			<!--Sinh mot hidden luu ID loai danh muc!-->
+			<?php echo $this->formHidden("hdn_Report_id",$this->sCodeList ,null); ?>	
+			<!--Sinh mot hidden luu gia tri xac dinh so ban ghi / 1 trang!-->	
+			<?php echo $this->formHidden("hdn_record_number_page",$this->numRowOnPage,null); ?>				
+			<!--Bien hdn_xml_file dung de luu ten file XML cua loai danh muc hien thoi-->
+			<?php echo $this->formHidden("hdn_xml_file",$this->xmlFileName,null); ?>	
+			<!--Bien hdn_xml_tag_list dung de luu danh sach cac THE XML tuong ung voi cac THUOC TINH cua mot doi tuong dang duoc cap nhat-->			
+			<?php echo $this->formHidden("hdn_xml_tag_list",'',null); ?>			
+			<!--Bien hdn_xml_value_list dung de luu danh sach cac gia tri cua cac THE XML tuong ung voi cac THUOC TINH cua mot doi tuong-->			
+			<?php echo $this->formHidden("hdn_xml_value_list",'',null); ?>	
+			<!--Bien hdn_page dung de luu chi so trang hien thi hien thoi-->			
+			<?php echo $this->formHidden("hdn_current_page",$this->currentPage,null); ?>
+			<!--Bien hdn_filter_xml_tag_list dung de luu danh sach cac THE XML tuong ung voi cac tieu thuc loc tren giao dien DANH SACH DOI TUONG-->
+			<?php echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); ?>
+			<!--Bien hdn_filter_xml_tag_list dung de luu gia tri cua cac THE XML tuong ung voi cac tieu thuc loc tren giao dien DANH SACH DOI TUONG-->	
+			<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+			
+			<?php echo $this->formHidden("hdn_exporttype",$this->sExportType ,null);?>	
+			
+			<?php echo $this->formHidden("unitName",$this->unitName ,null);?>		
+			
+		</tr>
+	</table>
+	
+	
+	<table cellpadding="0" cellspacing="0" border="0" width="100%" align="center">
+		<tr>
+<!--			Cemter-->
+			<td style="padding-left:10px;" colspan="2">
+					<!--HIen thi tieu de man hinh danh sach!-->
+					<table width='100%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+						<tr>
+							<td class="large_title" style="padding-left:7px;text-align:left;">
+								<?=$this->bodyTitle;?><br>
+							</td>
+						</tr>
+					</table>					
+					
+					<!--Hien thi danh sach tieu de code!-->			
+					<table cellpadding="0" cellspacing="0" border="0" width="98%" align="center">		
+							<!--Hien thi du lieu!-->
+						<tr>
+							<td class="small_title" colspan="3">
+								Bước 1: Chọn Báo Cáo
+							</td>
+						</tr>
+						<tr>
+							<td class="normal_label" colspan="3">								
+								<?=$this->sHtmlRes;?>								
+							</td>
+						</tr><?
+						if($this->sCodeList == "BXD_VBDI01"){?>
+							<tr>
+								<td class="normal_label" style="padding-left:8px;text-align:left;" colspan="5">
+									<select id="unitName" name="unitName" optional = "true" style="width:70%;" class="textbox normal_label">
+										<option id="" name = "" value="">-- Chọn đơn vị --</option><?php
+										$arrAllUnit = $this->arrUnit;
+										$arrUnitName = array();
+										for($i =0; $i <sizeof($arrAllUnit); $i ++){
+											$arrUnitName[$i]['C_NAME'] = trim($arrAllUnit[$i]['C_UNIT_NAME']);
+										}
+										echo Sys_Library::_generateSelectOption($arrUnitName,'C_NAME','C_NAME','C_NAME',$this->unitName);?>
+									</select>
+								</td>
+							</tr><?
+						}?>
+						<tr>
+							<td class="small_title" colspan="3">
+								Bước 2: Chọn các tiêu thức lọc báo cáo
+							</td>
+						</tr>
+						<tr>
+							<td class="normal_label" colspan="3" style="padding-left:20px">
+								<?=$this->generateFilterForm ;?>									
+							</td>
+						</tr>
+						<tr>
+							<td class='small_title' align='left' colspan="3">
+								Bước 3: Chọn định dạng báo cáo kết xuất ra 
+							</td>
+						</tr>
+						<tr align="center">
+							<td class="normal_label">
+								<input type='radio' class='normal_radio' id = "rad_exporttype" name = "rad_exporttype" value='31' onClick="btn_rad_onclick(this,document.getElementById('hdn_exporttype'));"> Định dạng pdf
+							</td>
+							<td class="normal_label">
+								<input type='radio' class='normal_radio' id = "rad_exporttype" name="rad_exporttype" value='14' checked onClick="btn_rad_onclick(this,document.getElementById('hdn_exporttype'));"> Định dạng Word
+							</td>	
+							<td class="normal_label">
+								<input type='radio' class='normal_radio' id = "rad_exporttype" name="rad_exporttype" value='29'  onClick="btn_rad_onclick(this,document.getElementById('hdn_exporttype'));"> Định dạng Excel
+							</td>		
+						</tr>
+					</table>						
+					<table width="98%" align="center" cellpadding="0" cellspacing="0" border="0" class="buton_table">	
+						<tr><td height="10"></td></tr>	
+						<tr><td align="center" class="body"><?php
+							echo $this->formButton("btn_add","Kết xuất",array("type"=>"button","class"=>"large_button","onClick"=>"btn_show_report(document.getElementById('hdn_Report_id'),document.getElementById('hdn_filter_xml_tag_list'),document.getElementById('hdn_filter_xml_value_list'),document.getElementById('unitName'),'printview');")) . "&nbsp;";?>		
+						</td></tr>	
+						<tr><td height="10"></td></tr>	
+					</table>
+				
+			</td>			
+		</tr>	
+	</table>		
+	<script type="text/javascript">
+		if(document.getElementById('from_date').value == ""){
+			document.getElementById('from_date').value = "01/<?=date('m') . '/' . date('Y')?>";
+		}
+		if(document.getElementById('to_date').value == ""){
+			document.getElementById('to_date').value = "<?=date('d/m/Y')?>";
+		}
+	</script>	
+</form>

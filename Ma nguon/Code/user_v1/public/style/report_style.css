@@ -1,0 +1,77 @@
+TABLE.report_title_table{
+}
+.report_unit_name{
+	PADDING-LEFT: 5pt; FONT-SIZE: 11pt; FONT-FAMILY: Tahoma; FONT-WEIGHT: bold;
+}
+
+.freedom_republic{
+    PADDING-LEFT: 5pt; FONT-SIZE: 11pt; FONT-FAMILY: Tahoma; FONT-WEIGHT: bold;
+}
+.title{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 11pt;
+    FONT-FAMILY: Tahoma;
+    LETTER-SPACING: 1pt;
+    HEIGHT: 20px;
+    TEXT-ALIGN: center;
+}
+.sub_title{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 10pt;
+    FONT-FAMILY: Arial;
+    HEIGHT: 20px;
+    TEXT-ALIGN: center;
+}
+
+TABLE.report_table {
+	border-right: 1px solid black;
+	border-bottom: 1px solid black;
+	vertical-align:bottom;
+	font-style:normal;
+	font-size:10px;
+	font-family:Arial;
+	PADDING-LEFT:5pt;
+}
+.header{
+	TEXT-ALIGN: center;
+	font-size:12px;
+	font-weight:bold;
+    border-left:1px solid black;
+	border-top:1px solid black;
+	vertical-align:middle
+}
+.data{
+	font-size:12px;
+	font-weight: normal;
+	border-left:1px solid black;
+	border-top:1px solid black;
+	vertical-align:middle
+}
+.creator{
+	font-family:arial;
+	font-size:10pt;
+	font-weight:bold;
+	text-align:center;
+	height:20pt;
+	vertical-align:top;
+}
+.approver{
+	font-family:arial;
+	font-size:10pt;
+	font-weight:bold;
+	text-align:center;
+	height:20pt;
+	vertical-align:top;
+}
+.signer{
+	font-family:arial;
+	font-size:10pt;
+	font-weight:bold;
+	text-align:center;
+	height:20pt;
+	vertical-align:top;
+}
+.normal_label{
+    FONT-SIZE: 10pt;	
+    FONT-FAMILY:Tahoma, Arial;
+}

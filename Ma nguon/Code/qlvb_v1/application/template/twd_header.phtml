@@ -1,0 +1,104 @@
+<?php
+$arrPermission = $_SESSION['arrStaffPermission'];
+$arrMenu = $this->arrMenu;
+//$sliidvisit = $this->_request->getParam('sliid','');
+$baseUrl = Sys_Init_Config::_getCurrentHttpAndHost();
+
+?>
+<!--He thong Menu ngang-->
+<table width="100%" cellpadding="0" cellspacing="0" class="top_menu_table">
+	<tr>
+    <td>
+    	<ul>
+    	<?php 
+		$html = '';
+		for($i=0;$i<sizeof($arrMenu);$i++){
+			if(($arrMenu[$i][C_POSITION]=='2')&&($arrMenu[$i][C_LEVEL]=='0')){				
+				if($arrMenu[$i][C_URL]==''){
+					$urlRe = $baseUrl . 'web/getarticle/index/?menuid='.$arrMenu[$i][PK_WEB_MENU].'&parent_menuid='.$arrMenu[$i][FK_WEB_MENU].'&articleid='.$arrMenu[$i][FK_WEB_ARTICLE];
+				}else{
+					if((substr_count($arrMenu[$i][C_URL],'http://')>0)||($arrMenu[$i][C_URL]=='#')){
+						$urlRe = $arrMenu[$i][C_URL];
+					}else{
+						$urlRe = $baseUrl . $arrMenu[$i][C_URL];
+						if(substr_count($urlRe,'?')>0){
+								$urlRe = $urlRe.'&menuid='.$arrMenu[$i][PK_WEB_MENU].'&parent_menuid='.$arrMenu[$i][FK_WEB_MENU].'&articleid='.$arrMenu[$i][FK_WEB_ARTICLE];
+						}else{
+								$urlRe = $urlRe.'?menuid='.$arrMenu[$i][PK_WEB_MENU].'&parent_menuid='.$arrMenu[$i][FK_WEB_MENU].'&articleid='.$arrMenu[$i][FK_WEB_ARTICLE];
+						}
+					}		
+				}
+				//Lay id cua li phuc vu viec bat topmenu
+				//$sliID = 'li'.$arrMenu[$i][C_ORDER_LEVER1].'_'.$arrMenu[$i][C_ORDER_LEVER2].'_'.$arrMenu[$i][C_ORDER_LEVER3];
+				
+				//echo $HTTP_SESSION_VARS;  
+				$sliID = 'li'.$arrMenu[$i][C_ORDER_LEVER1];	
+				if(substr_count($urlRe,'?')>0){
+						$urlRe = $urlRe.'&sliid='.$sliID.'&sleftmenu=mn_0_0_0';
+				}else{
+						$urlRe = $urlRe.'?sliid='.$sliID.'&sleftmenu=mn_0_0_0';
+				}
+				$iOpenNewWin = 0;
+				if($arrMenu[$i][C_WINDOWS_OPEN]=='1'){
+					$iOpenNewWin = 3;
+				}
+				$urlRe = "javaScript:goto_url('".$urlRe."',".$iOpenNewWin.")";	
+				
+				
+				$html = $html.'<li id ="'.$sliID.'" align="left" cl style="cursor:pointer;" onclick="'.$urlRe.'">'.$arrMenu[$i][C_NAME].'</li>';															
+				//var_dump($arrMenu);							
+			}
+		}
+		echo $html;
+		?>	
+					<li id ="" align="left" cl style="cursor:pointer;" onclick="javaScript:goto_url('<?php echo $baseUrl;?>exit/index');">Thoát</li>					
+					<li style="font-weight:normal;  width:auto; float: right;" >
+					<?php echo $_SESSION['STAFF_LOGIN'];?>					
+					<?php  //echo 'Hôm nay là: '.Sys_Publib_Library::_generate_day_of_week(1); ?></li>
+		        </ul>
+			</td>
+        </tr>
+</table>
+<!-- 
+	<div id="menu">
+	    <ul class="menu">	   
+	        <li><a href="#" class="parent"><span>Điều hành tác nghiệp</span></a>        
+	            <div class="columns two">
+	            	<h2>Giao việc</h2>
+	                <ul class="one">
+	                    <li><a href="#"><span>Giao việc</span></a></li>
+	                    <li><a href="#"><span>Trao đổi công việc</span></a></li>                   
+	                </ul> 
+	                <h2>Lịch công tác</h2>
+	                <ul class="one">
+	                    <li><a href="#"><span>Lịch cơ quan</span></a></li>
+	                    <li><a href="#"><span>Lịch lãnh đạo cơ quan</span></a></li> 
+	                    <li><a href="#"><span>Lịch lãnh đạo phòng</span></a></li>
+	                    <li><a href="#"><span>Lịch cá nhân</span></a></li>                   
+	                </ul>                              
+	            </div>
+	        </li>              
+	    </ul>
+	</div>
+-->
+
+<script type="text/javascript">
+/* Các hàm định nghĩa cho menu con*/
+function otab(child_id){
+	document.write('<table class = "pushdown_menu_table"' + 'id="' + child_id +'" border="0" cellspacing="0" cellpadding="0">');
+}
+function submn(submn_label,submn_text){
+	document.write('<tr><td  onclick="window.location.href=\'<?=$this->baseUrl;?>'+submn_label+'/\'" onmouseover="this.className=\'hoverClass\'" onmouseout="this.className=\'outverClass\'" ><img src="<?= $this->baseUrl?>images/anh_menu_level_2.gif"/>'+'  '+submn_text+'</td></tr>');
+}//
+function ctab(){
+	document.write('<\/table>');
+}<?php 
+$sliidvisit = $this->sliidvisit; ?>
+try {
+	document.getElementById('<?=$sliidvisit?>').className="visited";
+}catch(e){;}	
+	
+ function href(url){
+ 	window.location.href = url;
+ } 
+</script>

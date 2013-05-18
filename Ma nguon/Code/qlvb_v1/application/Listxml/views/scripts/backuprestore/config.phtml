@@ -1,0 +1,142 @@
+<form action="index" method="POST" id="frmSent" a>
+<div><?php
+	$arrConst = $this->arrConst;
+	$arrSmsUser = $this->arrSmsUser;
+	?>
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<!--Cac doi tuong hidden tren form-->
+				<?php echo $this->formHidden("hdn_current_page",$this->currentPage,null); ?>
+				<?php echo $this->formHidden("cbo_nuber_record_page",$this->numRowOnPage,null); ?>
+				<?php echo $this->formHidden("hdn_object_id_list","",null); ?>
+				<?php echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); ?>
+				<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+				<?php echo $this->formHidden("hdn_record_number_page",$this->numRowOnPage,null); ?>	
+				<?php echo $this->formHidden("hdn_object_id",'',null); ?>
+				<?php echo $this->formHidden("hdn_XmlTagValueList",$this->XmlTagValueList,null); ?>
+				<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+				<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>	
+				<!--Bien hdnStatus dung de lay trang thai van ban tu menu trai ...-->	
+				<?php echo $this->formHidden("hdnStatus","",null);?>
+				<?php echo $this->formHidden("hdn_function_modul",$this->getModulLeft,null);?>
+				<?php echo $this->formHidden("hdn_name","",null);?>
+				
+				<!--Cac doi tuong hidden tren form-->
+				<?=
+					$this->bodyTitle ;
+				?>
+			</td>
+		</tr>
+	</table>
+	<div class="box container c1">
+		<div class="pad">			
+			<table cellpadding="0" cellspacing="0" width="98%" border="0">
+				<col width="100%" align="left"/>			
+				<tr>
+					<td  style="padding-left:10px;">
+						<input type="text" id="sFullTextSearch" name="sFullTextSearch"  autocomplete="off" class="textbox" size="40%" value="<?= $this->sFullTextSearch ?>">
+						<input type="button" value="Tìm kiếm" class="add_large_button"  onchange="handler(event)" onclick="actionUrl('');">
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>	
+	<table width='99%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">&nbsp;
+				
+			</td>
+			<td style="text-align:right;" valign="bottom">
+				<a onclick="actionUrl('../add/'); "><?= $arrConst['_THEM'] ?></a>  
+				<a style="cursor:pointer; color:#0000FF;" onclick="btn_update_onclick(document.getElementsByName('chk_item_id'),'../edit/');">| <?= $arrConst['_SUA'] ?> |</a> 
+				<a style="cursor:pointer;color:#0000FF;" onclick="btn_delete_onclick(document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id_list'),'../delete/','<?=$this->UrlAjax?>','VB_DI','T_DOC_SENT_DOCUMENT');"><?= $arrConst['_XOA'] ?></a>
+			</td>
+		</tr>
+	</table>
+	<div id="viewAllSentDocument">
+		<table cellpadding="0" cellspacing="0" border="0" width="98%" align="center" class="list_table2" id="table1">
+			<?php			
+			$delimitor = $this->delimitor;//Lay ky tu phan cach giua cac phan tu
+			//Hien thi cac cot cua bang hien thi du lieu
+				$StrHeader = explode("!~~!",$this->GenerateHeaderTable("3%" . $delimitor . "30%" . $delimitor . "30%" . $delimitor . "15%" . $delimitor . "12%". $delimitor . "10%"
+												,'<input type="checkbox" name="chk_all_item_id" value="" onclick="checkbox_all_item_id(document.forms[0].chk_item_id);">' . $delimitor .$arrConst['_TEN_CAN_BO']  . $delimitor . $arrConst['_DON_VI'] . $delimitor . $arrConst['_DIEN_THOAI'] . $delimitor . $arrConst['_GUI_TIN_TU_DONG'] . $delimitor . $arrConst['_THU_TU']
+												,$delimitor));
+			echo $StrHeader[0];				
+			echo $StrHeader[1]; //Hien thi <col width = 'xx'><...		
+			//Dinh nghia URL
+			$sUrView  = "view";
+			$sCurrentStyleName = "round_row";
+			$objFunction =	new	Sys_Function_DocFunctions()	;	
+			for($index = 0;$index < sizeof($arrSmsUser) ;$index++){
+				$sPk						= $arrSmsUser[$index]['PK_DOC_SMS_USER'];			
+				$sStaffName					= $arrSmsUser[$index]['C_POSITON_NAME'];	
+				$sUnitName					= $arrSmsUser[$index]['C_UNIT_NAME'];					
+				$sTelMobile 				= $arrSmsUser[$index]['C_TEL_MOBILE'];
+				$iValue		 				= $arrSmsUser[$index]['C_AUTO_SMS'];
+				$iOrder		 		= 	$arrSmsUser[$index]['C_ORDER'];
+				If($iValue == 1){
+					$sAutoSms = "Có";
+				}else{
+					$sAutoSms = "<font color='red'>Không</font>";
+				}
+				if ($sCurrentStyleName == "odd_row"){
+					$sCurrentStyleName = "round_row";
+				}else{
+					$sCurrentStyleName = "odd_row";					
+				}?>					
+				<tr class="<?=$sCurrentStyleName?>">	
+					<td align="center" style="padding-left:3px;padding-right:3px;" class="normal_label">					
+						<?=$this->formCheckbox('chk_item_id',$sPk, array('checked' => false,'onclick' =>'selectrow(this)'));?>					
+					</td>
+					<td align="left"  onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sPk?>');" style="padding-left:3px;padding-right:3px;" class="normal_label">
+						<?=$sStaffName?>
+					</td>								
+					<!--Hien thi trich yeu!-->					
+					<td align="left"   onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sPk?>');"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sUnitName ?></td>
+					<!--Hien ket qua xu ly!-->	
+					<td align="center"  onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sPk?>');"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=  $sTelMobile?></td>
+					<td align="center" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sPk?>');"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?= $sAutoSms ?></td>	
+					<td align="center" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sPk?>');"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?= $iOrder ?></td>	
+				</tr><?php
+			}					
+			//Tu dien cac dong trang trong truong hop du lieu tra ve < so row _CONST_NUMBER_OF_ROW_PER_LIST	
+				echo $this->addEmptyRow($this->iCountElement,15 -sizeof($arrSmsUser),$sCurrentStyleName,6);
+			?>
+		</table>	
+		<!--Hien thi trang can xem!-->
+			<?=$this->SelectDeselectAll;?>
+		<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td  class="normal_label"style="color:red;width:23%;padding-left:1%;">
+						<?=$this->sdocpertotal;?>
+					</td>
+					<td align="center" style="width:48%;.">
+						<table width="10%"><?php
+							//Hien thi danh sach so trang
+							echo $this->generateStringNumberPage;?>
+						</table>
+					</td>
+					<td width="25%" align="right" style="font-size:13px; padding-right:1%; font:tahoma" class="normal_label"><?php
+						//Hien thi so trang
+						echo $this->generateHtmlSelectBoxPage;?>
+					</td>
+				</tr>
+		</table>
+	</div>
+	<?php echo $this->search_textselectbox ;?>
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' align="center">
+		<tr>
+			<td style="padding-top: 5px; padding-bottom: 5px;" align="center" valign="middle">
+				<input id="btn_add" name="btn_add" type="button" class="add_large_button" value="<?= $arrConst['_THEM']?>" onclick="actionUrl('../add/');">
+				<input type="button" class="add_large_button" value="<?= $arrConst['_SUA']?>" onclick="btn_update_onclick(document.getElementsByName('chk_item_id'),'../edit/');">
+				<input type="button" class="add_large_button" value="<?= $arrConst['_XOA']?>" onclick="btn_delete_onclick(document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id_list'),'../delete/','','','');">
+			</td>	
+		</tr>
+	</table>
+</div>
+</form>
+
+

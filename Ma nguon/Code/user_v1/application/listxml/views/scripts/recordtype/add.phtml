@@ -1,0 +1,298 @@
+<form action="index" method="POST" id="Listxml_Recordtype_Add" enctype="multipart/form-data" autocomplete="off">
+<table width='100%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+	<!--tao tac hidden!-->
+	<tr>
+		<td style="padding-left:7px;text-align:left;">
+			<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>
+			<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>
+			<?php echo $this->formHidden("hdn_xml_tag_list","",null); ?>
+			<?php echo $this->formHidden("hdn_xml_value_list","",null); ?>
+			<?php echo $this->formHidden("hdn_XmlTagValueList","",null); ?>
+			<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+			<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>	
+			<?php echo $this->formHidden("hdn_object_id","",null); ?>			
+			<?php echo $this->formHidden("hdn_list_id","",null); ?>			
+			<?php echo $this->formHidden("hdn_department_list","",null); ?>			
+		</td>
+	</tr>
+</table>
+<?php 
+	//Cac mang goi tu Controller
+	$arrConst = $this->arrConst;
+	$arrCate = $this->arrCate;
+	$arrApproveLevel = $this->arrApproveLevel;
+	$arrPeriod = $this->arrPeriod;
+	$arrWorkType = $this->arrWorkType ;
+	$arrDocResult = $this->arrDocResult;
+	$arrResult = $this->arrResult; ?>
+<div style="height:3px;"></div>
+<div id ="contentXml" >
+	<div id="header_conten" style="height: 15px;padding-bottom:15px;">
+		<h1 class="large_label"><?=$this->bodyTitle;?> 
+			<div style="text-align:right; float:right;">
+				<a  class="small_link" onClick = "btn_save_recordtype(document.getElementsByName('hdn_xml_tag_list'),document.getElementsByName('hdn_xml_value_list'),'');"><?=$arrConst['_GHI'] ?>&nbsp;|</a> 
+				<a  class="small_link"  onclick="actionUrl('../recordtype/');">&nbsp;<?=$arrConst['_QUAY_LAI'] ?>&nbsp;</a>
+			</div>
+		</h1>
+	</div>
+<!--Form nhap TTHC !-->
+	<div id="body_conten1">
+		<div>
+			<label ><?=$arrConst['_MA_TTHC'] ?><span class="requiein">*</span></label>
+			<input style="width:33%"  type="text"  id ="C_CODE" name="C_CODE" option = "false"  value="" xml_data="false" column_name="C_CODE" message="<?php echo "Phai xac dinh MA THU TUC HANH CHINH!";?>">			
+		</div>
+		<div>
+			<label><?=$arrConst['_TEN_TTHC'] ?><span class="requiein">*</span></label>
+			<textarea style="width:65%"  class="normal_textarea" name="C_NAME"  id="C_NAME"  option = "false" rows="1"  xml_data="false" column_name="C_NAME"  message="<?php echo "Phai xac dinh TEN THU TUC HANH CHINH!";?>"  ><?= $arrResult['C_NAME']?></textarea>
+		</div>
+		<div>
+			<label><?=$arrConst['_LINH_VUC'] ?><span class="requiein">*</span></label>
+			<select  id="C_CATE" name="C_CATE"  option = "false"  style="width:33%;" class="textbox normal_label"  message="<?php echo "Phai xac dinh LINH VUC!”.";?>" >
+				<option id="" name = "" value="">-- Chọn lĩnh vực --</option>
+				<?php echo Sys_Library::_generateSelectOption($arrCate,'C_CODE','C_CODE','C_NAME',$arrResult['C_CATE']);?>
+			</select>
+		</div>
+		<div>
+			<label><?=$arrConst['_THU_TU'] ?><span class="requiein">*</span></label>
+			<input style="width:15%" id ="C_ORDER" name="C_ORDER" type="text"  option = "false"  value="<?=$this->iOrder?>"  message="<?php echo "Phai xac dinh THU TU!";?>"    onchange="IsNumeric(this);">			
+			&nbsp; &nbsp; <input id ="C_STATUS" name="C_STATUS" type="checkbox"  checked> <span ><?=$arrConst['_HOAT_DONG'] ?> </span>				
+		</div>	
+<!-- LOAI HO SO LIEN THONG HAY KHONG LIEN THONG--><?php
+			$arrRecordType[0]["C_CODE"] =  "LIEN_THONG";$arrRecordType[0]["C_NAME"] = "Liên thông" ;
+			$arrRecordType[1]["C_CODE"] =  "KHONG_LIEN_THONG";$arrRecordType[1]["C_NAME"] = "Không liên thông" ;?>
+		<div id="id_trasition"  style="padding-top:3px;">
+			<label><?=$arrConst['_LOAI_TTHC'] ?><span class="requiein">*</span></label>
+			<select  id="C_RECORD_TYPE" name="C_RECORD_TYPE"  option = "false"  style="width:33%;" class="textbox normal_label"  message="<?php echo "Phai xac dinh LOAI TTHC!”.";?>"  >
+				<option id="" name = "" value="">-- Chọn <?=$arrConst['_LOAI_TTHC'] ?> --</option>
+				<?php 
+					echo Sys_Library::_generateSelectOption($arrRecordType,'C_CODE','C_CODE','C_NAME','KHONG_LIEN_THONG');?>
+			</select>
+		</div>	
+		<div id="ajax_trasition">	
+			<!-- Ajax Treeview-->		
+		</div>	
+		<div class="line"></div>
+<!-- PHONG BAN THU LY HO SO -->	
+		<div>
+			<label><b><?=$arrConst['_PB_THU_LY'] ?></b></label>
+			<input style="width:65%"  type="text"  id ="C_DEPARTMENT_LIST" name="C_DEPARTMENT_LIST"  optional="true"  value="<?=$arrResult['C_DEPARTMENT_NAME_LIST']?>">			
+		</div>
+		<div class="line"></div>
+<!-- CAN BO TIEP NHAN -->	
+		<div>
+			<label><b><?=$arrConst['_CB_TIEP_NHAN'] ?></b></label>
+			<div> &nbsp;</div>
+		</div>
+		<div id="id_receive">
+			&nbsp;<input id ="select_receive" name="select_receive" type="checkbox"> <label style="float:right;width:95%;" for="select_receive"><?=$arrConst['_THEM'] ?> <?=$arrConst['_CB_TIEP_NHAN'] ?> </label>				
+		</div>
+		<div id="ajax_receive">	
+			<!-- Ajax Treeview-->		
+		</div>
+		<div class="line"></div>
+<!-- CAN BO TTHU LY -->	
+		<div>
+			<label><b><?=$arrConst['_CB_THU_LY'] ?></b></label>
+			<div> &nbsp;</div>
+		</div>
+		<div id="id_handle">
+			&nbsp;<input id ="select_handle" name="select_handle" type="checkbox"> <label style="float:right;width:95%;" for="select_handle"><?=$arrConst['_THEM'] ?> <?=$arrConst['_CB_THU_LY'] ?> </label>				
+		</div>
+		<div id="ajax_handle">	
+			<!-- Ajax Treeview-->		
+		</div>
+		<div class="line"></div>	
+<!-- SO CAP DUYET HO SO-->
+		<div id="id_approve_level">
+			<label><b><?=$arrConst['_SO_CAP_DUYET'] ?></b><span class="requiein">*</span></label>
+			<select  id="C_APPROVE_LEVEL" name="C_APPROVE_LEVEL"  option = "false"  style="width:33%;" class="textbox normal_label"  message="<?php echo "Phai xac dinh SO CAP DUYET HO SO!”.";?>"  >
+				<option id="" name = "" value="">-- Chọn <?=$arrConst['_SO_CAP_DUYET'] ?>--</option>
+				<?php echo Sys_Library::_generateSelectOption($arrApproveLevel,'C_CODE','C_CODE','C_NAME',$arrResult['C_APPROVE_LEVEL']);?>
+			</select>
+		</div>	
+		<div id="ajax_approve_level">	
+			<!-- Ajax Treeview-->		
+		</div>	
+		<div class="line"></div>					
+<!-- SO NGAY THU LY HS THEO QUI DINH VA CAC GIAI DOAN -->		
+		<div style="margin:0px 0px 5px 0px;">
+			<label><b><?=$arrConst['_SO_NGAY_THU_LY_HS'] ?></b></label>
+			<input style="width:15%"  type="text"  id ="C_PROCESS_NUMBER_DATE" name="C_PROCESS_NUMBER_DATE" optional = "true"  value="<?=$arrResult['C_PROCESS_NUMBER_DATE']?>"  onchange="IsNumeric(this);">			
+		</div>
+		<div style="width:99%; margin:10px 10px 10xp 10px;">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%" align="center" class="list_table2" id="table1">
+				<col width="10%"><col width="45%"><col width="45%">
+				<tr  class="header">
+					<td align="center" class="title">#</td>
+					<td align="center" class="title"><?=$arrConst['_GIAI_DOAN'] ?></td>
+					<td align="center" class="title"><?=$arrConst['_CONG_VIEC'] ?></td>
+				</tr>	
+			<?php for($index = 0;$index <sizeof($arrPeriod);$index++){ 
+					if ($sCurrentStyleName == "odd_row"){
+						$sCurrentStyleName = "round_row";
+					}else{
+						$sCurrentStyleName = "odd_row";					
+					} ?>				
+				<tr class="<?=$sCurrentStyleName?>"  onclick="check_color_recordtype(this,document.getElementById('<?=$arrPeriod[$index]['C_CODE'] ?>'))" >
+					<td align="center" >
+						<input id ="<?=$arrPeriod[$index]['C_CODE'] ?>" name="<?=$arrPeriod[$index]['C_CODE'] ?>" type="checkbox" > 
+					</td>
+					<td >	
+						<?=$arrPeriod[$index]['C_NAME'] ?>
+					</td>	
+					<td align="center">
+						<?=$arrConst['_THOI_GIAN_GIAI_QUYET'] ?>&nbsp; &nbsp; &nbsp;
+						<input style="width:30%"  type="text"  id ="DATE_<?=$arrPeriod[$index]['C_CODE'] ?>" name="DATE_<?=$arrPeriod[$index]['C_CODE'] ?>" optional = "true"  value="" onchange="IsNumeric(this);"> (Ngày)
+					</td>
+				</tr>								
+			<?php } ?>	
+			</table>
+		</div>
+		<div class="line"></div>	
+<!-- DANH MUC CONG VIEC -->	
+		<div>
+			<label><b><?=$arrConst['_DANH_SACH_CONG_VIEC'] ?></b></label>
+			<div>&nbsp;</div>
+		</div>		
+		<div style="width:99%;">
+		<?php	
+			global $dspDiv, $readonlyInEditMode, $disabledInEditMode, $formFielName;
+			$this->dspDiv = 1; //Chia lam 2 phan
+			$this->readonlyInEditMode = true; $this->disabledInEditMode = true;
+			$this->formFielName	= "C_WORKTYPE_LIST";
+			$spRetHtml = "<div style='display:none'><input type='textbox' id='$this->formFielName' name='$this->formFielName' value='' hide='true' readonly optional = true xml_data=false xml_tag_in_db='' message=''></div>";
+			echo $spRetHtml . Sys_Xml::_generateHtmlForMultipleCheckbox($arrWorkType, 'C_CODE','C_NAME',$arrResult['C_WORK_TYPE_LIST']); ?>
+		</div>
+		<div class="line"></div>			
+<!-- HINH THUC VAN BAN TRA KET QUA -->
+		<div style="padding-top:3px;">
+			<label><?=$arrConst['_HINH_THUC_VB_TRA_KQ'] ?><span class="requiein">*</span></label>
+			<select  id="C_RESULT_DOC_TYPE" name="C_RESULT_DOC_TYPE"  option = "false"  style="width:33%;" class="textbox normal_label"  message="<?php echo "Phai xac dinh HINH THUC VB TKQ!”.";?>"  >
+				<option id="" name = "" value="">-- Chọn <?=$arrConst['_HINH_THUC_VB_TRA_KQ'] ?> --</option>
+				<?php echo Sys_Library::_generateSelectOption($arrDocResult,'C_CODE','C_CODE','C_NAME',$arrResult['C_RESULT_DOC_TYPE']);?>
+			</select>
+		</div>		
+		<div class="line"></div>	
+<!-- LE PHI - SO TT -->		
+		<div style="width:99%;">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%" align="center" id="table1" class="list_table2"  style="border:none;">
+				<col width="25%"><col width="25%"><col width="25%"><col width="25%">
+				<tr>	
+					<td align="left">&nbsp;<?=$arrConst['_LE_PHI_MOI'] ?></td>
+					<td align="left"><input style="width:50%;text-align:right;"  type="text"  id ="C_COST_NEW" name="C_COST_NEW" optional = "true" value="<?=$arrResult['C_COST_NEW']?>" onkeyup="AddComma(this,event);"> VNĐ</td>
+					<td align="left"><?=$arrConst['_LE_PHI_THAY_DOI'] ?></td>
+					<td align="left"><input style="width:50%;text-align:right;"  type="text"  id ="C_COST_CHANGE" name="C_COST_CHANGE" optional = "true" value="<?=$arrResult['C_COST_CHANGE']?>" onkeyup="AddComma(this,event);"> VNĐ</td>
+				</tr>	
+				<tr>
+					<td colspan="4" style="height:2px;"></td>
+				</tr>
+				<tr >	
+					<td align="left">&nbsp;<?=$arrConst['_STT_HS'] ?></td>
+					<td align="left"><input style="width:50%"  type="text"  id ="C_BEGIN_RECORD_NUMBER" name="C_BEGIN_RECORD_NUMBER" optional = "true" value="<?=$arrResult['C_BEGIN_RECORD_NUMBER']?>" onchange="IsNumeric(this);"> </td>
+					<td align="left"><?=$arrConst['_STT_GIAY_PHEP'] ?></td>
+					<td align="left"><input style="width:50%"  type="text"  id ="C_BEGIN_LICENSE_NUMBER" name="C_BEGIN_LICENSE_NUMBER" optional = "true" value="<?=$arrResult['C_BEGIN_LICENSE_NUMBER']?>" onchange="IsNumeric(this);"> </td>
+				</tr>
+			</table>	
+		</div>			
+		<div id="clear"></div>
+		<div class="line"></div>
+<!-- TRANH THAI LIEN QUAN -->	
+		<div>
+			<label><b><?=$arrConst['_TRANG_THAI_LIEN_QUAN'] ?></b></label>
+			<div>&nbsp;</div>
+		</div>		
+		<div style="width:99%; margin:10px 10px 10xp 10px;">
+			<table cellpadding="0" cellspacing="0" border="0" width="100%" align="center" class="list_table2" id="table1">
+				<col width="10%"><col width="90%">		
+					<tr class="odd_row" onclick="check_color_recordtype(this,document.getElementById('C_IS_VIEW_ON_NET'))">	
+						<td align="center">
+							<input id ="C_IS_VIEW_ON_NET" name="C_IS_VIEW_ON_NET" type="checkbox" <?php if($arrResult['C_IS_VIEW_ON_NET'] == true) echo "checked" ; ?> >
+						</td>
+						<td align="left" style="padding-left:3px;padding-right:3px;" class="normal_label" >	
+							Cho tra cứu trạng thái hồ sơ qua mạng			
+						</td>
+				   </tr>	
+			   		<tr class="round_row" onclick="check_color_recordtype(this,document.getElementById('C_IS_REGISTER_ON_NET'))">	
+						<td align="center">
+							<input id ="C_IS_REGISTER_ON_NET" name="C_IS_REGISTER_ON_NET" type="checkbox" <?php if($arrResult['C_IS_REGISTER_ON_NET'] == true) echo "checked" ; ?> >
+						</td>
+						<td align="left" style="padding-left:3px;padding-right:3px;" class="normal_label">	
+							Cho đăng ký hồ sơ qua mạng			
+						</td>
+			 	  </tr>	
+			 	   <tr class="odd_row" onclick="check_color_recordtype(this,document.getElementById('C_MOVE_TO_RESULT'))">	
+						<td align="center">
+							<input id ="C_MOVE_TO_RESULT" name="C_MOVE_TO_RESULT" type="checkbox" <?php if($arrResult['C_MOVE_TO_RESULT'] == true) echo "checked" ; ?> >
+						</td>
+						<td align="left" style="padding-left:3px;padding-right:3px;" class="normal_label" >	
+							Chuyển hồ sơ về bộ phận trả kết quả		
+						</td>
+			 	  </tr>	
+			 	   <tr class="round_row" onclick="check_color_recordtype(this,document.getElementById('C_AUTO_RESET'))">	
+						<td align="center">
+							<input id ="C_AUTO_RESET" name="C_AUTO_RESET" type="checkbox" <?php if($arrResult['C_AUTO_RESET'] == true) echo "checked" ; ?> >
+						</td>
+						<td align="left" style="padding-left:3px;padding-right:3px;" class="normal_label">	
+							Đầu năm tự động thiết lập lại số thứ tự		
+						</td>
+			 	  </tr>	
+			</table>
+		</div> 
+		<div id="clear"></div>
+	</div>
+</div>			
+<!--Hien thi nut!-->			
+<table 	width='99%'  border='0' cellspacing='0' cellpadding='0' align="center" class="table_title">		
+	<tr>
+		<td align="center">	
+			<?=$this->formButton("btn_update","Ghi",array("type"=>"button","class"=>"add_large_button","onClick"=>"btn_save_recordtype(document.getElementsByName('hdn_xml_tag_list'),document.getElementsByName('hdn_xml_value_list'),'');"))?>								
+			<?=$this->formsubmit('button','Quay lại',array("onClick"=>"actionUrl('../recordtype/');","class"=>"add_large_button"))?>
+		</td>
+	</tr>			
+</table>
+</form>
+<?php echo $this->arr_autocomplete_department ;?>
+<script type="text/javascript">
+$(document).ready(function() {		
+//Jquery Don vi lien thong
+	$("#id_trasition").change(function() {
+		var RecordTypeval = $("#C_RECORD_TYPE").val();
+		$.post("ajaxtrasition", { C_RECORD_TYPE: RecordTypeval}, function(data) {
+			$("#ajax_trasition").html(data);
+		});
+		return false;
+	});
+	
+//Jquery Can bo tiep nhan
+	$("#ajax_receive").hide();
+	$("#select_receive").click(function(){
+		$("#ajax_receive").toggle();
+		var CheckReceiveStaffval =$("#select_receive").val();
+		$.post("ajaxstaff",{select_receive: CheckReceiveStaffval},function(data){
+			$("#ajax_receive").html(data);
+		});
+		return true;
+	});
+	
+//Jquery Can bo thu ly
+	$("#ajax_handle").hide();
+	$("#select_handle").click(function(){
+		$("#ajax_handle").toggle();
+		var CheckReceiveStaffval =$("#select_handle").val();
+		$.post("ajaxstaff",{select_handle: CheckReceiveStaffval},function(data){
+			$("#ajax_handle").html(data);
+		});
+		return true;
+	});
+
+//Jquery Don vi lien thong
+	$("#id_approve_level").change(function() {
+		var ApproveLevelval = $("#C_APPROVE_LEVEL").val();
+		$.post("ajaxapprove", { C_APPROVE_LEVEL: ApproveLevelval}, function(data) {
+			$("#ajax_approve_level").html(data);
+		});
+		return false;
+	});	
+});
+
+</script>

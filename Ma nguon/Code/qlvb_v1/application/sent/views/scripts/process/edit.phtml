@@ -1,0 +1,350 @@
+<form action="index" method="POST" id="frmAddSent" enctype="multipart/form-data" autocomplete="off">
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<!--tao tac hidden!-->
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>
+				<?php echo $this->formHidden("hdnCode","",null); ?>
+				<?php echo $this->formHidden("hdn_xml_tag_list","",null); ?>
+				<?php echo $this->formHidden("hdn_object_id_list","",null); ?>
+				<?php echo $this->formHidden("hdn_xml_value_list","",null); ?>
+				<?php echo $this->formHidden("hdn_XmlTagValueList","",null); ?>
+				<?php echo $this->formHidden("hdh_option",$this->option,null); ?>
+				<?php echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); ?>
+				<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>	
+				<?php echo $this->formHidden("hdnListId","",null); ?>	
+				<?php echo $this->formHidden("number",'',null); ?>
+				<?php echo $this->formHidden("hdn_object_id",$this->sentID,null); ?>		
+				<?php echo $this->formHidden("hdn_work_id",$this->workID,null); ?>		
+				<?php echo $this->formHidden("hdn_received_place","",null); ?>
+				<?php echo $this->formHidden("hdn_function_modul",$this->getModulLeft,null);?>
+				<?php echo $this->formHidden("hdn_idea_staft_name","",null); ?>
+				<?php echo $this->formHidden("hdn_idea_staft_name_phxl","",null); ?>
+				<?php echo $this->formHidden("hdn_idea_unit_name","",null); ?>
+				<?php echo $this->formHidden("hdn_list_id","",null); ?>
+				<?php echo $this->formHidden("so_ban","",null); ?>
+				<?php echo $this->formHidden("so_trang","",null); ?>
+				<?php echo "THÔNG TIN VĂN BẢN DỰ THẢO"  ;?>
+			</td>
+		</tr>
+	</table>
+	<?php  
+		$arrSent = $this->arrSent;
+		$arrConst = $this->arrConst;
+		$urlCalendar = $this->urlCalendar;
+		$arrWork = $this->arrWork;
+	?>
+	<table class="table_detail_doc" border="1" width="100%">
+	<col width="25%" align="left"/><col width="75%" align="left"/>
+		<tr>
+			<td style="border-right:1px solid #CCC">
+				<?=$arrConst['_LOAI_VAN_BAN'] ?>
+			</td>
+				
+			<td>
+				<?= $arrSent[0]['C_DOC_TYPE'] ?>
+			</td>
+		</tr>	
+		<tr>
+			<td style="border-right:1px solid #CCC">
+				<?=$arrConst['_PHONG_BAN_DU_THAO'] ?>
+			</td>
+				
+			<td>
+				<?= $arrSent[0]['C_UNIT_NAME'] ?>
+			</td>
+		</tr>
+		<tr>
+			<td style="border-right:1px solid #CCC">
+				<?=$arrConst['_TRICH_YEU'] ?>
+			</td>
+				
+			<td>
+				<?= $arrSent[0]['C_SUBJECT'] ?>
+			</td>
+		</tr>
+		<?php
+			$strFileName = $arrSent[0]['C_FILE_NAME'];
+			if($strFileName!=''){
+			$sFile = Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+		?>
+		<tr>
+			<td style="border-right:1px solid #CCC">
+				<?=$arrConst['_FILE_DINH_KEM'] ?>
+			</td>
+				
+			<td>
+				<?= $sFile ?>
+			</td>
+		</tr>
+		<?php
+			}
+		$sIdeaNameUnit = explode('!#~$|*',$arrSent[0]['C_IDEA_NAME']);
+		?>
+		<tr>
+			<td style="border-right:1px solid #CCC">
+				<?=$arrConst['_DON_VI_CHO_Y_KIEN'] ?>
+			</td>
+				
+			<td>
+				<?= $sIdeaNameUnit[0].$sIdeaNameUnit[1] ?>
+			</td>
+		</tr>
+		<tr>
+			<td style="border-right:1px solid #CCC">
+				<?=$arrConst['_HAN_TRA_LOI'] ?>
+			</td>
+				
+			<td>
+				<?= $arrSent[0]['C_APPOINTED_DATE'] ?>
+			</td>
+		</tr>
+	</table>
+		<?php $arrAssign = $this->arrAssign  ;
+	if($arrAssign[0]['C_ASSIGNED_IDEA'] !='' and $this->iUserId !=$arrAssign[0]['FK_STAFF']){?>		
+		<table cellpadding="0" cellspacing="0" width="100%" border="0">
+			<tr>
+				<td class="large_title" style="padding-left:7px;text-align:left;">
+				Ý KIẾN CHỈ ĐẠO
+				</td>
+			</tr>
+		</table>		
+		<table class="table_detail_doc" border="1" width="100%">
+		<col width="20%" align="left"/><col width="30%" align="left"/><col width="20%" align="left"/><col width="30%" align="left"/>
+			<tr>
+				<td style="border-right:1px solid #CCC">
+					<?=$arrConst['_Y_KIEN_CHI_DAO']?>
+				</td>
+				<td>
+					<?=$arrAssign[0]['C_ASSIGNED_IDEA'];?>
+				</td>
+				<td style="border-right:1px solid #CCC">
+					<?=$arrConst['_HAN_XU_LY']?>
+				</td>
+				<td>
+					<?=$arrAssign[0]['C_APPOINTED_DATE'];?>
+				</td>
+			</tr>
+		</table>
+	<?php } ?>	
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+			<?= $this->bodyTitle ; ?>
+			</td>
+			<td style="text-align:right;" valign="bottom">
+				<a style="cursor:pointer;" onClick="document.getElementById('hdh_option').value='GHI_QUAYLAI';btn_save_period(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'');">&nbsp;<?=$arrConst['_GHI'] ?>&nbsp;|</a> 
+				<a style="cursor:pointer;" onclick="actionUrl('../../index/modul/<?=$this->getModulLeft?>');">&nbsp;<?=$arrConst['_QUAY_LAI'] ?>&nbsp;</a>
+			</td>
+		</tr>
+	</table>
+	<?php
+   if($this->sMainProcessStatus != 'KET_THUC_XU_LY' ){ ?>
+		<div id="body_conten1" style="padding-top:5px;">		 
+				<div>
+					<label>1.&nbsp;<?=$arrConst['_NGAY_THUC_HIEN']?><span class="requiein">*</span></label> 
+					<input id ="C_WORK_DATE" name="C_WORK_DATE" type="text" isdate="true" value="<?=$arrWork[0]['C_WORK_DATE'];?>" option = "true"  xml_tag_in_db="" xml_data="false" column_name="C_WORK_DATE" message="NGAY THUC HIEN khong dung dinh dang ngay/thang/nam!" onKeyDown="change_focus(document.forms[0],this)">
+					<img src="<?= $this->baseUrl?>images/calendar.gif" border="0" onclick="DoCal('<?= $urlCalendar;?>',document.getElementById('C_WORK_DATE'));" style="cursor:pointer">	 						
+				</div>				
+				<div>
+					<label>2.&nbsp;<?=$arrConst['_KET_QUA_XU_LY'] ?><span class="requiein">*</span></label>
+					<textarea  class="textbox normal_textarea" id="C_RESULT" name="C_RESULT"  option = "true" rows="2" message="Phai xac dinh noi dung KET QUA THUC HIEN!" ><?= $arrWork[0]['C_RESULT'];?></textarea>
+				</div>
+				<div>
+					<label style="width:31%">3. &nbsp;<?=$arrConst['_FILE_DINH_KEM'] ?></label>
+					<?=$this->AttachFile;?>
+				</div>		
+				<div>
+					<label style="width:31%">4. &nbsp;<?=$arrConst['_TRANG_THAI_XU_LY'] ?></label>
+					<?php if($this->sProcessStatus != 'DA_XU_LY'){?>
+					<input type="radio" name= 'C_PROCESS_STATUS' id ='C_PROCESS_STATUS'  value = 'DANG_XU_LY' checked><span class="normal_label"><?=$arrConst['_DANG_XU_LY'] ?> </span>
+					<?php }if($this->getModulLeft !='PHXL' and $this->sProcessStatus != 'DA_XU_LY'){?>
+					&nbsp;&nbsp;<input type="radio" name= 'C_PROCESS_STATUS' id ='C_PROCESS_STATUS' value = 'DA_XU_LY' ><span class="normal_label">  <?=$arrConst['_KET_THUC_XU_LY'] ?></span>
+					<?php }if ($this->getModulLeft !='PHXL' and $this->sProcessStatus == 'DA_XU_LY'){ ?>
+					&nbsp;&nbsp;<input style="margin-left:160px;" type="radio" name= 'C_PROCESS_STATUS' id ='C_PROCESS_STATUS' value = 'DANG_XU_LY' ><span class="normal_label" ><?=$arrConst['_KHOI_PHUC_XU_LY'] ?></span>
+					<?php } ?>
+				</div>								
+		</div>
+		<table 	width='99%'  border='0' cellspacing='0' cellpadding='0' align="center" class="table_title">
+			<tr><td style="height:20px;"><hr width='100%' color='#3399FF' size='1'></td></tr>			
+			<tr>
+				<td align="center" style="padding-bottom:1px;">	
+					
+					<button name="btn_ghivaquaylai" id="btn_ghivaquaylai" type="button" value="" class="add_large_button" onClick="document.getElementById('hdh_option').value='';process_save_period(document.getElementById('C_WORK_DATE'),'<?=date("d/m/Y" )?>',document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'');"><?=$arrConst['_GHI'] ?></button>
+					<?=$this->formsubmit('button','Quay lại',array("onClick"=>"actionUrl('../../index/modul/".$this->getModulLeft."');","class"=>"add_large_button"))?>
+				</td>
+			</tr>			
+		</table>
+	<?php }else{ ?>	
+		<div id="body_conten1" style="padding-top:5px;">	
+				<div>
+					<label>Văn bản đã hết thời hạn xin ý kiến</label>
+				</div>	
+		</div>	
+	<?php }
+	$arrProcessNew = $this->arrProcessNew ;
+	$arrProcessOld = $this->arrProcessOld ; 	
+	if(sizeof($arrProcessNew) > 0){ ?>
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+			<?= $this->bodyTitle2 ; ?>
+			</td>
+			<td style="text-align:right;" valign="bottom">
+				<a style="cursor:pointer; color:#0000FF;" onclick="process_update_onclick(document.getElementsByName('chk_item_id'),'../../edit/modul/<?=$this->getModulLeft ?>');"><?=$arrConst['_SUA'] ?> &nbsp;|</a> 	
+				<a style="cursor:pointer;" onclick="btn_sent_delete_onclick(document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id_list'),'../../delete/modul/<?=$this->getModulLeft?>');">&nbsp;<?=$arrConst['_XOA'] ?>&nbsp;</a>
+			</td>
+		</tr>
+	</table>	
+	<div id="viewAllSentDocument">
+		<table cellpadding="0" cellspacing="0" border="0" width="98%" align="center" class="list_table2" id="table1">
+			<?php			
+			$delimitor = $this->delimitor;//Lay ky tu phan cach giua cac phan tu
+			//Hien thi cac cot cua bang hien thi du lieu
+			$StrHeader = explode("!~~!",$this->GenerateHeaderTable("3%" . $delimitor . "42%" . $delimitor . "15%" . $delimitor . "40%" 
+												,'<input type="checkbox" name="chk_all_item_id" value="" optional="true" onclick="checkbox_all_item_id(document.forms[0].chk_item_id);">' . $delimitor .$arrConst['_NOI_XU_LY']  . $delimitor . $arrConst['_NGAY_THUC_HIEN'] . $delimitor . $arrConst['_KET_QUA_XU_LY'] 
+												,$delimitor));
+			echo $StrHeader[0];				
+			echo $StrHeader[1]; //Hien thi <col width = 'xx'><...		
+			//Dinh nghia URL
+			//$sUrView  = "../../view";
+			$sCurrentStyleName = "round_row";
+			$objFunction =	new	Sys_Function_DocFunctions()	;	
+			function work_date($in_bike1, $in_bike2) 
+		    { 
+		        if ($in_bike1["C_WORK_DATE"] < $in_bike2["C_WORK_DATE"]) 
+		        { 
+		            return 1; 
+		        } 
+		        else if ($in_bike1["C_WORK_DATE"] == $in_bike2["C_WORK_DATE"]) 
+		        { 
+		            return 0; 
+		        } 
+		        else 
+		        { 
+		            return -1; 
+		        } 
+		    } 		
+		    	uasort($arrProcessNew, "work_date"); ?>
+		    			
+				<!--  CAC CONG VIEC MOI THUC HIEN    !-->
+				<tr class="<?=$sCurrentStyleName?>"    >	
+					<td colspan="4" align="left" style="padding: 3px 3px 3px 3px; font-weight:normal;font-size:16px;" class="normal_label">
+						<span class="normal_label" style="font-weight:bold;">Công việc thực hiện gần đây </span>
+					</td>
+				</tr>
+			    <?php	
+			    foreach ($arrProcessNew as $bike){ 
+			        //lay file dinh kem
+					$strFileName 				= $bike['C_FILE_NAME'];
+					$sFile = Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+					$sWorkId 					= $bike['PK_DOC_WORK'];				
+					$sProcessUnitName			= $bike['C_STAFF_POSITION_NAME'] .'&nbsp;'.'=>'.$bike['C_UNIT_NAME'] ;						
+					$dDateProcess				= Sys_Library::_yyyymmddToDDmmyyyyhhmmss($bike['C_WORK_DATE']) .'&nbsp;';	
+					$sResult					= $bike['C_RESULT'] ;	
+					//Disable doi vs nhung cong viec khong phai do can bo dang nhap hien thoi tao lap ra:
+					if($bike['FK_STAFF'] != $this->iUserId){
+						$sDisable = "disabled";
+					}
+					//Tai lieu kem theo ho so
+					if($strFileName == '' || $strFileName == null){
+						$sResult				= $sResult;
+					}else {
+						$sResult				= $sResult . '<br>'.$sFile;
+						$sFile = "";
+					}
+					if ($sCurrentStyleName == "odd_row"){
+						$sCurrentStyleName = "round_row";
+					}else{
+						$sCurrentStyleName = "odd_row";					
+					}?>					
+					<tr class="<?=$sCurrentStyleName?>" >	
+						<td align="center" style="padding-left:3px;padding-right:3px;" class="normal_label">					
+							<?=$this->formCheckbox('chk_item_id',$sWorkId, array('checked' => false,'optional'=>true,'onclick' =>'selectrow(this)',$sDisable=>true) );?>					
+						</td>
+						<td align="left"  onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_work_id'),'<?=$sWorkId?>');" style="padding-left:3px;padding-right:3px;" class="normal_label">
+							<?=$sProcessUnitName?>
+						</td>								
+						<!--Hien thi trich yeu!-->					
+						<td align="center"   onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_work_id'),'<?=$sWorkId?>');"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$dDateProcess ?></td>
+						<!--Hien ket qua xu ly!-->	
+						<td align="left"  onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_work_id'),'<?=$sWorkId?>');"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=  $sResult?></td>
+					</tr><?php
+					$sDisable = "";
+				}
+		    }	
+		    if(sizeof($arrProcessOld) > 0){
+		    uasort($arrProcessOld, "work_date");	
+			?>
+				<!--  CAC CONG VIEC XU LY TRUOC   !-->
+				<tr class="<?=$sCurrentStyleName?>"    >	
+					<td colspan="4" align="left" style="padding: 3px 3px 3px 3px; font-weight:normal;font-size:16px;" class="normal_label">
+						<span class="normal_label" style="font-weight:bold;">Công việc xử lý trước </span>
+					</td>
+				</tr>
+				<?php
+				foreach ($arrProcessOld as $bike) { 
+			        //lay file dinh kem
+					$strFileName 				= $bike['C_FILE_NAME'];
+					$sFile = Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+					$sWorkId 					= $bike['PK_DOC_WORK'];				
+					$sProcessUnitName			= $bike['C_STAFF_POSITION_NAME'] .'&nbsp;'.'=>'.$bike['C_UNIT_NAME'] ;						
+					$dDateProcess				= Sys_Library::_yyyymmddToDDmmyyyyhhmmss($bike['C_WORK_DATE']).'&nbsp;';	
+					$sResult					= $bike['C_RESULT'] ;		
+					//Disable doi vs nhung cong viec khong phai do can bo dang nhap hien thoi tao lap ra:
+					if($bike['FK_STAFF'] != $this->iUserId){
+						$sDisable = "disabled";
+					}
+					//Tai lieu kem theo ho so
+					if($strFileName == '' || $strFileName == null){
+						$sResult				= $sResult;
+					}else {
+						$sResult				= $sResult . '<br>'.$sFile;
+						$sFile = "";
+					}
+					if ($sCurrentStyleName == "odd_row"){
+						$sCurrentStyleName = "round_row";
+					}else{
+						$sCurrentStyleName = "odd_row";					
+					}?>					
+					<tr class="<?=$sCurrentStyleName?>" >	
+						<td align="center" style="padding-left:3px;padding-right:3px;" class="normal_label">			
+							<?=$this->formCheckbox('chk_item_id',$sWorkId, array('checked' => false,'optional'=>true,'onclick' =>'selectrow(this)',$sDisable=>true) );?>					
+						</td>
+						<td align="left"  onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_work_id'),'<?=$sWorkId?>');" style="padding-left:3px;padding-right:3px;" class="normal_label">
+							<?=$sProcessUnitName?>
+						</td>								
+						<!--Hien thi trich yeu!-->					
+						<td align="center"   onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_work_id'),'<?=$sWorkId?>');"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$dDateProcess ?></td>
+						<!--Hien ket qua xu ly!-->	
+						<td align="left"  onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_work_id'),'<?=$sWorkId?>');"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=  $sResult?></td>
+					</tr><?php
+					$sDisable = "";
+				}	
+		    }	
+			//Tu dien cac dong trang trong truong hop du lieu tra ve < so row _CONST_NUMBER_OF_ROW_PER_LIST	
+			//		echo $this->addEmptyRow($this->iCountElement,15 -sizeof($arrProcessNew),$sCurrentStyleName,4);
+			?>
+		</table>	
+	</div>	
+	<?php If(sizeof($arrProcessNew) > 0){ ?>
+	<!--Hien thi nut!-->			
+	<table 	width='99%'  border='0' cellspacing='0' cellpadding='0' align="center" class="table_title">
+		<tr><td style="height:20px;"><hr width='100%' color='#3399FF' size='1'></td></tr>			
+		<tr>
+			<td align="center" style="padding-bottom:10px;">	
+			<input type="button" class="add_large_button" value="Sửa" onclick="process_update_onclick(document.getElementsByName('chk_item_id'),'../../edit/modul/<?=$this->getModulLeft ?>');">
+			<input type="button" class="add_large_button" value="Xóa" onclick="btn_sent_delete_onclick(document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id_list'),'../../delete/modul/<?=$this->getModulLeft?>');"> 
+			</td>
+		</tr>			
+	</table>
+	<?php } ?>
+	<div id="getSysbolforNowYear" style="display:none;"></div>
+</div>		
+</form>
+<script type="text/javascript">
+	document.getElementById('C_WORK_DATE').value = '<?=date("d/m/Y" ) ;?>';
+</script>

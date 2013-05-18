@@ -1,0 +1,172 @@
+<?php
+	//Ham Const
+	$arrConst	=	Sys_Init_Config::_setProjectPublicConst();
+	//echo $this->currentModulCodeForLeft;
+?>
+<div id="Iddiv_leftmenu">	
+	<!--Menu trai cua Cơ cấu tổ chức-->
+	<div id ="left_org" style="display:none;">
+		<table width="100%" cellpadding="0"  cellspacing="0" border="0" class="body3">		
+			<tr>
+				<td valign="top">
+					<table width="98%" cellpadding="0"  cellspacing="0" align="center"  class="left_menu_table">	
+						<!--Cau lenh If...Else phan quyen--><?php 
+						if($_SESSION['STAFF_PERMISSTION']==Sys_Init_Config::_setPermisstionSystem(1)|| $_SESSION['STAFF_PERMISSTION']==Sys_Init_Config::_setPermisstionSystem(2)){?>	
+							<tr>  
+								<td id ="left_unit" class="level1" >						
+									<a href="<?php echo $this->baseUrl;?>../user/org/index/"><?=$arrConst['_CO_CAU_PHONG_BAN']?></a>
+								</td>
+							</tr>	
+						<?php }
+						if($_SESSION['STAFF_PERMISSTION']==Sys_Init_Config::_setPermisstionSystem(1)){?>
+							<tr>  
+								<td id ="left_position_group" class="level1" >						
+									<a href="<?php echo $this->baseUrl;?>../user/positiongroup/index/"><?=$arrConst['_NHOM_CHUC_VU']?></a>
+								</td>
+							</tr>
+						<?php }
+							if($_SESSION['STAFF_PERMISSTION']==Sys_Init_Config::_setPermisstionSystem(1)){?>	
+							<tr>  
+								<td id ="left_position" class="level1" >						
+									<a href="<?php echo $this->baseUrl;?>../user/position/index/"><?=$arrConst['_CHUC_VU']?></a>
+								</td>
+							</tr>	<?php 
+						}?>
+					</table>
+				</td>						
+			</tr>
+		</table>	
+	</div>	
+<!--Menu trai cua menu danh muc-->		
+	<div id ="left_list" style="display:none"> 
+		<table width="100%" cellpadding="0"  cellspacing="0" class="body3">	
+			<tr >
+				<td valign="top">
+					<table width="98%" cellpadding="0"  cellspacing="0" align="center"  class="left_menu_table"><?php 
+						if($_SESSION['STAFF_PERMISSTION']==Sys_Init_Config::_setPermisstionSystem(1)){ ?>
+							<tr>  
+								<td id ="left_list_listtype" class="level1" >
+									<a href="<?php echo $this->baseUrl;?>../listxml/listtype/"><?=$arrConst['_DM_LOAI']?></a>
+								</td>
+							</tr><? 
+						//} 
+						//if($arrPermission['CAP_NHAT_DM_DOI_TUONG']) {?>
+							<tr>  
+								<td id ="left_list_list" class="level1">
+									<a href="<?php echo $this->baseUrl;?>../listxml/list/" ><?=$arrConst['_DM_DOITUONG']?></a>
+								</td>
+							</tr><? 
+						}
+						//!----------------------------------------------Danh muc quyen!---------------------------------------------->
+						//Số liệu là 1 sửa thành 100
+						if($_SESSION['STAFF_PERMISSTION']==Sys_Init_Config::_setPermisstionSystem(100)){	?>	
+							<tr>
+								<td id ="left_list_permission" class="level1">		
+									<a href="<?php echo $this->baseUrl;?>../listxml/permission/"><?=$arrConst['_DM_QUYEN']?></a>																	
+								</td>							
+							</tr><? 
+						}
+						//!----------------------------------------------Danh muc backup, sao luu du lieu!---------------------------------------------->
+						//Số liệu là 1 sửa thành 100
+						if($_SESSION['STAFF_PERMISSTION']==Sys_Init_Config::_setPermisstionSystem(100)){	?>	
+							<tr>
+								<td id ="left_list_backup" class="level1">		
+									<a href="<?php echo $this->baseUrl;?>../listxml/backup/"><?=$arrConst['_SAOLUU_PHUCHOI']?></a>																	
+								</td>							
+							</tr><? 
+						}?>
+						
+					</table>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<!-- thong tin nguoi dang nhap -->
+	<div style = 'normal_label'><?=$_SESSION['INFORMATION_STAFF_LOGIN'];?></div>
+</div>	
+<!--Xu ly JS!-->
+<script type="text/javascript">
+ function showHideMenu(p_id){	 	
+	var objfrm = document.getElementsByTagName('div');
+	for(i=0; i<objfrm.length; i++){
+		e = objfrm[i].getAttribute('id');
+		if (objfrm[i].getAttribute('value') == "true"){
+	 		if(e == p_id){		
+	 			var pStyle	= eval("document.getElementById('" + p_id + "').style.display");	 			
+	 			if (pStyle == "none"){
+	 				eval("document.getElementById('" + p_id + "').style.display = '" + "block'"); 
+	 			}else{
+	 				eval("document.getElementById('" + p_id + "').style.display = '" + "none'"); 
+	 			}				 						 			
+	 		}
+ 		}	
+ 	}
+ }  
+												
+try{<?php
+	// Hien thi menu trai tuong ung voi menu ngang
+	$sCurrentModulCode = $this->currentModulCode;	
+	$getModulLeft = $this->getStatusLeftMenu;
+	$scurrentModulCodeForLeft = $this->currentModulCodeForLeft;		
+	//DANH MUC
+	try {
+		if ($sCurrentModulCode == "LIST"){?>
+			document.getElementById('left_list').style.display = 'block';
+			<?if($scurrentModulCodeForLeft == "LISTTYPE"){ ?>
+				document.getElementById('left_list_listtype').className = "level1_visited";
+			<?}if($scurrentModulCodeForLeft == "LIST"){ ?>			
+				document.getElementById('left_list_list').className = "level1_visited";
+			<?}if($scurrentModulCodeForLeft == "PERMISSION"){ ?>			
+				document.getElementById('left_list_permission').className = "level1_visited";
+			<?}if($scurrentModulCodeForLeft == "BACKUP"){ ?>			
+				document.getElementById('left_list_backup').className = "level1_visited";
+			<?}
+		}
+	}catch (Exception $ex){;};		
+	//CO CAU TO CHUC 
+	try {
+		if ($sCurrentModulCode == "ORG"){?>
+			document.getElementById('left_org').style.display = 'block';
+			<?if($scurrentModulCodeForLeft == "UNIT"){//HS cho tiep nhan so bo?>
+	 			document.getElementById('left_unit').className = "level1_visited";
+ 			<?}if($scurrentModulCodeForLeft == "POSITION-GROUP"){//HS cho bo sung?>
+ 				document.getElementById('left_position_group').className = "level1_visited";<?php
+ 			}if($scurrentModulCodeForLeft == "POSITION"){//Tiep nhan chinh thuc?>
+ 				document.getElementById('left_position').className = "level1_visited";<?php
+ 			}
+		}
+	}catch (Exception $ex){;};	
+	?>
+}catch(e){;}
+// -------------------------------------------------PHIM TAT
+shortcut.add("Enter",function() {
+	if(document.activeElement.name == 'FullTextSearchLeft'){
+		checkvalue1();
+	}else{
+		var scriptFileName = '<?=$_SERVER['REQUEST_URI']?>';
+		if(scriptFileName.search('index') >= 0){
+			checkvalue();
+		}else
+			shortcut.remove("Enter");
+	}
+});
+function addEnter(){
+	shortcut.add("Enter",function() {
+		if(document.activeElement.name == 'FullTextSearchLeft'){
+			checkvalue1();
+		}else{
+			var scriptFileName = '<?=$_SERVER['REQUEST_URI']?>';
+			if(scriptFileName.search('index') >= 0)
+				checkvalue();
+			else
+				shortcut.remove("Enter");
+		}
+	});
+}
+function checkvalue1(){
+	if(document.getElementById('FullTextSearchLeft').value != ''){
+		var p_Url = '<?=$this->baseUrl?>' + '../fulltextsearch/fulltextsearch/index/?FullTextSearch=' + document.getElementById('FullTextSearchLeft').value;
+		actionUrl(p_Url);
+	}
+}
+</script>

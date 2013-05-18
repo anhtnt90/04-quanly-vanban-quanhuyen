@@ -1,0 +1,117 @@
+<form action="index" method="POST" id="frmChangePass" name="frmChangePass" autocomplete="off">	
+	<!--Cac doi tuong hidden tren form-->		
+	<?php echo $this->formHidden("hdn_object_id_list","",null);  ?>			
+	<?php echo $this->formHidden("hdn_option","VIEW");?>	
+	<?php echo $this->formHidden("hdn_new_pass","",null);  ?>	
+	<?php echo $this->formHidden("hdn_old_pass","",null);  ?>	
+	<?php 
+		$arrCount = $this->arrConst;
+		$StaffName = $this->StaffName;
+		$username = $this->username;	
+		$arrayResuft = $this->arrayResuft;
+		$staff_id = $_SESSION['staff_id'];					
+		//var_dump($arrayResuft);	
+		//var_dump($_SESSION['C_USER_NAME']);	
+	?>
+<table>
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<?=$this->bodyTitle;?>				
+			</td>
+		</tr>
+	</table>
+	<!--Phan hien thi Link cap nhat -->	
+	<table width='99%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+	</table>
+	<!--Phan hien thi Tuan trong nam va Nam -->
+	<div class="box container c1">
+		<div class="pad">			
+		<table width="100%" border="0" class="schedule_unit">		 		 	
+		  <tr>
+		    <td valign="top">&nbsp;<label><?=$arrCount['_TEN_NGUOI_DUNG']?></label></td>
+		    <td>
+		    	<input style="width:100%;" class="normal_texbox_text" id ="C_NAME" name="C_NAME" type="text"  isnumeric = "false" readonly="readonly" optional = "false" value="<?php echo $StaffName; ?>" >				
+		    </td>
+		  </tr>
+		  <tr>
+		    <td valign="top">&nbsp;<label><?=$arrCount['_TEN_DANG_NHAP']?></label></td>
+		   	 <td >
+		    	<input style="width:100%; text-align:left;" class="normal_texbox_text" id ="C_USER_NAME" name="C_USER_NAME" type="text"  isnumeric = "false" optional = "false" value="<?php if(isset($_SESSION['C_USER_NAME'])){echo $_SESSION['C_USER_NAME'];}else{echo $username;}?>" >				
+		    </td>
+		  </tr>
+		  <tr>
+		    <td valign="top">&nbsp;<label><?=$arrCount['_MK_DANG_DUNG']?></label></td>
+		   	 <td colspan="2">
+		    	<input style="width:100%;" class="normal_texbox_text" id ="C_PASS_OLD" name="C_PASS_OLD" type="password"  isnumeric = "false" optional = "false">				
+		  	  </td>
+		 	 </tr>
+		   <tr>
+		    <td valign="top">&nbsp;<label><?=$arrCount['_MK_MOI']?></label></td>
+		   	 <td colspan="2">
+		    	<input style="width:100%;" class="normal_texbox_text" id ="C_PASS_NEW" name="C_PASS_NEW" type="password"  isnumeric = "false" optional = "false">				
+		  	  </td>
+		 	 </tr>	
+		 	 <tr>
+		    <td valign="top">&nbsp;<label><?=$arrCount['_NHAC_LAI_MK']?></label></td>
+		   	 <td colspan="2">
+		    	<input style="width:100%;" class="normal_texbox_text" id ="C_PASS_NEW_RETURN" name="C_PASS_NEW_RETURN" type="password"  isnumeric = "false" optional = "false">				
+		  	  </td>
+		 	 </tr> 	 	
+		</table>
+	</div>
+</div>			
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' align="center">		
+		<tr>
+			<td style="padding-top: 10px; padding-bottom: 10px;" align="center" valign="middle">								
+				<input id="btn_save_pass" name="btn_save_pass" type="button" class="add_large_button" value="<?=$arrCount['_XAC_NHAN']?>" onclick="btn_save_password('<?php echo $this->urlbackup?>');">
+				<input id="btn_exit" name="btn_exit" type="button" class="add_large_button" value="<?=$arrCount['_HUY']?>" onclick="goExit();">					
+			</td>	
+		</tr>
+	</table>
+</div>	
+</form>
+<div id = "ajax_loader" style = "display:none;">
+	<img src = "<?=$this->baseUrl?>images/ajax-loader1.gif" /><br>
+	<div style = "color:blue;font-weight:bold;text-align:center;width:100%;">Đang cập nhật thông tin</div>
+</div>
+<script type="text/javascript">	
+	function btn_save_password(p_url){
+		//alert(p_url);
+		var old_pass = document.forms[0].C_PASS_OLD.value;
+		var pass_word = document.forms[0].C_PASS_NEW.value;
+		var re_password = document.forms[0].C_PASS_NEW_RETURN.value;
+		if(old_pass ==''){
+			alert('Bạn phải nhập mật khẩu cũ trước khi đổi mật khẩu!');
+			document.forms[0].C_PASS_OLD.focus();
+			return;
+		}
+		if(pass_word ==''){
+			alert('Bạn phải nhập mật khẩu mới trước khi đổi mật khẩu!');
+			document.forms[0].C_PASS_NEW.focus();
+			return;
+		}
+		if(pass_word != re_password){
+			alert('Mật khẩu xác nhận lại không đúng,hoặc bạn chưa nhập hãy kiểm tra lại!');
+			document.forms[0].C_PASS_NEW_RETURN.focus();
+			return;
+		}
+		else{											
+		 var pass_new =	document.getElementById('hdn_new_pass').value = document.getElementById('C_PASS_NEW').value ;	
+		 var pass_old =	document.getElementById('hdn_old_pass').value = document.getElementById('C_PASS_OLD').value ;			
+		 var iOption = document.getElementById('hdn_option').value = 'CAP_NHAT';
+		 var sUserName  = document.getElementById('C_USER_NAME').value;									
+		}
+		$('#ajax_loader').modal({close:false, maxHeight:50, maxWidth:235,autoResize:true});
+		$.ajax({
+			  url: p_url,type: 'POST',dataType: 'html',
+			  data:'hdn_new_pass=' + pass_new
+			  + '&hdn_old_pass=' + pass_old
+			  + '&hdn_option=' + iOption
+			  + '&hdn_username=' + sUserName,
+			  success: function(data){
+				$.modal.close();
+				alert(data);
+		      }
+		 });	
+}
+</script>

@@ -1,0 +1,207 @@
+<form action="index" method="POST" id="frmsheduleUnit" autocomplete="off">
+	<?php echo $this->formHidden("hdn_type","",null); ?>
+	<!--Cac doi tuong hidden tren form-->		
+	<?php echo $this->formHidden("hdn_object_id_list","",null); ?>
+	
+	<?php echo $this->formHidden("hdn_object_id",$this->scheduleID,null); ?>	
+	<?php echo $this->formHidden("hdh_option",null); ?>
+	<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+	<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+	<?php echo $this->formHidden("htn_leftModule",$this->currentModulCodeForLeft,null); ?>	
+	<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+	<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null);?>	
+	<?php echo $this->formHidden("hdn_signer_position_name","",null); ?>
+	<?php echo $this->formHidden("htn_schedule_update",$this->currentUpdate,null); ?>		
+	<?php echo $this->formHidden("hdn_week",$this->$iWeek); ?>
+	<?php echo $this->formHidden("hdn_week_text",$this->$v_week_text); ?>
+	<?php echo $this->formHidden("hdn_year",$this->$v_year); ?>
+	<?php echo $this->formHidden("hdn_day",$this->$v_day); ?>
+	<?php echo $this->formHidden("hdn_part_time",$this->$v_part_time); ?>
+	<?php echo $this->formHidden("hdn_approve_schedule","0"); ?>
+	<?php echo $this->formHidden("hdn_exporttype","1"); ?>	
+	<?php echo $this->formHidden("hdn_edit",$this->iEdit); ?>
+	<?php echo $this->formHidden("hdn_approve",$this->iApprove); ?>	
+	<?php echo $this->formHidden("hdn_owner_code",$this->sOwner_name); ?>
+	<?php
+		$arrCount = $this->arrCount;
+		$arryWekk = $this->arryWekk;
+		$arryYear = $this->arryYear;	
+		$arrDateInWeek = $this->arrDateInWeek;	
+		$arrDayInWeek = $this->arrDayInWeek;					
+		$arrResulSingle = $this->arrResulSingle;						
+		$p_year = date('Y');				
+		$iCheck = $arrResulSingle[0]['C_STATUS'];
+		$iDay = $arrResulSingle[0]['C_DAY'];				
+		$iPartDay = $arrResulSingle[0]['C_DAY_PART'];
+		$iWorkName = $arrResulSingle[0]['C_WORK_NAME'];
+		$ojbSysLib = new Sys_Library();	
+		$iApprove = $this->iApprove;
+		$iEdit = $this->iEdit;
+		$sTempOwnerCodeParent = $_SESSION['OWNER_CODE'];
+		$sTempOwnerCode  	 = $this->sOwner_name;
+		/*
+		echo $sTempOwnerCodeParent ."<br>";
+		echo $sTempOwnerCode ."<br>";
+		echo "Approve " . $iApprove ."<br>";
+		echo "Edit " . $iEdit ."<br>";
+		//echo $iEdit; 	
+		*/
+	?>	
+	<table>
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<?=$this->bodyTitle;?>				
+			</td>
+		</tr>
+	</table>
+	<!--Phan hien thi Link cap nhat -->	
+	<table style='height: 23px;' width='99%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+		<col  width="85%" align="left"/><col width="15%" align="right"/>
+		<tr>
+			<td align="right" colspan="2">
+				<div style="text-align:right; width:98%;">
+					<label>
+					<?php if($iEdit=='1' && $iApprove =='0'){ ?>
+						<a class="small_link"   onclick="document.getElementById('hdh_option').value ='_CAP_NHAT'; document.getElementById('hdn_object_id').value ='<? echo $arrResulSingle[0]['PK_SCHEDULE_UNIT'];?>'; btn_save_schedule_unit(document.getElementById('hdn_approve_schedule').value,'../edit/');"><?=$arrCount['_GHI_QUAY_LAI']?>&nbsp;</a>
+					<?php }if($iEdit=='1' && $iApprove =='1'){ ?>
+						<a class="small_link"   onclick=check_approve(document.getElementById('chk_approver_schedule')); document.getElementById('hdh_option').value ='_CAP_NHAT'; document.getElementById('hdn_object_id').value ='<? echo $arrResulSingle[0]['PK_SCHEDULE_UNIT'];?>'; btn_save_schedule_unit(document.getElementById('hdn_approve_schedule').value,'../edit/');"><?=$arrCount['_GHI_QUAY_LAI']?>&nbsp;</a>					
+					<?php } ?>
+						<a class="small_link"  onclick="actionUrl('../index/');"><?=$arrCount['_QUAY_LAI']?>&nbsp;</a>							
+					</label>
+				</div>	
+			</td>
+		</tr>
+	</table>
+	<!--Phan hien thi Tuan trong nam va Nam -->
+	<div class="box container c1">
+		<div class="pad">			
+		<table width="98%" border="0" class="schedule_unit">
+		  <tr>
+		    <td width="17%" scope="col"><label>&nbsp;<?=$arrCount['_TUAN']?></label></td>
+		    <td width="100%" scope="col">
+		    	<select name="cbo_week" id="cbo_week" style="width:auto;" class="textbox"  onchange="document.getElementById('hdn_week').value = this.value;" >					
+						<? echo $arryWekk; ?>				
+				</select>				
+				<label style="width:auto;"><?=$arrCount['_NAM']?></label>
+				<select name="cbo_year" id="cbo_year" class="normal_texbox_text" valign="top" style="width:70px" onchange="document.getElementById('hdn_year').value = this.value;" >
+						<? echo $arryYear;?>
+				</select>		    		    
+		 	 </tr>
+		  <tr>
+		    <td valign="top">&nbsp;<label><?=$arrCount['_NGAY_TRONG_TUAN']?></label><span class="requiein">*</span></td>
+		    <td width="100%" >
+		    	<select name="cbo_day" id="cbo_day" class="normal_texbox_text" valign="top" style="width:10%;" onchange="document.getElementById('hdn_day').value = this.value;" ><? echo $arrDayInWeek;?></select>
+		    	<label>&nbsp;<?=$arrCount['_BUOI']?>&nbsp;</label>
+		    	<select name="cbo_part_time" id="cbo_part_time" class="normal_texbox_text" valign="top" style="width:10%;" onchange="document.getElementById('hdn_part_time').value = this.value;" >
+		    		<option id="BUOI_SANG" value="BUOI_SANG"><?=$arrCount['_SANG']?></option>
+		    		<option id="BUOI_CHIEU" value="BUOI_CHIEU"><?=$arrCount['_CHIEU']?></option>		    		
+		    	</select>	    	    
+		    	<label>&nbsp;<?=$arrCount['_THOI_GIAN_BAT_DAU']?></label>		    
+		    	<input style="width:12.2%;" class="normal_texbox_text" id ="C_START_TIME" name="C_START_TIME" type="text" value="<?= $arrResulSingle[0]['C_START_TIME']?>"  onblur="hour_onBlur(this)" onkeyup="hour_onkeyup(this,event)">						    
+		    	<label>&nbsp;<?=$arrCount['_THOI_GIAN_KET_THUC']?></label>			    
+		    	<input style="width:12.2%;" class="normal_texbox_text" id ="C_FINISH_TIME" name="C_FINISH_TIME" type="text" value="<?= $arrResulSingle[0]['C_FINISH_TIME']?>" onblur="hour_onBlur(this)" onkeyup="hour_onkeyup(this,event)">				
+		    </td>
+		  </tr>
+		  <tr>
+		    <td valign="top">&nbsp;<label><?=$arrCount['_TEN_CONG_VIEC']?></label><span class="requiein">*</span></td>
+		    <td colspan="5">
+		    	<textarea style="width:100%;" id="C_WORK_NAME" name="C_WORK_NAME" optional="true" rows="1" class="normal_texbox_text normal_textarea" ><?= $ojbSysLib->_replaceBadChar($iWorkName);?></textarea>
+		    </td>
+		  </tr>
+		  <tr>
+		    <td valign="top">&nbsp;<label><?=$arrCount['_NOI_DUNG_CONG_VIEC']?></label></td>
+		    <td colspan="5">
+		    	<textarea style="width:100%" id="C_WORK_CONTENT" name="C_WORK_CONTENT" optional="true" class="normal_texbox_text normal_textarea" ><?= $ojbSysLib->_replaceBadChar($arrResulSingle[0]['C_WORK_CONTENT']);?></textarea>
+		    </td>
+		  </tr>
+		  <tr >
+		    <td valign="top">&nbsp;<label><?=$arrCount['_CHU_TRI']?></label></td>
+		    <td colspan="5">
+		    	<input style="width:100%;" class="normal_texbox_text" id ="C_NAME_JOINER" name="C_NAME_JOINER" type="text"  isnumeric = "false" optional = "false" value="<?= $arrResulSingle[0]['C_NAME_JOINER']?>" >				
+		    </td>
+		  </tr>
+		  <tr>
+		    <td valign="top">&nbsp;<label><?=$arrCount['_DIA_DIEM']?></label></td>
+		    <td colspan="5">
+		    	<input style="width:100%;" class="normal_texbox_text" id ="C_PLACE" name="C_PLACE" type="text"  isnumeric = "false" optional = "false" value="<?= $arrResulSingle[0]['C_PLACE']?>" >				
+		    </td>
+		  </tr>
+		  <tr>
+		    <td valign="top">&nbsp;<label><?=$arrCount['_CQ_CB_NOI_DUNG']?></label></td>
+		    <td colspan="5">
+		    	<input style="width:100%;" class="normal_texbox_text" id ="C_PREPARE_ORGAN" name="C_PREPARE_ORGAN" type="text"  isnumeric = "false" optional = "false" value="<?= $ojbSysLib->_replaceBadChar($arrResulSingle[0]['C_PREPARE_ORGAN']);?>" >				
+		    </td>
+		  </tr>
+		  <tr>
+		    <td valign="top">&nbsp;<label><?=$arrCount['_TP_THAM_DU']?></label></td>
+		    <td colspan="5">
+		    	<textarea style="width:100%" id="C_ATTENDING" name="C_ATTENDING" optional="true" class="normal_texbox_text normal_textarea" ><?= $ojbSysLib->_replaceBadChar($arrResulSingle[0]['C_ATTENDING']);?></textarea>
+		    </td>
+		  </tr>
+		  <tr>		  
+		  <?php  if($iApprove ){?>
+		    <td valign="top">&nbsp;
+		    <label>Trạng thái</label>
+		  	</td><td>
+		  	  <input type="checkbox"   checked="true"  name="chk_approver_schedule" id="chk_approver_schedule" optional = "true" value="<? echo $check_apprrove;?>" onclick="check_approve(this);" > 
+		      <label for = "chk_approver_schedule" class = "normal_label" style = "display:inline;float:none; cursor:pointer;"><?=$arrCount['_DUYET_LICH']?></label>
+		    </td>		    
+		  <?php } ?>
+		  </tr>
+		</table>
+	</div>
+</div>		
+	<!--Phan hien thi Noi dung lich -->	
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' align="center">		
+		<tr>
+			<td style="padding-top: 10px; padding-bottom: 10px;" align="center" valign="middle">								
+				<?php if($iEdit=='1' && $iApprove =='0'){ ?>				
+					<input id="btn_schedule_staff" name="btn_schedule_staff" type="button" class="add_large_button" value="<?=$arrCount['_GHI_QUAY_LAI']?>" onclick="document.getElementById('hdh_option').value ='_CAP_NHAT'; document.getElementById('hdn_object_id').value ='<? echo $arrResulSingle[0]['PK_SCHEDULE_UNIT'];?>'; btn_save_schedule_unit(document.getElementById('hdn_approve_schedule').value,'../edit/');">				
+				<?php }if($iEdit=='1' && $iApprove =='1'){ ?>
+					<input id="btn_schedule_staff" name="btn_schedule_staff" type="button" class="add_large_button" value="<?=$arrCount['_GHI_QUAY_LAI']?>" onclick="check_approve(document.getElementById('chk_approver_schedule')); document.getElementById('hdh_option').value ='_CAP_NHAT'; document.getElementById('hdn_object_id').value ='<? echo $arrResulSingle[0]['PK_SCHEDULE_UNIT'];?>'; btn_save_schedule_unit(document.getElementById('hdn_approve_schedule').value,'../edit/');">
+				<?php }?>						
+				<input id="btn_schedule_staff" name="btn_schedule_staff" type="button" class="add_large_button" value="<?=$arrCount['_QUAY_LAI']?>" onclick="actionUrl('../index/');">				
+			</td>	
+		</tr>
+	</table>
+</div>
+</form>
+<?php 
+	 echo $this->search_textselectbox_signer;   	 
+?>
+
+<?php  if($iApprove){?>
+	<script>
+		if('<?=$iCheck; ?>' == '1'){
+			document.getElementById('chk_approver_schedule').value = '1';
+			document.getElementById('chk_approver_schedule').checked;
+		}else{	
+			document.getElementById('chk_approver_schedule').value = '0';
+			document.getElementById('chk_approver_schedule').checked = false;
+		}
+	</script>
+<?php } ?>
+<script type="text/javascript">
+if('<?=$iPartDay; ?>' == 'BUOI_SANG'){
+	document.getElementById('cbo_part_time').value = 'BUOI_SANG';
+}else{	
+	document.getElementById('cbo_part_time').value = 'BUOI_CHIEU';
+}
+shortcut.add("Ctrl+K",function() {
+	document.getElementById('txtfullTextSearch').focus();
+	document.getElementById('txtfullTextSearch').select();
+});
+function ResetSearch(){
+	document.getElementById('hdn_current_page').value = "1";	
+}
+function checkvalue(){
+	if(document.getElementById('txtfullTextSearch').value != ""){
+		actionUrl('');
+	}
+}
+	document.getElementById('hdn_week').value = document.getElementById('cbo_week').value;
+	document.getElementById('hdn_day').value = document.getElementById('cbo_day').value;
+	document.getElementById('hdn_part_time').value = document.getElementById('cbo_part_time').value ;
+	document.getElementById('hdn_year').value = document.getElementById('cbo_year').value; 
+	document.getElementById('hdn_object_id').value ='<? echo $arrySchedule_Staff[0]['PK_SCHEDULE_STAFF']; ?>' 
+</script>

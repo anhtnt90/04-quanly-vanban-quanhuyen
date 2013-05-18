@@ -1,0 +1,184 @@
+<form action="index" method="POST" id="frmAddReceived" enctype="multipart/form-data" autocomplete="off">
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<!--tao tac hidden!-->
+		<tr>
+			<td>
+				<?php echo $this->formHidden("hdn_xml_tag_list","",null); ?>
+				<?php echo $this->formHidden("hdn_xml_value_list","",null); ?>
+				<?php echo $this->formHidden("hdn_XmlTagValueList","",null); ?>
+				<?php echo $this->formHidden("hdh_option",$this->option,null); ?>
+				<?php echo $this->formHidden("hdn_option_natr","TRAO_DOI",null); ?>
+				<?php echo $this->formHidden("hdn_staff_id_list",$this->sProcessStaffIDList,null); ?>
+				<?php echo $this->formHidden("hdn_staff_id",$this->sProcessStaffID,null); ?>
+				<!--Sinh mot hidden luu ID VB!-->
+				<?php echo $this->formHidden("hdn_object_id",$this->sTaskWorkId,null); ?>		
+				<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+				<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>	
+				<?php echo $this->formHidden("hdn_current_page",$this->currentPage,null); ?>
+				<?php echo $this->formHidden("hdn_record_number_page",$this->numRowOnPage,null); ?>
+				<?php echo $this->formHidden("fromDate",$this->fromDate,null); ?>	
+				<?php echo $this->formHidden("toDate",$this->toDate,null); ?> 
+				<?php echo $this->formHidden("FullTextSearch",$this->FullTextSearch,null); ?>
+				<?php echo $this->formHidden("hdn_history_back",$this->sUrl,null); ?>
+				<?php echo $this->formHidden("hdn_search_check",$this->sSearchCheck,null); ?>
+				<?php echo $this->formHidden("hdn_search_file",$this->sSearchFile,null); ?>
+			</td>
+		</tr>
+	</table>
+	<?php 
+		$arrReceived = $this->arrReceived;
+		//var_dump($arrReceived);
+		if($arrReceived[0]['C_NATURE']=='TRAO_DOI'){
+			$sNguoi_nhan_khac = Sys_Function_DocFunctions::getNamePositionStaffByIdList($arrReceived[0]['FK_STAFF_ID_LIST']);
+			$sNguoi_nhan_khac = str_replace('!#~$|*',';',$sNguoi_nhan_khac);
+		}else{
+			$sNguoi_xuly = Sys_Function_DocFunctions::getNamePositionStaffByIdList($arrReceived[0]['FK_PROCESS_STAFF']);
+			$sNguoi_nhan_khac = Sys_Function_DocFunctions::getNamePositionStaffByIdList($arrReceived[0]['FK_STAFF_ID_LIST']);
+			$sNguoi_nhan_khac = str_replace('!#~$|*',';',$sNguoi_nhan_khac);
+		}
+		$sNature = $arrReceived[0]['C_NATURE'];
+		$urlCalendar = $this->urlCalendar; 
+		$arrConst = $this->arrConst; 
+		$i = 1;
+		$sDisable = 'disabled';
+		$arrPermission = $_SESSION['arrStaffPermission'];
+		if($arrPermission['NHOM_LANH_DAO_PHONG_BAN'] || $arrPermission['NHOM_PHAN_PHOI_VB_DON_VI']|| $arrPermission['LANH_DAO_VP']|| $arrPermission['LANH_DAO_UB_TINH']|| $arrPermission['LANH_DAO_SO']|| $arrPermission['LANH_DAO_UB_QUAN_HUYEN']|| $arrPermission['LANH_DAO_PHUONG_XA']|| $arrPermission['NHOM_LANH_DAO_DON_VI']){
+			$sDisable = '';
+		}
+		$sTitle = substr($arrReceived[0]['C_TITLE'],0,3);
+		if($sTitle == 'FW:'){
+			$sTitle = $arrReceived[0]['C_TITLE'];
+		}else{
+			$sTitle = 'FW: '.$arrReceived[0]['C_TITLE'];
+		}
+	?>
+	<!--HIen thi tieu de man hinh danh sach!-->
+	<div id ="content">
+		<div>
+			<div style="text-align:right;"> 
+				<a style="cursor:pointer;" class="small_link" onClick="btn_save_task_work('');">&nbsp;<?=$arrConst['_CAP_NHAT'] ?>&nbsp;</a>  
+				<a style="cursor:pointer;" class="small_link" onclick="actionUrl('../index/');">&nbsp;<?=$arrConst['_QUAY_LAI'] ?>&nbsp;</a>
+			</div>
+		</div>
+		<table width='100%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+			<!--tao tac hidden!-->
+			<tr>
+				<td class="large_title" style="padding-left:7px;text-align:left;">
+					<?=$this->bodyTitle;?>	
+				</td>
+			</tr>
+		</table>
+		<div class="box container c1">
+			<div class="pad">			
+				<table cellpadding="0" cellspacing="0" width="100%" border="0">
+					<col width="20%"/><col width="80%"/>
+					<tr>
+						<td class="normal_label" align="left">
+							<label><?=$i++?>.&nbsp;<?=$arrConst['_TINH_CHAT'] ?></label>
+						</td>
+						<td>
+							<input type="radio" id="giao_viec" value="giao_viec" name="tinh_chat" <?=$sDisable?> onclick="dsp_view(this.value)"  /><label class="normal_label">Giao việc</label>
+							<input type="radio" id="trao_doi" value="trao_doi" name="tinh_chat" onclick="dsp_view(this.value)" checked /><label class="normal_label">Trao đổi công việc</label>
+						</td>
+					</tr>
+					<tr>
+						<td class="normal_label" align="left">
+							<label><?=$i++?>.&nbsp;<?=$arrConst['_TIEU_DE'] ?><span class="requiein">*</span></label>
+						</td>
+						<td>
+							<input style="width:99%;" type="text" id="C_TITLE" name="C_TITLE" option = "true" value="<?=$sTitle?>" message="<?php echo "Phải xác định TIÊU ĐỀ!";?>">
+						</td>
+					</tr>
+					<tr>
+						<td class="normal_label" align="left">
+							<label><?=$i++?>.&nbsp;Nội dung</label>
+						</td>
+						<td colspan="3">
+							<textarea style="width:99%;" class="textbox normal_textarea" id="C_CONTEN" optional = "true" rows="9" name="C_CONTEN" ><?=$arrReceived[0]['C_CONTENT']?></textarea>
+						</td>
+					</tr>
+					<tr name = 'idStaffProcess' id='idStaffProcess' style='display:none'>
+						<td class="normal_label" align="left">
+							<label><?=$i++?>.&nbsp;Người thực hiện<span class="requiein">*</span></label>
+						</td>
+						<td>
+							<input style="width:99%;" type="text" id="C_STAFF_ID" name="C_STAFF_ID" option = "true" value="">
+						</td>
+					<tr>
+						<td class="normal_label" align="left">
+							<label><?=$i++?>.&nbsp;Người nhận</label>
+						</td>
+						<td colspan="3">
+							<textarea style="width:99%;" class="textbox normal_textarea" id="C_STAFF_ID_LIST" optional = "true" rows="2" name="C_STAFF_ID_LIST"></textarea>
+						</td>
+					</tr>
+					<tr name = 'tr_hanxuly' id='tr_hanxuly' style='display:none'>
+						<td class="normal_label" align="left">
+							<label><?=$i++?>.&nbsp;<?=$arrConst['_HAN_XU_LY']?></label>
+						</td>
+						<td class="normal_label" colspan="3">
+							<?=$arrConst['_SO_NGAY']?>
+							<input style="width:6%;" type="text" id="limit_date" name="limit_date" value="" align="right" optional = "true" xml_tag_in_db="limit_date" xml_data="true" column_name="" message="" onblur="appointed_date('<?=date("d/m/Y");?>',document.getElementById('limit_date'),document.getElementById('C_APPOINTED_DATE'));">
+							<label style="float:none; clear:none;display:inline;margin-left:0%">&nbsp;&nbsp;<?=$arrConst['_NGAY']?></label>				
+							<input style="width:15%;" class="textbox" id ="C_APPOINTED_DATE" name="C_APPOINTED_DATE" type="text" isdate="true" value="" optional = "true" message="HAN XU LY khong dung dinh dang ngay/thang/nam!" onKeyDown="change_focus(document.forms[0],this)">
+						</td>
+					</tr>
+					<tr>
+						<td class="normal_label" align="left"><?=$i++?>.&nbsp;<?=$arrConst['_FILE_DINH_KEM'] ?></td>
+						<td><?=$this->AttachFile;?>
+						</td>
+					</tr>
+				</table>		
+			</div>
+		</div>
+	</div>	
+	<!--Hien thi nut!-->		
+	<table width='99%'  border='0' cellspacing='0' cellpadding='0' align='center' class='normal_label'>
+		<tr><td style="height:20px;"></td></tr>		
+		<tr>
+			<td align="center" style="padding-bottom:10px;">	
+				<button name="btn_capnhat" id="btn_capnhat" type="button" value="" class="add_large_button" onClick="btn_save_task_work('');"><?=$arrConst['_CAP_NHAT'] ?></button>
+				<?=$this->formsubmit('button',$arrConst['_QUAY_LAI'],array("onClick"=>"actionUrl('../index/')","class"=>"add_large_button"))?>
+			</td>
+		</tr>			
+	</table>	
+</form>
+<?php echo $this->search_textselectbox_staff; ?>
+<?php echo $this->search_textselectbox_onestaff; ?>
+<script type="text/javascript"> 
+$(function() {
+	$( "#C_APPOINTED_DATE" ).datepicker({
+		changeMonth: true,
+		gotoCurrent: true,
+		maxDate: '+2y +1m +1w',
+		minDate: new Date(2011, 1 - 1, 1),
+		changeYear: true
+	});
+});
+
+function dsp_view(value){
+	if(value == 'giao_viec'){
+		document.getElementById('hdn_option_natr').value = 'GIAO_VIEC';
+		document.getElementById('idStaffProcess').style.display = "";
+		document.getElementById('tr_hanxuly').style.display = "";
+	}
+	if(value == 'trao_doi'){
+		document.getElementById('hdn_option_natr').value = 'TRAO_DOI';
+		document.getElementById('C_STAFF_ID').value = "";
+		document.getElementById('idStaffProcess').style.display = "none";
+		document.getElementById('tr_hanxuly').style.display = "none";
+	}
+}
+</script>
+<script type="text/javascript">
+//Tinh chat cong viec
+if('<?=$sNature?>'=='TRAO_DOI'){
+	document.getElementById('trao_doi').checked = true;
+	dsp_view('trao_doi');
+}else{
+	document.getElementById('giao_viec').checked = true;
+	dsp_view('giao_viec');
+}
+</script>

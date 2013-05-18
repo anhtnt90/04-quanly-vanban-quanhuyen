@@ -1,0 +1,60 @@
+<form action="index" method="POST" id="frmreceived">
+<?php
+	$arrDocSingle = $this->arrDocSingle;
+	$arrConst	  = $this->arrConst;
+?>
+	<!--HIen thi tieu de man hinh danh sach!-->
+	<script type="text/javascript">
+		$(function(){$('#body_conten1').equalHeights();});
+	</script>
+	<div id ="content">
+		<div class="large_title" style="padding-left:1px;text-align:left;"> <?=$this->docInfo;?> </div>
+		<table class="table_detail_doc" border="1">
+			<col width="20" /><col width="80%" />
+			<tr>
+				<td><?=$arrConst['_NGAY_BAN_HANH']?></td>
+				<td><?=$arrDocSingle[0]['C_RELEASE_DATE'].'&nbsp;'?></td>
+			<tr>
+				<td><?=$arrConst['_SO_KY_HIEU']?></td>
+				<td><?=$arrDocSingle[0]['C_SYMBOL'].'&nbsp;'?></td>
+			</tr>
+			<tr>
+				<td><?=$arrConst['_NGUOI_KY']?></td>
+				<td><?=$arrDocSingle[0]['C_SIGNER_POSITION_NAME'].'&nbsp;'?></td>
+			</tr>
+			<tr>
+				<td><?=$arrConst['_TRICH_YEU']?></td>
+				<td><?=$arrDocSingle[0]['C_SUBJECT'].'&nbsp;'?></td>
+			</tr>
+			<tr>
+				<td>Cơ quan ban hành</td>
+				<td><?=$arrDocSingle[0]['C_AGENTCY_NAME'].'&nbsp;'?></td>
+			</tr>
+			<tr>
+				<td><?=$arrConst['_LOAI_VAN_BAN']?></td>
+				<td><?=$arrDocSingle[0]['C_DOC_TYPE'].'&nbsp;'?></td>
+			</tr>
+			<?php
+				$strFileName 	= $arrDocSingle[0]['C_FILE_NAME'];
+				$sFile 			= Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+				if($strFileName != '' || $strFileName != null){?>
+					<tr>
+						<td><?=$arrConst['_FILE_DINH_KEM'].'&nbsp;'?></td>
+						<td colspan="3"><?=$sFile.'&nbsp;'?></td>
+					</tr>
+		  <?php }?>
+		</table>
+	</div>	
+	<!--Hien thi nut!-->		
+	<table width='99%'  border='0' cellspacing='0' cellpadding='0' align='center' class='normal_label'>
+		<tr><td> &nbsp; </td></tr>		
+		<tr>
+			<td align="center" style="padding-bottom:10px;">	
+				<input type="submit" name="quaylai" id="quaylai" value="<?=$arrConst['_QUAY_LAI'] ?>" onClick="btn_back_onclick('../index/')" class="add_large_button">
+			</td>
+		</tr>			
+	</table>	
+</form>
+
+
+

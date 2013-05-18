@@ -1,0 +1,6 @@
+[29-Sep-2010 21:43:00] PHP Warning:  Invalid argument supplied for foreach() in /home/quanda/public_html/vi/includes/fckeditor/editor/dialog/fck_spellerpages/spellerpages/server-scripts/spellchecker.php on line 25
+[29-Sep-2010 21:43:00] PHP Warning:  shell_exec() has been disabled for security reasons in /home/quanda/public_html/vi/includes/fckeditor/editor/dialog/fck_spellerpages/spellerpages/server-scripts/spellchecker.php on line 102
+[29-Sep-2010 21:43:21] PHP Warning:  Invalid argument supplied for foreach() in /home/quanda/public_html/vi/includes/fckeditor/editor/dialog/fck_spellerpages/spellerpages/server-scripts/spellchecker.php on line 25
+[29-Sep-2010 21:43:21] PHP Warning:  shell_exec() has been disabled for security reasons in /home/quanda/public_html/vi/includes/fckeditor/editor/dialog/fck_spellerpages/spellerpages/server-scripts/spellchecker.php on line 102
+[29-Sep-2010 22:01:09] PHP Warning:  Invalid argument supplied for foreach() in /home/quanda/public_html/vi/includes/fckeditor/editor/dialog/fck_spellerpages/spellerpages/server-scripts/spellchecker.php on line 25
+[29-Sep-2010 22:01:09] PHP Warning:  shell_exec() has been disabled for security reasons in /home/quanda/public_html/vi/includes/fckeditor/editor/dialog/fck_spellerpages/spellerpages/server-scripts/spellchecker.php on line 102

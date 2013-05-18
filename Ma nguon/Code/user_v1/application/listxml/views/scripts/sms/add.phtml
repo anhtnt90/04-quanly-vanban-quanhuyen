@@ -1,0 +1,90 @@
+<form action="index" method="POST" id="frmAddSent" enctype="multipart/form-data" autocomplete="off">
+<table width='100%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+	<!--tao tac hidden!-->
+	<tr>
+		<td class="large_title" style="padding-left:7px;text-align:left;">
+			<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>
+			<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>
+			<?php echo $this->formHidden("hdnCode","",null); ?>
+			<?php echo $this->formHidden("hdn_xml_tag_list","",null); ?>
+			<?php echo $this->formHidden("hdn_xml_value_list","",null); ?>
+			<?php echo $this->formHidden("hdn_XmlTagValueList","",null); ?>
+			<?php echo $this->formHidden("hdh_option",$this->option,null); ?>
+			<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+			<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+			<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+			<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); ?>	
+			<?php echo $this->formHidden("hdnListId","",null); ?>	
+			<?php echo $this->formHidden("hdn_object_id","",null); ?>			
+			<?php echo $this->formHidden("hdn_list_id","",null); ?>
+			<?php echo $this->formHidden("hdn_name","",null);?>
+			<?=$this->bodyTitle;?>
+		</td>
+	</tr>
+</table>
+	<?php 
+		$arrConst = $this->arrConst;
+	?>
+	<!--HIen thi tieu de man hinh danh sach!-->
+	<table width='99%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">&nbsp;
+				
+			</td>
+			<td style="text-align:right;" valign="bottom">
+				<a style="cursor:pointer;" onClick="document.getElementById('hdh_option').value='GHI_THEMMOI';update_user_sms(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'');"><?=$arrConst['_GHI_THEM_MOI'] ?>&nbsp;|</a> 
+				<a style="cursor:pointer;" onClick="document.getElementById('hdh_option').value='GHI_QUAYLAI';update_user_sms(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'');">&nbsp;<?=$arrConst['_GHI_QUAY_LAI'] ?>&nbsp;|</a> 
+				<a style="cursor:pointer;" onclick="actionUrl('../index/');">&nbsp;<?=$arrConst['_QUAY_LAI'] ?>&nbsp;</a>
+			</td>
+		</tr>
+	</table>
+		<div id="body_conten1" > 
+			<div style="margin-left:20%">
+				<label style="width:160px;">1. &nbsp;<?=$arrConst['_TEN_CAN_BO'] ?></label>
+					<input type="text" id="C_POSITON_NAME" name="C_POSITON_NAME"  autocomplete="off" class="textbox" size="60%" value="">
+			</div>
+			<div style="margin-left:20%">
+				<label style="width:160px;">2. &nbsp;<?=$arrConst['_GUI_TIN_TU_DONG'] ?></label>
+				<input type="radio"     name= 'C_AUTO_SMS'     id ='C_AUTO_SMS' value="1" ><span class="normal_label"> Có </span> &nbsp;
+				<input type="radio"     name= 'C_AUTO_SMS'     id ='C_AUTO_SMS' value="0" checked><span class="normal_label"> Không </span>
+			</div>
+	</div>
+</div>			
+	<!--Hien thi nut!-->			
+	<table 	width='99%'  border='0' cellspacing='0' cellpadding='0' align="center" class="table_title">
+		<tr><td style="height:20px;"><hr width='100%' color='#3399FF' size='1'></td></tr>			
+		<tr>
+			<td align="center" style="padding-bottom:10px;">	
+				<button name="btn_ghivathemmoi" id="btn_ghivathemmoi" type="button" value="<?=$arrConst['_GHI_THEM_MOI'] ?>" class="add_large_button" onClick="document.getElementById('hdh_option').value='GHI_THEMMOI';update_user_sms(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'');"><?=$arrConst['_GHI_THEM_MOI'] ?></button>
+				<button name="btn_ghivaquaylai" id="btn_ghivaquaylai" type="button" value="<?=$arrConst['_GHI_QUAY_LAI'] ?>" class="add_large_button" onClick="document.getElementById('hdh_option').value='GHI_QUAYLAI';update_user_sms(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'');"><?=$arrConst['_GHI_QUAY_LAI'] ?></button>
+				<?=$this->formsubmit('button','Quay lại',array("onClick"=>"actionUrl('../index/');","class"=>"add_large_button"))?>
+			</td>
+		</tr>			
+	</table>
+	<div id="getSysbolforNowYear" style="display:none;"></div>
+</div>		
+</form>
+<?php echo $this->search_textselectbox ;?>
+<script type="text/javascript">
+	//bat phim tat
+	shortcut.add("Ctrl+M",function() {
+		document.getElementById('hdh_option').value='GHI_THEMMOI';
+		update_user_sms(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'');
+	});
+	
+	shortcut.add("Ctrl+Q",function() {
+		document.getElementById('hdh_option').value='GHI_QUAYLAI';
+		update_user_sms(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'');
+	});
+	
+function update_user_sms(p_hdn_tag_obj,p_hdn_value_obj,p_url){	
+	_save_xml_tag_and_value_list(document.forms[0], p_hdn_tag_obj, p_hdn_value_obj, true);
+	if (verify(document.forms[0])){	
+		//Hidden luu danh sach the va gia tri tuong ung trong xau XML			
+		document.getElementById('hdn_XmlTagValueList').value = p_hdn_tag_obj.value + '|{*^*}|' + p_hdn_value_obj.value;	
+		//document.getElementsByTagName('form')[0].disabled = true;
+		document.getElementsByTagName('form')[0].action = p_url;
+		document.getElementsByTagName('form')[0].submit(); 
+	}	
+}
+</script>

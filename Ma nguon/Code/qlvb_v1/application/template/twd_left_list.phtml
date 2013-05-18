@@ -1,0 +1,146 @@
+<?php
+	//Mang quyen cua NSD hien thoi
+	$arrPermission = $_SESSION['arrStaffPermission'];
+	//var_dump($arrPermission);
+?>
+<div id="Iddiv_leftmenu" style="margin-top: 5px;">	
+<!--Menu trai cua menu danh muc-->	
+	<div id ="Iddiv_list">
+		<table width="100%" cellpadding="0"  cellspacing="0" class="body3">	
+			<tr >
+				<td valign="top">
+					<table width="98%" cellpadding="0"  cellspacing="0" align="center"  class="left_menu_table">
+					<?php 
+					//
+						if($arrPermission['CAP_NHAT_LOAI_DM']) { ?>
+							<tr>  
+								<td id ="id_loaidm" class="level0_doc" >
+									<a href="<?php echo $this->baseUrl;?>../listxml/listtype/index/">Loại danh mục</a>
+								</td>
+							</tr><? 
+						} 
+						if($arrPermission['CAP_NHAT_DM_DOI_TUONG']) {?>
+							<tr>  
+								<td id ="id_dmdoituong" class="level0_doc">
+									<a href="<?php echo $this->baseUrl;?>../listxml/list/index/" >Danh mục đối tượng</a>
+								</td>
+							</tr>
+						<tr>  
+							<td id ="id_dmchuyenmuc" class="level0_doc" >
+								<a href="<?php echo $this->baseUrl;?>../dashboard/menu/index/">Quản trị chuyên mục</a>
+							</td>
+						</tr>	
+						<tr>  
+							<td id ="id_dmtinbai" class="level0_doc" >
+								<a href="<?php echo $this->baseUrl;?>../dashboard/article/index/">Quản trị tin bài</a>
+							</td>
+						</tr>
+																						
+						<? }
+						//!----------------------------------------------Danh muc quyen!---------------------------------------------->
+						if($arrPermission['CAP_NHAT_QUYEN']){	?>	
+							<tr>
+								<td id ="id_dmquyen" class="level0_doc">		
+									<a href="<?php echo $this->baseUrl;?>../permission/user/index/">Danh mục quyền</a>																	
+								</td>							
+							</tr><? 
+						} 
+						if($arrPermission['QUAN_TRI_SMS']){	?>	
+							<!-- 
+							<tr>
+								<td id ="id_dmquyen" class="level0_doc">		
+									<a href="<?php echo $this->baseUrl;?>../sms/user/index/">Danh mục SMS</a>																	
+								</td>							
+							</tr>  -->
+							
+						<? 
+							
+						} 		
+						if($arrPermission['CAP_NHAT_DM_DOI_TUONG']) {?>				
+						<!-- 
+						<tr>
+							<td id ="left_list_backup" class="level0_doc">		
+								<a href="<?php echo $this->baseUrl;?>../listxml/backup/manualbackup/">Sao lưu dữ liệu</a>																	
+							</td>							
+						</tr>
+						<tr>
+							<td id ="left_list_restore" class="level0_doc">		
+								<a href="<?php echo $this->baseUrl;?>../listxml/restore/restore/">Phục hồi dữ liệu</a>																	
+							</td>							
+						</tr>		
+						 -->														
+						<?php }?>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</div>		
+</div>
+
+<script type="text/javascript">											
+try{<?php
+	// Hien thi menu trai tuong ung voi menu ngang
+	$sCurrentModulCode = $this->currentModulCode;	
+	$getModulLeft = $this->getStatusLeftMenu;
+	$scurrentModulCodeForLeft = $this->currentModulCodeForLeft;		
+	//DANH MUC
+	try {
+		if ($sCurrentModulCode == "LIST"){?>
+			document.getElementById('Iddiv_list').style.display = 'block';
+			<?if($scurrentModulCodeForLeft == "LIST-USER"){?>
+	 			document.getElementById('Iddiv_danhmuc_quyen').style.display = "block";
+	 			document.getElementById('list_user').className = "level0_doc_list_visited";
+			<?}if($scurrentModulCodeForLeft == "DISTRIBUTION"){?>
+	 			document.getElementById('Iddiv_danhmuc_quyen').style.display = "block";
+	 			document.getElementById('distribution_permission').className = "level0_doc_list_visited";
+			<?}if($scurrentModulCodeForLeft == "WEB_MENU"){ ?>
+				document.getElementById('id_dmchuyenmuc').className = "level0_doc_list_visited";
+			<?}if($scurrentModulCodeForLeft == "WEB_ARTICLE"){ ?>
+				document.getElementById('id_dmtinbai').className = "level0_doc_list_visited";
+			<?}if($scurrentModulCodeForLeft == "LISTTYPE"){ ?>
+				document.getElementById('id_loaidm').className = "level0_doc_list_visited";
+			<?}if($scurrentModulCodeForLeft == "LIST"){ ?>			
+				document.getElementById('id_dmdoituong').className = "level0_doc_list_visited";
+			<?}if($scurrentModulCodeForLeft == "RESTORE"){ ?>			
+				document.getElementById('left_list_restore').className = "level0_doc_list_visited";
+			<?}if($scurrentModulCodeForLeft == "BACKUP"){ ?>			
+				document.getElementById('left_list_backup').className = "level0_doc_list_visited";
+			<?}															
+		}
+	}catch (Exception $ex){;};		
+	?>
+}catch(e){;}
+
+</script>
+<script type="text/javascript">
+	shortcut.add("Enter",function() {
+		if(document.activeElement.name == 'FullTextSearchLeft'){
+			checkvalue1();
+		}else{
+			var scriptFileName = '<?=$_SERVER['REQUEST_URI']?>';
+			if(scriptFileName.search('index') >= 0){
+				checkvalue();
+			}else
+				shortcut.remove("Enter");
+		}
+	});
+	function addEnter(){
+		shortcut.add("Enter",function() {
+			if(document.activeElement.name == 'FullTextSearchLeft'){
+				checkvalue1();
+			}else{
+				var scriptFileName = '<?=$_SERVER['REQUEST_URI']?>';
+				if(scriptFileName.search('index') >= 0)
+					checkvalue();
+				else
+					shortcut.remove("Enter");
+			}
+		});
+	}
+	function checkvalue1(){
+		if(document.getElementById('FullTextSearchLeft').value != ''){
+			var p_Url = '<?=$this->baseUrl?>' + '../fulltextsearch/fulltextsearch/index/?FullTextSearch=' + document.getElementById('FullTextSearchLeft').value;
+			actionUrl(p_Url);
+		}
+	}
+</script>

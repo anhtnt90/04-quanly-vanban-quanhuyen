@@ -1,0 +1,761 @@
+<style>
+
+body {
+    background-color: #023149;
+    background-image: -moz-linear-gradient(#0594BE, #023149 900px);
+    background-repeat: repeat-x;
+    background-size: 100% 900px;
+    font-family: helvetica,arial,sans-serif;
+}
+body:not(#old_ie) {
+}
+.clear {
+    clear: both;
+}
+a:link, a:visited, a:active {
+    color: #022B3B;
+    text-decoration: none;
+}
+a:hover {
+    color: #FFFFFF;
+    text-decoration: underline;
+}
+#login-wrapper {
+    margin: 50px auto;
+}
+.login-whisp {
+    min-height: 460px;
+}
+.login-whisp:not(#old_ie) {
+    background: url("<?php echo $this->baseUrl; ?>/images/bg_login.png") no-repeat scroll center center transparent;
+}
+#login-container {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px 10px 10px 10px;
+    height: 330px;
+    margin: 0 auto;
+    position: relative;
+    width: 356px;
+}
+#security-container {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px 10px 10px 10px;
+    margin: 0 auto;
+    min-height: 620px;
+    position: relative;
+    width: 850px;
+}
+#login-sub-container {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 0 0 10px #000000 inset;
+    height: 318px;
+    left: 5px;
+    position: absolute;
+    top: 5px;
+    width: 345px;
+}
+#security-sub-container {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 0 0 10px #000000 inset;
+    height: 610px;
+    left: 5px;
+    position: absolute;
+    top: 5px;
+    width: 838px;
+}
+#login-sub-header {
+    background-color: rgba(2, 67, 93, 0.75);
+    border-bottom: 1px solid #002F3F;
+    border-radius: 5px 5px 0 0;
+    height: 65px;
+    padding: 10px 0 0;
+    text-align: center;
+}
+#login-sub-header img {
+    margin-left: 7px;
+}
+#login-sub, #security-sub {
+    background-color: rgba(3, 82, 113, 0.75);
+    border-radius: 0 0 5px 5px;
+    border-top: 1px solid #0D7291;
+    color: white;
+    font-size: 12px;
+    height: 212px;
+    padding-left: 30px;
+    padding-right: 5px;
+    padding-top: 30px;
+}
+#security-sub {
+    height: 502px;
+}
+#forms {
+    left: 30px;
+  
+    top: 0;
+}
+.input-req-login label {
+}
+button, button[disabled]:active, input[type="submit"], input[type="submit"][disabled]:active, input[type="button"], input[type="button"][disabled]:active, .login-btn a.loginbtn {
+    background: -moz-linear-gradient(#1090B0, #096479) repeat scroll 0 0 #02324A;
+    border: 1px solid #01303F;
+    border-radius: 3px 3px 3px 3px;
+    box-shadow: 0 0 2px 2px #034C64;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    overflow: visible;
+    padding: 4px 10px;
+    text-shadow: 0 1px 0 #063A46;
+    width: auto;
+}
+button:active, input[type="submit"]:active, input[type="button"]:active, .login-btn a.loginbtn:hover {
+    background-color: #FF9900 !important;
+    background-image: -moz-linear-gradient(#096479, #1090B0);
+    box-shadow: none;
+}
+button[disabled], button[disabled]:active, input[type="submit"][disabled], input[type="submit"][disabled]:active, input[type="button"][disabled], input[type="button"][disabled]:active {
+    border: 1px solid #034C64;
+    color: #034C64;
+    cursor: default;
+}
+input.std_textbox {
+    border: 2px solid #024257;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0 10px 10px #C1E5EF inset;
+    color: #000000;
+    font-family: helvetica;
+    font-size: 13px;
+    height: 22px;
+    margin: 5px 0;
+    width: 254px;
+}
+div.icon input.std_textbox {
+    background: none repeat scroll 0 0 transparent;
+    border: medium none;
+    border-radius: 0 0 0 0;
+    box-shadow: none;
+    margin-left: 26px;
+    outline: medium none;
+}
+html[dir="rtl"] input.std_textbox.icon {
+    background-position: right center;
+    padding-left: 0;
+    padding-right: 26px;
+}
+.input-field-login.icon {
+    background-color: #FFFFFF;
+    background-position: 6px 6px;
+    background-repeat: no-repeat;
+    border: 2px solid #024257;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0 10px 10px #C1E5EF inset;
+    height: 32px;
+}
+div.username-container, div.reset-pass-container {
+    background-image: url("<?php echo $this->baseUrl; ?>images/icon-username.png");
+}
+div.password-container {
+    background-image: url("<?php echo $this->baseUrl; ?>images/icon-password.png");
+}
+input.std_textbox[disabled] {
+    background-color: #005270;
+    box-shadow: none !important;
+}
+#userform {
+    text-align: center;
+}
+#userform input {
+    box-shadow: 0 10px 10px #C1E5EF inset;
+    font-family: helvetica;
+    font-size: 13px;
+    font-style: normal;
+    padding: 2px;
+}
+input.security_question {
+    color: #000000;
+    font-family: Georgia,serif;
+    font-size: 13px;
+    font-style: italic;
+    height: 32px;
+    margin: 10px 0 0 3px;
+    width: 324px;
+}
+#userform input.security_question {
+    background-color: transparent;
+    box-shadow: none;
+}
+html[dir="rtl"] input.security_question {
+    margin: 10px 3px 0 0;
+}
+html body.security_policy input.security_question {
+    margin: 0;
+    width: 625px;
+}
+span.security_question_expander {
+    color: #014D5F;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 0 !important;
+    position: absolute;
+    right: 6px;
+    text-decoration: none;
+    top: 12px;
+}
+input.security_question_answer {
+    border: 2px solid #024257;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0 10px 10px #C1E5EF inset;
+    height: 32px;
+    padding-left: 2px;
+    width: 650px;
+}
+input.security_question[disabled] {
+    background-color: #005270;
+    box-shadow: none !important;
+}
+td.label-cell {
+    text-align: right;
+}
+html[dir="rtl"] td.label-cell {
+    text-align: left;
+}
+.combobox {
+    background-color: #FFFFFF;
+    border: 2px solid #024257 !important;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0 10px 10px #C1E5EF inset;
+    position: relative;
+    text-align: left;
+    width: 650px;
+}
+.yui-ac-bd li {
+    white-space: normal !important;
+}
+.yui-ac-bd {
+    color: #333333;
+    font-size: 12px;
+}
+#userform label, .answer {
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: bold;
+    padding-bottom: 8px;
+    padding-left: 4px;
+    text-align: right;
+}
+a.page-link {
+    text-decoration: underline;
+}
+#confirmation {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 2px solid #024257;
+    color: #000000;
+    font-family: helvetica;
+    font-size: 13px;
+    font-style: normal;
+    padding-left: 3px;
+    width: 282px;
+}
+#login_form, #reset_form {
+    left: 0;
+    position: absolute;
+    top: 100px;
+}
+.login-btn, .reset-pass-btn {
+    float: left;
+    padding-top: 22px;
+}
+#resetpass .login-btn {
+    padding-top: 0;
+}
+#reset-pw-container {
+    margin-right: 30px;
+}
+.reset-pw {
+    float: right;
+    padding: 30px 0 0;
+    text-align: right;
+    width: 100px;
+}
+.reset-pw a {
+    color: #E1E1E1;
+    font-size: 12px;
+    font-weight: normal;
+    text-decoration: none;
+}
+.reset-pw a:hover {
+    color: #FFFFFF;
+    text-shadow: none;
+}
+.input-req-login {
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: bold;
+    padding-bottom: 8px;
+    padding-left: 4px;
+    width: 100%;
+}
+.locale-container {
+    border-top: 1px solid #0A91AD;
+    padding: 5px 0 0;
+    text-align: center;
+}
+#locale-footer {
+    margin: 40px auto;
+    width: 75%;
+}
+.error_notice {
+    color: #FFFFFF;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    padding: 10px;
+    width: 50%;
+}
+body.security_policy #login-status {
+    margin: 45px auto 15px;
+    padding: 2px;
+    width: 556px;
+}
+#answer-submit {
+    float: left;
+    margin: 0 0 0 50px;
+}
+#confirm-submit-btn {
+    padding-top: 23px !important;
+}
+#notify {
+    margin: 45px auto;
+    width: 365px;
+}
+#notify a {
+    font-size: 12px;
+    text-decoration: underline;
+}
+#notify a:hover {
+    text-decoration: none;
+}
+#notify p, #failure p {
+    margin: 0 0 10px;
+    padding-left: 30px;
+    padding-top: 3px;
+}
+.text_notice {
+    background-color: #FFFFFF;
+    border: 2px solid #000000;
+    padding-bottom: 20px;
+    padding-left: 30px;
+    padding-top: 3px;
+    text-align: left;
+}
+#failure a {
+    color: #035E7E;
+    font-size: 14px;
+    text-decoration: underline;
+}
+#failure a:hover {
+    text-decoration: none;
+}
+.error-notice, .answers-notice, .warn-notice, .info-notice, .success-notice, #failure {
+    background-color: #E5E5E5;
+    background-image: -moz-linear-gradient(#FBFBFB, #E5E5E5 30px);
+    border-radius: 3px 3px 3px 3px;
+    color: #444444;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px 5px 8px;
+    text-shadow: 0 1px 0 #FFFFFF;
+}
+.error-notice, #failure {
+    border: 2px solid #C43335;
+}
+.warn-notice, .answers-notice {
+    border: 2px solid #FAA661;
+}
+.info-notice {
+    border: 2px solid #3E7F99;
+}
+.success-notice {
+    border: 2px solid #7AB443;
+}
+#login-status .login-status-icon {
+    display: block;
+    height: 21px;
+    position: absolute;
+    width: 21px;
+}
+
+#failure {
+    margin: 45px auto;
+    width: 365px;
+}
+#login-status-message {
+    padding-left: 30px;
+    padding-top: 3px;
+}
+html[dir="rtl"] #login-status-message {
+    padding-left: 0;
+    padding-right: 30px;
+}
+#locale-container {
+    background-attachment: scroll;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px 10px 10px 10px;
+    height: 245px;
+    margin: 0 auto;
+    padding: 3px;
+    position: relative;
+    width: 768px;
+}
+
+#locale-header {
+    border-bottom: 1px solid #0D7291;
+    height: 25px;
+    padding: 5px 0;
+    width: 100%;
+}
+.locale-head {
+    color: #FFFFFF;
+    float: left;
+    font-size: 14px;
+    padding: 7px 0 10px 10px;
+    text-shadow: 0 1px 0 #000000;
+}
+.close {
+    float: right;
+    padding: 7px 10px 0 0;
+}
+.close a {
+    color: #FFFFFF;
+    font-size: 10px;
+    font-weight: bold;
+}
+html[dir="rtl"] .locale-head {
+    float: right;
+    padding: 7px 10px 10px 0;
+}
+html[dir="rtl"] .close {
+    float: left;
+    padding: 7px 0 0 10px;
+}
+.locale-cell {
+    display: block;
+    float: left;
+    height: 40px;
+    overflow: hidden;
+    padding: 10px 0 0 5px;
+    width: 140px;
+}
+html[dir="rtl"] .locale-cell {
+    float: right;
+    padding: 10px 5px 0 0;
+}
+.scroller {
+    max-height: 320px;
+    min-height: 205px;
+    overflow-y: auto;
+    padding: 0 0 0 10px;
+}
+html[dir="rtl"] .scroller {
+    padding: 0 10px 0 0;
+}
+.scroller a {
+    color: #10A5CA;
+    font-family: Helvetica,Helvetica Neue,Arial;
+    font-size: 14px;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #000000;
+}
+.scroller a:hover {
+    color: #FFFFFF;
+}
+.locale-container ul {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+.locale-container ul li, html[dir="rtl"] .locale-container ul li:first-child {
+    display: inline;
+    list-style: none outside none;
+    margin-left: 34px;
+}
+.locale-container ul li:first-child, html[dir="rtl"] .locale-container ul li:last-child {
+    margin-left: 0;
+}
+.locale-container ul li a, #morelocale {
+    color: #B2CBD1;
+    text-decoration: none;
+}
+#morelocale {
+    font-size: 16px;
+    font-weight: bold;
+}
+.locale-container ul li a {
+    color: #10A5CA;
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #000000;
+}
+.locale-container ul li a:hover {
+    color: #FFFFFF;
+}
+
+input:-moz-placeholder {
+    color: #666666;
+    font-family: Georgia,serif;
+    font-style: italic;
+}
+input:focus:-moz-placeholder {
+    -moz-transition: color 0.2s ease 0s;
+    color: #AAAAAA;
+}
+.mask {
+    background-color: #000000 !important;
+    opacity: 0.8 !important;
+}
+#validation_errors_modal_box {
+    background-color: #01303F;
+    border: 1px solid #247291;
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 4px 4px 8px #000000;
+    color: #FFFFFF;
+    font-size: 13px;
+    padding: 10px;
+}
+.yui-panel .hd {
+    background-color: #01303F !important;
+    border: medium none !important;
+    font-size: 14px !important;
+    margin: 0 0 20px;
+    padding: 3px;
+}
+.validation_errors_modal_box_title {
+    font-weight: bold !important;
+}
+#validation_errors_modal_box ul {
+    list-style: none outside none;
+}
+#validation_errors_modal_box li {
+    margin: 5px 0;
+}
+.yui-panel .container-close {
+    background: url("/cPanel_magic_revision_1333642433/unprotected/cpanel/images/login-error-close.png") no-repeat scroll 0 0 transparent !important;
+}
+.login-rt {
+    color: #FFFFFF;
+    padding: 0 20px 0 0;
+    text-align: center;
+}
+#sec-ques {
+    font-size: 12px;
+    margin-left: 15px;
+    text-align: left;
+}
+.description {
+    margin-bottom: 10px;
+    text-align: left;
+}
+#new-pw-container {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px 10px 10px 10px;
+    height: 380px;
+    margin: 0 auto;
+    position: relative;
+    width: 356px;
+}
+#new-pw-sub-container {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 0 0 10px #000000 inset;
+    height: 368px;
+    left: 5px;
+    position: absolute;
+    top: 5px;
+    width: 345px;
+}
+#new-pw-sub {
+    background-color: rgba(3, 82, 113, 0.75);
+    border-radius: 0 0 5px 5px;
+    border-top: 1px solid #0D7291;
+    color: white;
+    font-size: 12px;
+    height: 262px;
+    padding-left: 30px;
+    padding-right: 5px;
+    padding-top: 30px;
+}
+input#new-password {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: medium none;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0 10px 10px #C1E5EF inset;
+    color: #000000;
+    font-family: helvetica;
+    font-size: 13px;
+    font-style: normal;
+    height: 32px !important;
+    margin-top: 10px;
+    padding-left: 5px;
+    width: 284px !important;
+}
+.login-btn a.loginbtn {
+    display: block;
+    padding: 7px;
+}
+.code {
+    font-family: monospace;
+}
+ul.options li {
+    margin-top: 8px;
+}
+ul.options li:first-child {
+    margin-top: 0;
+}
+:not(#old_ie) {
+}
+</style>
+
+<form action="index" method="POST" name="frmLogin">	
+	<?php echo $this->formHidden("hdn_option","",null); ?>
+	<?php echo $this->formHidden("hdn_autorem","0",null); ?>	
+	<?php
+		$arrConst = $this->arrConst;
+		$sUrlEdit  = "../edit/";
+		$hdhOption= $this->hdh_option;
+		$sUserName= $this->txt_usename;
+		$sPassWord= $this->txt_password;	
+	 	$arrInfoUnit = Sys_Init_Config::_setInfoAddressUnit(); 	 		
+	?>
+<body style="background-color:#047CA2; height: 100%; width: 100%; ">	
+		<br/><br/><br/>
+      <div id="content-container" style="background-image:url(<?php echo $this->baseUrl; ?>/images/bg_login.png); background-repeat:no-repeat; background-position:center;">
+        <div id="login-container">
+            <div id="login-sub-container">
+                <div id="login-sub-header">
+                    <img src="<?php echo $this->baseUrl; ?>/images/cpanel-logo.png" alt="logo" />
+                </div>
+                <div id="login-sub" >
+                    <div id="forms" >                       
+                       
+                            <div class="input-req-login"><label for="user">Tên đăng nhập</label></div>
+                            <div class="input-field-login icon username-container">
+                                <input placeholder="Tên đăng nhập." class="std_textbox" type="text" align= "center" style="width:90%;" id="txt_usename" name="txt_usename" size="50" value="<?=$this->txt_usename;?>"  option = "false" class="textbox normal_label" message="Phải nhập tên đăng nhập!" onKeyDown="change_focus_in_login(document.forms['frmLogin'],this,event)">
+                                
+                                
+                            </div>
+                            <div style="margin-top:30px;" class="input-req-login"><label for="pass">Mật khẩu</label></div>
+                            <div class="input-field-login icon password-container">
+                                <input  placeholder="Mật khẩu." class="std_textbox" type="password" align= "center" style="width:90%" id="txt_password" name="txt_password" size="50" value="<?=$this->txt_password;?>"  option = "false" class="textbox normal_label" message="Phải nhập mật khẩu!" onKeyDown="change_focus_in_login(document.forms['frmLogin'],this,event)">                                
+                            </div>
+                            <div style="width: 285px;">
+                                <div class="login-btn">
+                                    <?php                                
+                                echo $this->formButton("btn_save",$arrConst['_DANG_NHAP'],array("type"=>"button","id"=>"login_submit","onClick"=>"btn_save_onclick();", "onKeyDown"=>"change_focus_in_login(document.forms['frmLogin'],this,event)")). "&nbsp;";	
+                                $urlRe = $this->baseUrl . "../login/";
+                                 "&nbsp;";?>
+                                  <!--    <button name="login" type="submit" id="login_submit" tabindex="3">Log in</button> -->
+                                </div>
+                                <div style="text-align:left; padding-top: 22px;">
+                               		 <input type="checkbox" optional = "true" name="ghinhomatkhau"  id="ghinhomatkhau" onKeyDown="change_focus_on_firefox(document.forms['frmLogin'],this,event)" /><label for="ghinhomatkhau">Ghi nhớ mật khẩu</label>
+                                </div>
+                      		</div>
+                            <div class="clear" id="push"></div>                       
+                    <!--CLOSE forms -->
+                    </div>
+
+                <!--CLOSE login-sub -->
+                </div>
+            <!--CLOSE login-sub-container -->
+            </div>
+        <!--CLOSE login-container -->
+        </div>
+
+        <div id="locale-footer">
+            <div class="locale-container">
+                <noscript>                   
+                    <style type="text/css">#locales_list {display:none}</style>
+                </noscript>
+                <ul id="locales_list">
+                                           
+                        <li><a href="#">Trang thông tin</a></li>
+                    
+                        
+                        <li><a href="#">Cổng thông tin</a></li>
+                    
+                        
+                        <li><a href="#">Phần mềm quản lý văn bản và điều hành</a></li>
+                    
+                        
+                        <li><a href="#">Phần mềm một cửa điện tử</a></li>
+                    
+                        
+                        <li><a href="#">Phần mềm quản lý học sinh sinh viên</a></li>
+                    
+                        
+                        <li><a href="#">Phần mềm giải quyết đơn thư KNTC</a></li>
+                    
+                        
+                        <li><a href="#">Phần mềm quản lý nhân sự</a></li>
+                    
+                        
+                        <li><a href="#">Phần mềm quản lý lương</a></li>                                                               
+                </ul>
+            </div>
+        </div>
+    </div>                  
+          		
+</form>
+<div class="element_to_pop_up"></div>
+
+</body>
+
+<script language="JavaScript">
+
+                                
+if(document.getElementById('txt_usename').value ==''){
+	document.getElementById('txt_usename').focus();	
+}else{
+	document.getElementById('txt_password').focus();
+	document.getElementById('txt_password').select();
+}
+shortcut.add("Ctrl+K",function() {
+	document.getElementById('txt_password').focus();
+	document.getElementById('txt_password').select();
+});
+window.dialogHeight = "270pt";
+window.dialogWidth = "420pt";
+window.dialogTop = "80pt"; 
+function btn_save_onclick(){
+	if (verify(document.forms[0])){
+		document.forms[0].hdn_option.value = "1";
+		if(document.forms[0].ghinhomatkhau.checked){
+			document.forms[0].hdn_autorem.value = '1';
+		}
+		actionUrl('');
+		}
+	}
+var x='';
+function handler(e){
+//IE return :event.keyCode; FF return : e.which;
+var x=(window.event)?event.keyCode:e.which;
+if (x==13){ //Enter
+//btn_enrollment_wait('');
+}
+}
+if (!document.all){
+window.captureEvents(Event.KEYPRESS);
+window.onkeypress=handler;
+}else{
+document.onkeypress = handler;
+} 
+if(<?=$this->sCheckReme?>){
+	document.forms[0].ghinhomatkhau.checked = true;	
+}else{
+	document.forms[0].ghinhomatkhau.checked = false;
+}
+</script>

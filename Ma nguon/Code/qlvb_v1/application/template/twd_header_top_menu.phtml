@@ -1,0 +1,125 @@
+<?php
+$arrPermission = $_SESSION['arrStaffPermission'];
+$arrMenu = $this->arrMenu;
+$arrMenuLeverII = $this->arrMenu;	
+$baseUrl = Sys_Init_Config::_getCurrentHttpAndHost();
+
+?>
+<!-- <table width="100%" cellpadding="0" cellspacing="0" class="top_menu_table">   -->
+<table width="100%" cellpadding="0" cellspacing="0">
+	<tr>
+    <td>
+    <nav id="ddmenu">
+    	<ul>   	
+    	<?php 
+		$html = '';
+		for($i=0;$i<sizeof($arrMenu);$i++){
+			if(($arrMenu[$i][C_POSITION]=='2')&&($arrMenu[$i][C_LEVEL]=='0')){				
+				if($arrMenu[$i][C_URL]==''){
+					$urlRe = $baseUrl . 'web/getarticle/index/?menuid='.$arrMenu[$i][PK_WEB_MENU].'&parent_menuid='.$arrMenu[$i][FK_WEB_MENU].'&articleid='.$arrMenu[$i][FK_WEB_ARTICLE];
+				}else{
+					if((substr_count($arrMenu[$i][C_URL],'http://')>0)||($arrMenu[$i][C_URL]=='#')){
+						$urlRe = $arrMenu[$i][C_URL];
+					}else{
+						$urlRe = $baseUrl . $arrMenu[$i][C_URL];
+						if(substr_count($urlRe,'?')>0){
+								$urlRe = $urlRe.'&menuid='.$arrMenu[$i][PK_WEB_MENU].'&parent_menuid='.$arrMenu[$i][FK_WEB_MENU].'&articleid='.$arrMenu[$i][FK_WEB_ARTICLE];
+						}else{
+								$urlRe = $urlRe.'?menuid='.$arrMenu[$i][PK_WEB_MENU].'&parent_menuid='.$arrMenu[$i][FK_WEB_MENU].'&articleid='.$arrMenu[$i][FK_WEB_ARTICLE];
+						}
+					}		
+				}						
+				$sliID = 'li'.$arrMenu[$i][C_ORDER_LEVER1];	
+				if(substr_count($urlRe,'?')>0){
+						$urlRe = $urlRe.'&sliid='.$sliID.'&sleftmenu=mn_0_0_0';
+				}else{
+						$urlRe = $urlRe.'?sliid='.$sliID.'&sleftmenu=mn_0_0_0';
+				}
+				$iOpenNewWin = 0;
+				if($arrMenu[$i][C_WINDOWS_OPEN]=='1'){
+					$iOpenNewWin = 3;
+				}
+				$urlRe = "javaScript:goto_url('".$urlRe."',".$iOpenNewWin.")";							
+				$html = $html.'<li id ="'.$sliID.'" align="left" style="cursor:pointer;" onclick="'.$urlRe.'"><a href="#">'.$arrMenu[$i][C_NAME].'</a>';
+				} } echo $html;
+				/* CAP 2 */
+				
+				for($j=0;$j<sizeof($arrMenuLeverII);$j++){
+					if($arrMenuLeverII[$j][C_LEVEL]=='0' && $arrMenuLeverII[$j][C_POSITION]=='0'){
+					if($arrMenuLeverII[$j][C_URL]==''){							
+										$urlRe = $baseUrl .'web/home/getarticle/?menuid='.$arrMenuLeverII[$j][PK_WEB_MENU].'&parent_menuid='.$arrMenuLeverII[$j][FK_WEB_MENU].'&articleid='.$arrMenuLeverII[$j][FK_WEB_ARTICLE].'&menuname='.Sys_Publib_Library::_convertUnicodeToETX($arrMenuLeverII[$j][C_NAME]);
+									}else{
+										if((substr_count($arrMenuLeverII[$j][C_URL],'http://')>0)||($arrMenuLeverII[$j][C_URL]=='#')){
+											$urlRe = $arrMenuLeverII[$j][C_URL];
+										}else{
+											$urlRe = $baseUrl . $arrMenuLeverII[$j][C_URL];
+											if(substr_count($urlRe,'?')>0){
+													$urlRe = $urlRe.'&menuid='.$arrMenuLeverII[$j][PK_WEB_MENU].'&parent_menuid='.$arrMenuLeverII[$j][FK_WEB_MENU].'&articleid='.$arrMenuLeverII[$j][FK_WEB_ARTICLE].'&menuname='.Sys_Publib_Library::_convertUnicodeToETX($arrMenuLeverII[$j][C_NAME]);
+											}else{
+													$urlRe = $urlRe.'?menuid='.$arrMenuLeverII[$j][PK_WEB_MENU].'&parent_menuid='.$arrMenuLeverII[$j][FK_WEB_MENU].'&articleid='.$arrMenuLeverII[$j][FK_WEB_ARTICLE].'&menuname='.Sys_Publib_Library::_convertUnicodeToETX($arrMenuLeverII[$j][C_NAME]);
+											}
+										}		
+									}	
+
+									$sleftmenu = 'mn_'.$arrMenuLeverII[$j][C_ORDER_LEVER1].'_'.$arrMenuLeverII[$j][C_ORDER_LEVER2].'_'.$arrMenuLeverII[$j][C_ORDER_LEVER3];	
+									if(substr_count($urlRe,'?')>0){
+											$urlRe = $urlRe.'&sleftmenu='.$sleftmenu;
+									}else{
+											$urlRe = $urlRe.'?sleftmenu='.$sleftmenu;
+									}
+
+									$iOpenNewWin = 0;
+									if($arrMenuLeverII[$j][C_WINDOWS_OPEN]=='1'){
+										$iOpenNewWin = 3;
+									}
+									$urlRe = "javaScript:goto_url('".$urlRe."',".$iOpenNewWin.")";		
+						}	?>																	
+							 <div>
+			                    <div class="column">
+			                        <b><?=$arrMenuLeverII[$j]['C_NAME'];?></b>
+			                     
+			                    </div>
+			
+					
+				<?php } ?>	
+					
+					
+						<li style="font-weight:normal;  width:167px; float: right;" ><?php echo Sys_Publib_Library::_generate_day_of_week(1); ?></li>													
+		        	</ul>		        
+		        </nav>
+			</td>
+        </tr>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+function otab(child_id){
+	document.write('<table class = "pushdown_menu_table"' + 'id="' + child_id +'" border="0" cellspacing="0" cellpadding="0">');
+}
+function submn(submn_label,submn_text){
+	document.write('<tr><td  onclick="window.location.href=\'<?=$this->baseUrl;?>'+submn_label+'/\'" onmouseover="this.className=\'hoverClass\'" onmouseout="this.className=\'outverClass\'" ><img src="<?= $this->baseUrl?>images/anh_menu_level_2.gif"/>'+'  '+submn_text+'</td></tr>');
+}//
+function ctab(){
+	document.write('<\/table>');
+}<?php 
+$sliidvisit = $this->sliidvisit; ?>
+try {
+	document.getElementById('<?=$sliidvisit?>').className="visited";
+}catch(e){;}	
+	
+ function href(url){
+ 	window.location.href = url;
+ } 
+</script>

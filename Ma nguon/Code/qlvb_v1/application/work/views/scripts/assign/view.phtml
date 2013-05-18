@@ -1,0 +1,97 @@
+<form action="index" method="POST" id="frmAddReceived" enctype="multipart/form-data"><?php 	
+	$urlCalendar = $this->urlCalendar; 
+	$arrWork = $this->arrWork;
+	$arrConst		 = $this->arrConst;
+	$UrlBack		 = '../index/modul/CHO_PHAN_CONG';
+	if($this->getStatusLeftMenu == 'DA_PHAN_CONG')
+		$UrlBack		 = '../index/modul/DA_PHAN_CONG';
+?>
+	<!--tao tac hidden!-->
+				<?php echo $this->formHidden("hdnCode","",null); ?>
+				<!--Sinh mot hidden luu ID loai danh muc!-->
+				<?php echo $this->formHidden("hdn_object_id",$this->sWorkId,null); ?>		
+				<?php echo $this->formHidden("hdn_record_number_page",$this->numRowOnPage,null); ?>	
+				<!--Bien hdn_filter_xml_tag_list dung de luu danh sach cac THE XML tuong ung voi cac tieu thuc loc tren giao dien DANH SACH DOI TUONG-->
+				<?php echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); ?>
+				<!--Bien hdn_filter_xml_tag_list dung de luu gia tri cua cac THE XML tuong ung voi cac tieu thuc loc tren giao dien DANH SACH DOI TUONG-->	
+				<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+				<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+				<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+				<?php echo $this->formHidden("showModalDialog","",null); ?>
+				<?php echo $this->formHidden("hdn_doc_id",$this->pDocId,null); ?>
+
+	<div id ="content">
+		<div id="header_conten" style="height: 25px;padding-bottom:0px;border:none;">
+			<h1 class="large_label"><?=$this->bodyTitle;?></h1>
+		</div>
+		<div style="border:none; border:1px solid #CCCCCC;" id="body_conten1">
+			<div>
+				<label style="width:20%;"><?=$arrConst['_NGAY_GIAO_VIEC']?></label>
+				<label style="clear:right;"><?=$arrWork[0]['C_APPROVE_DATE'].'&nbsp;'?></label>
+			</div>
+			<div>
+				<label style="width:20%;"><?=$arrConst['_LANH_DAO_GIAO_VIEC']?></label>
+				<label style="clear:right;"><?=$arrWork[0]['C_LEADER_POSITION_NAME'].'&nbsp;'?></label>
+			</div>
+			<div>
+				<label style="width:20%;"><?=$arrConst['_HAN_XU_LY']?></label>
+				<label style="clear:right;"><?=$arrWork[0]['C_APPOINTED_DATE'].'&nbsp;'?></label>
+			</div>
+			<div>
+				<label id="C_WORK_CONTENT" name ="C_WORK_CONTENT" style="width:20%;"><?=$arrConst['_NOI_DUNG_CONG_VIEC']?></label>
+				<label style="clear:right;width:75%;"><?=$arrWork[0]['C_WORK_CONTENT'].'&nbsp;'?></label>
+			</div>
+			<div>
+				<label style="width:20%;"><?=$arrConst['_GHI_CHU']?></label>
+				<label style="clear:right;width:75%;"><?=$arrWork[0]['C_NOTES'].'&nbsp;'?></label>
+			</div>
+			<div>
+				<label style="width:20%;"><?=$arrConst['_FILE_DINH_KEM']?></label>
+				<label id="C_FILE_NAME" for="C_FILE_NAME" style="clear:right;width:75%;"><?php
+					$strFileName 				= $arrWork[0]['C_FILE_NAME'];
+					$sFile 						= Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+					echo $sFile.'&nbsp;';
+				?></label>
+			</div>
+			<div>
+				<label style="width:20%;"><?=$arrConst['_CAN_BO_XU_LY']?></label>
+				<label style="clear:right;width:75%;"><?php 
+					$sUnitNameList = '';
+					if(trim($arrWork[0]['C_STAFF_NAME_LIST']) != ''){
+						$arrUnitNameList = explode(';',$arrWork[0]['C_STAFF_NAME_LIST']);
+						for($i = 0; $i < sizeof($arrUnitNameList); $i++){
+							$sUnit = explode(':',$arrUnitNameList[$i]);
+							$sUnitNameList .=$sUnit['0'].';';
+						}
+					}
+					$sUnitNameList .='&nbsp;';
+					echo $sUnitNameList;
+				?></label>
+			</div>
+			<div>
+				<label style="width:20%;"><?=$arrConst['_PHONG_BAN_XU_LY']?></label>
+				<label style="clear:right;width:75%;"><?php
+					$sUnitNameList = '';
+					if(trim($arrWork[0]['C_UNIT_NAME_LIST']) != ''){
+						$arrUnitNameList = explode(';',$arrWork[0]['C_UNIT_NAME_LIST']);
+						for($i = 0; $i < sizeof($arrUnitNameList); $i++){
+							$sUnit = explode(':',$arrUnitNameList[$i]);
+							$sUnitNameList .=$sUnit['0'].';';
+						}
+					}
+					$sUnitNameList .='&nbsp;';
+					echo $sUnitNameList;?></label>
+			</div>
+			<div style="clear:both;"></div>
+		</div><!-- End #body_conten1-->
+	</div><!-- End #content-->	
+	
+	<!--Hien thi nut!-->		
+	<div class="divButton" style="margin-top:10px;text-align:center;margin-bottom:10px;">
+		<input id="btn_print" name="btn_print" type="button" class="add_large_button" value="In" onclick="btn_print_infor_onclick(document.getElementById('hdn_object_id'),'../print');">
+		<input type="submit" name="quaylai" id="quaylai" value="Quay lại" onClick="btn_back_onclick('<?=$UrlBack?>')" class="add_large_button">
+	</div>
+</form>
+
+

@@ -1,0 +1,154 @@
+<script src="/Sys-doc-boxd/public/Sys-js/jquery-1.4.2.min.js" type="text/javascript"></script>
+<base target=_self>
+<form action="index" method="POST" id="frmReceived" autocomplete="off">
+<div>
+	<!--Cac doi tuong hidden tren form-->
+	<?php echo $this->formHidden("hdn_docrelate_id_list","",null); ?>
+	<?php echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); ?>
+	<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+	<?php echo $this->formHidden("hdn_object_id",$this->sReceiveDocumentId,null); ?>
+	<?php echo $this->formHidden("hdn_save","",null); ?>
+	<?php echo $this->formHidden("hdn_XmlTagValueList",$this->XmlTagValueList,null); ?>
+	<?php echo $this->formHidden("hdn_docrelate_type",$this->sDocRelateType,null); ?>
+	<?php echo $this->formHidden("hdn_current_page",$this->iCurrentPage,null); ?>
+	<?php echo $this->formHidden("cbo_nuber_record_page",$this->iNumRowOnPage,null); ?>
+	<?php echo $this->formHidden("hdn_record_number_page",$this->iNumRowOnPage,null); ?>
+	<?php echo $this->formHidden("hdn_year",$this->year,null); ?>
+	<?php echo $this->formHidden("hdn_subModulLeft",$this->getStatusLeftMenu,null); ?>
+	<?php echo $this->formHidden("hdn_doc_type","",null); ?>
+	<?php echo $this->formHidden("hdn_doc_cate","",null); ?>
+	<?php echo $this->formHidden("hdn_unit_id_list","",null); ?>
+	<?php
+		$arrConst = $this->arrConst;
+		$arrResul = $this->arrResul;
+		$objFunction =	new	Sys_Function_DocFunctions()	;
+	?>
+	<table>
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<?=$this->bodyTitle;?>				
+			</td>
+		</tr>
+	</table>
+	<div class="box container c1">
+		<div class="pad" style="padding:4px;">			
+			<table align="center" cellpadding="0" cellspacing="0" width="98%" border="0" style="padding-left:0%;">
+				<col align="left" width="10%" /><col align="left" width="28%" /><col align="center" width="10%" /><col align="left" width="40%" /><col align="left" width="12%" />
+				<tr>
+					<td><label class="normal_label"><?=$arrConst['_DON_VI_XU_LY']?></label></td>
+					<?php if($this->getStatusLeftMenu == 'QUAN'){?>
+							<td><input tabindex ="1" style="width:100%;" type="text" id="C_UNIT_ID" name="C_UNIT_ID" class="textbox" value="<?=$objFunction->getNameUnitByIdUnitList($this->iUnitId,'')?>" onchange="ResetSearch();"/></td>
+					<?php } ?>
+					<?php if($this->getStatusLeftMenu == 'DONVI'){?>
+							<td><input tabindex ="1" style="width:100%;" type="text" readonly = "true" id="C_UNIT_ID" name="C_UNIT_ID" class="textbox" value="<?=$objFunction->getNameUnitByIdUnitList($this->iUnitId,'')?>"/></td>
+					<?php } ?>
+					<td align="left"><label style="margin-left:30%;" class="normal_label"><?=$arrConst['_NAM']?></label></td>
+					<td colspan="2">
+						<select style="height:22px;margin-top:-3px;" tabindex ="2" id="year" name="year" onchange="page_record_number_onchange(this,'QUAN')">
+							<?php 
+								for($i = 2000; $i <= 2020; $i++)
+									echo '<option value='.$i.'>'.$i.'</option>';
+							?>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td align="left"><label class="normal_label"><?=$arrConst['_LOAI_VAN_BAN']?></label></td>
+					<td><input tabindex ="3" style="width:100%;" type="text" id="C_DOC_TYPE" name="C_DOC_TYPE" class="textbox"value="<?= $this->sDocType ?>" onchange="ResetSearch();"/></td>
+					<td align="left"><label style="margin-left:30%;" class="normal_label"><?=$arrConst['_LINH_VUC']?></label></td>
+					<td><input tabindex ="4" style="width:96%;" type="text" id="C_DOC_CATE" name="C_DOC_CATE" class="textbox"value="<?= $this->sDocCate ?>" onchange="ResetSearch();"/></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td colspan="3"><input tabindex ="5" style="width:98%;" type="text" id="txtfullTextSearch" name="txtfullTextSearch" class="textbox" value="<?= $this->sfullTextSearch ?>" onchange="ResetSearch();"/></td>
+					<td><input tabindex ="6" type="button" name="timkiem" id="timkiem" value="Tìm Kiếm" class="add_large_button"  onclick="actionUrl('');"></td>
+				</tr>
+			</table>
+		</div>
+	</div>	
+	<table cellpadding="0" cellspacing="0" border="0" width="98%" align="center" class="list_table2" id="table1">
+		<?php			
+		$delimitor = $this->delimitor;//Lay ky tu phan cach giua cac phan tu
+		//Hien thi cac cot cua bang hien thi du lieu
+		$StrHeader = explode("!~~!",$this->GenerateHeaderTable("7%". $delimitor ."10%". $delimitor . "15%" . $delimitor . "41%" . $delimitor . "27%"
+										,$arrConst['_SO_DEN']. $delimitor . $arrConst['_NGAY_DEN'] . $delimitor . $arrConst['_SO_KY_HIEU'] . $delimitor . $arrConst['_TRICH_YEU'] . $delimitor . $arrConst['_NOI_GUI']
+										,$delimitor));
+		echo $StrHeader[0];					
+		echo $StrHeader[1]; //Hien thi <col width = 'xx'><...		
+			//Dinh nghia URL
+			$sUrlView  = "../../view/";
+			$v_current_style_name = "round_row";
+			$arrResul = $this->arrResul;	
+			for($index = 0;$index < sizeof($arrResul);$index++){
+				$sDocumentId 	= $arrResul[$index]['PK_RECEIVED_DOC'];
+				$iNum 			= $objFunction->searchCharColor($this->sfullTextSearch,$arrResul[$index]['C_NUM']) .'&nbsp;';		
+				$sreceivedDate	= $objFunction->searchCharColor($this->sfullTextSearch,$arrResul[$index]['C_RECEIVED_DATE']) .'&nbsp;';								
+				$sSymbol		= $objFunction->searchCharColor($this->sfullTextSearch,$arrResul[$index]['C_SYMBOL']) .'&nbsp;';			
+				$strFileName 	= $arrResul[$index]['C_FILE_NAME'];
+				$sFile 			= Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+				if($strFileName == '' || $strFileName == null){
+					$sSubject	= $objFunction->searchStringColor($this->sfullTextSearch,$arrResul[$index]['C_SUBJECT']) .'&nbsp;';	
+				}else {
+					$sSubject	= $objFunction->searchStringColor($this->sfullTextSearch,$arrResul[$index]['C_SUBJECT']) .'<br>'. $sFile;
+					$sFile 		= "";
+				}
+				$sAgentcyName	= $objFunction->searchStringColor($this->sfullTextSearch,$arrResul[$index]['C_AGENTCY_NAME']) .'&nbsp;';	
+				if ($v_current_style_name == "odd_row"){
+					$v_current_style_name = "round_row";
+				}else{
+					$v_current_style_name = "odd_row";					
+				}?>
+				<tr class="<?=$v_current_style_name?>">	
+					<td style="display:none;" align="center" style="padding-left:3px;padding-right:3px;" class="normal_label">
+						<?=$this->formCheckbox('chk_item_id',$arrResul[$index]['PK_RECEIVED_DOC'], array('checked' => false,'onclick' =>'selectrow(this)'));?>					
+					</td>
+					<td ondblclick="item_onclick('<?=$sDocumentId?>','<?=$sUrlView?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="center"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$iNum?></td>
+					<td ondblclick="item_onclick('<?=$sDocumentId?>','<?=$sUrlView?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="center" valign="middle"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sreceivedDate;?></td>
+					<td ondblclick="item_onclick('<?=$sDocumentId?>','<?=$sUrlView?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="center" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sSymbol?></td>	
+					<td ondblclick="item_onclick('<?=$sDocumentId?>','<?=$sUrlView?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="left" valign="middle" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sSubject?></td>	
+					<td ondblclick="item_onclick('<?=$sDocumentId?>','<?=$sUrlView?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="left" valign="middle" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sAgentcyName?></td>	
+				</tr><?php
+			}					
+			//Tu dien cac dong trang trong truong hop du lieu tra ve < so row _CONST_NUMBER_OF_ROW_PER_LIST		
+			if(sizeof($arrResul) < 15){	
+				echo $this->addEmptyRow($this->iCountElement,15 - sizeof($arrResul),$v_current_style_name,5);		
+			}	
+		?>			
+	</table>	
+	<!--Hien thi trang can xem!-->
+	
+	<table width="100%" cellpadding="0" cellspacing="0" border="0">
+		<tr>
+			<td style="color:red;width:30%;padding-left:1%;" class="small_label">
+				<small class="small_starmark"><?=$this->sdocpertotal;?></small>
+			</td>
+			<td align="center" style="width="50%">
+				<table width="10%"><?php
+					//Hien thi danh sach so trang
+					echo $this->generateStringNumberPage;?>
+				</table>
+			</td>
+			<td width="30%" align="right" style="font-size:13px; padding-right:1%; font:tahoma" class="normal_label"><?php
+				//Hien thi so trang
+				echo $this->generateHtmlSelectBoxPage;?>
+			</td>
+		</tr>
+	</table>
+</div>
+</form>
+<?php echo $this->search_textselectbox_doc_type;?>
+<?php echo $this->search_textselectbox_doc_cate;?>
+<?php if($this->getStatusLeftMenu == 'QUAN')echo $this->search_textselectbox_unit;?>
+<script type="text/javascript">
+if(document.getElementById('hdn_year').value == '')
+	document.getElementById('year').value = '<?=date("Y")?>';
+else
+	document.getElementById('year').value = '<?=$this->year?>';
+shortcut.add("Ctrl+K",function() {
+	document.getElementById('txtfullTextSearch').focus();
+	document.getElementById('txtfullTextSearch').select();
+});
+function ResetSearch(){
+	document.getElementById('hdn_current_page').value = "1";
+}
+</script>

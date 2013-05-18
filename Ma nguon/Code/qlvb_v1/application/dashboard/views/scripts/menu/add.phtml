@@ -1,0 +1,261 @@
+<?php 
+$arrPermission = $_SESSION['arrStaffPermission'];
+if($arrPermission['CAP_NHAT_LOAI_DM'] || $arrPermission['CAP_NHAT_DM_DOI_TUONG'] || $arrPermission['CAP_NHAT_QUYEN'])
+{?>
+<form action="index" method="POST" id="frmAddReceived" enctype="multipart/form-data">
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+		<!--tao tac hidden!-->
+		<tr>
+			<td>
+				<?php echo $this->formHidden("hdn_option_view",'TAT_CA',null); ?>
+				<?php echo $this->formHidden("hdn_view_staff",'',null); ?>		
+				<?php echo $this->formHidden("hdn_article_id",'',null); ?>		
+				<?php echo $this->formHidden("hdn_object_id",$this->sReceiveDocumentId,null); ?>				
+				<?php echo $this->formHidden("hdn_history_back",$this->sUrl,null); ?>
+				<?php echo $this->formHidden("hdn_xml_tag_list","",null); ?>
+				<?php echo $this->formHidden("hdn_xml_value_list","",null); ?>
+				<?php echo $this->formHidden("hdn_XmlTagValueList","",null); ?>
+				<?php echo $this->formHidden("hdn_status","1",null); ?>
+				<?php echo $this->formHidden("hdn_display_web","0",null); ?>
+				<?php echo $this->formHidden("hdn_open_win","0",null); ?>
+				
+				<?php echo $this->formHidden("hdn_position",$this->iPosition,null); ?>
+				<?php echo $this->formHidden("hdn_owner",$this->sOwner,null); ?>
+			</td>
+		</tr>
+	</table>
+	<?php 
+		$urlCalendar = $this->urlCalendar; 
+		$arrConst = $this->arrConst; 
+		//var_dump($this->arrMenu);
+	?>
+	<div id ="content">
+		<div>			
+		</div>
+		<table width='100%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+			<!--tao tac hidden!-->
+			<tr>
+				<td class="large_title" style="padding-left:7px;text-align:left;">
+					<?=$this->bodyTitle;?>	
+				</td>
+			</tr>
+		</table>
+		<div class="box container c1">
+			<div class="pad">			
+				<table cellpadding="0" cellspacing="0" width="100%" border="0">
+					<col width="20%"/><col width="30%"/><col width="15%"/><col width="35%"/>
+					<tr>
+						<td class="normal_label" align="left">
+							<label>1.&nbsp;<?=$arrConst['_TEN_CHUYEN_MUC'] ?><span class="requiein">*</span></label>
+						</td>
+						<td colspan="3">
+							<input style="width:100%;" type="text" id="C_NAME" name="C_NAME" option = "true" value="" message="<?php echo "Phai xac dinh TEN chuyen muc!";?>">
+						</td>
+					</tr>
+					<tr>
+						<td class="normal_label" align="left">
+							<label>2.&nbsp;<?=$arrConst['_CAP_CHUYEN_MUC'] ?><span class="requiein">*</span></label>
+						</td>
+						<td>
+							<select style="width:90%;" id="C_LEVEL" name="C_LEVEL"  option = "true" class="textbox normal_label" onchange="getOrderNumber(document.getElementById('OrderNumber'));getParentMenu(document.getElementById('MenuParent'));disabled_fkmenu(this);" message="<?php echo "Phai xac dinh CAP chuyen muc!";?>">
+								<?php
+									$arrLevel = $this->arrLevel;
+									echo Sys_Library::_generateSelectOption($arrLevel,'C_CODE','C_CODE','C_NAME','');?>
+							</select>
+						</td>
+						<td class="normal_label" align="left">
+							<label>3.&nbsp;<?=$arrConst['_CHUYEN_MUC_GOC'] ?></label>
+						</td>
+						<td>
+							<div id="MenuParent">
+							<select style="width:100%;" id="PK_WEB_MENU" name="PK_WEB_MENU" class="textbox normal_label" onchange="getOrderNumber(document.getElementById('OrderNumber'));" optional = "true"  >
+							<option id="" name = "" value="">-- Chọn chuyên mục gốc --</option>
+								<?php
+									echo Sys_Library::_generateSelectOption($this->arrMenu01,'PK_WEB_MENU','PK_WEB_MENU','C_NAME','');?>
+							</select>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="normal_label" align="left">
+							<label>4.&nbsp;<?=$arrConst['_DIA_CHI_LIEN_KET'] ?></label>
+						</td>
+						<td colspan="3">
+							<input style="width:100%;" type="text" id="C_URL" name="C_URL" optional = "true" value="" >
+						</td>
+					</tr>
+					<tr>
+						<td class="normal_label" align="left">
+							<label>5.&nbsp;<?=$arrConst['_TIN_BAI_LIEN_QUAN'] ?></label>
+						</td>
+						<td colspan="3">
+							<input style="width:85%;" type="text" id="C_ARTICLE" name="C_ARTICLE" value="" disabled = "true" optional = "true" message="<?php echo "Phai xac dinh TEN chuyen muc!";?>">
+							<a id = "deletearticle" style="cursor:pointer; display:none" class="small_link" onClick="document.getElementById('C_ARTICLE').value = ''; document.getElementById('hdn_article_id').value = '';">&nbsp;<img src = "<?=$this->baseUrl ?>images/delete.gif"/>&nbsp;</a>
+							<button name="chontin" id="chontin" type="button" value="Chọn tin" class="add_large_button" onClick="show_article_modal_dialog_onclick('../getarticle/',document.getElementById('C_ARTICLE'),document.getElementById('hdn_article_id'))">Chọn tin</button>
+						</td>
+					</tr>
+					<tr>
+						<td class="normal_label" align="left">
+							<label>6.&nbsp;<?=$arrConst['_VI_TRI_HIEN_THI'] ?><span class="requiein">*</span></label>
+						</td>
+						<td>
+							<select style="width:90%;" id="C_POSTISION" name="C_POSTISION" class="textbox normal_label" onchange="getOrderNumber(document.getElementById('OrderNumber'));" optional = "true" message="<?php echo "Phai xac dinh VI TRI chuyen muc!";?>">
+							<option id="" name = "" value="">-- Chọn vị trí chuyên mục --</option>
+								<?php
+									$arrPosition = $this->arrPosition;
+									echo Sys_Library::_generateSelectOption($arrPosition,'C_CODE','C_CODE','C_NAME','');?>
+							</select>
+						</td>
+						<td class="normal_label" align="left" colspan="2">
+							<input type="checkbox" name="chk_view_on_web" id="chk_view_on_web" optional = "true" value="" >							
+							<label for = "chk_view_on_web" class = "normal_label" style = "display:inline;float:none; cursor:pointer;">Hiển thị trên trang thông tin</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;							
+							<input type="checkbox" name="chk_open_win" id="chk_open_win" optional = "true" value="" >							
+							<label for = "chk_open_win" class = "normal_label" style = "display:inline;float:none; cursor:pointer;">Hiển thị với cửa sổ mới</label>						
+						</td>
+					</tr>
+					<tr>
+						<td class="normal_label" align="left">
+							<label>7.&nbsp;<?=$arrConst['_SO_THU_TU'] ?><span class="requiein">*</span></label>
+						</td>
+						<td>
+							<div id="OrderNumber">
+								<input style="width:90%;" type="text" id="ORDER" name="ORDER" value="" isnumeric = "true" option = "true" message="<?php echo "SỐ THƯ TỰ phải nhập dạng chữ số 1, 2, 3, ...!";?>">
+							</div>
+						</td>
+						<td class="normal_label" align="left" colspan="2">
+							<label>8.&nbsp;<?=$arrConst['_TINH_TRANG'] ?></label>&nbsp;&nbsp;
+							<input type="checkbox" name="chk_status" id="chk_status" optional = "true" value="" checked = 'true'>
+							<label for = "chk_status" class = "normal_label" style = "display:inline;float:none; cursor:pointer;">Hoạt động</label>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+				<table width='100%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+			<!--tao tac hidden!-->
+			<tr>
+				<td class="large_title" style="padding-left:7px;text-align:left;">
+					<?=$this->bodyRoleTitle;?>	
+				</td>
+			</tr>
+		</table>
+		<div class="box container c1">
+			<div class="pad">			
+				<table cellpadding="0" cellspacing="0" width="100%" border="0">
+				<col width="20%"/><col width="80%"/>
+					<tr>
+						<td class="normal_label" align="left">
+							<label>9.&nbsp;Cán bộ cập nhật</label>
+						</td>
+						<td><?php 
+							$this->formFielName	= "C_EDIT_ID_LIST";	
+							$spRetHtml = "<div style='display:none'><input type='textbox' id='$this->formFielName' name='$this->formFielName' value='' hide='true' readonly optional = true xml_data=true xml_tag_in_db='' message=''></div>";		
+							echo $spRetHtml.Sys_Xml::_generateHtmlForTreeAllUser('');	?>		
+						</td>
+					</tr>
+					<tr>
+						<td class="normal_label" align="left">
+							<label>10.&nbsp;Cán bộ duyệt</label>
+						</td>
+						<td><?php 
+							$this->formFielName	= "C_APPROVED_ID_LIST";	
+							$spRetHtml = "<div style='display:none'><input type='textbox' id='$this->formFielName' name='$this->formFielName' value='' hide='true' readonly optional = true xml_data=true xml_tag_in_db='' message=''></div>";		
+							echo $spRetHtml.Sys_Xml::_generateHtmlForTreeAllUser('');	?>		
+						</td>
+					</tr>
+					<tr>
+						<td class="normal_label" align="left">
+							<label>11.&nbsp;Quyền xem</label>
+						</td>
+						<td>
+							<input type="radio" id="all1" value="all" name="quyen_xem" onclick="dsp_view(this.value)" checked /><label class="normal_label"><?=$arrConst['_TAT_CA']?></label>
+							<input type="radio" id="other" value="other" name="quyen_xem" onclick="dsp_view(this.value)" /><label class="normal_label"><?=$arrConst['_KHAC']?></label>
+							<div id="option_view" style="display:none;">
+								<div style="width:88%;margin-left:11%">
+									<?php 
+									$this->formFielName	= "C_VIEW_ID_LIST";	
+									$spRetHtml = "<div style='display:none'><input type='textbox' id='$this->formFielName' name='$this->formFielName' value='' hide='true' readonly optional = true xml_data=true xml_tag_in_db='' message=''></div>";		
+									echo $spRetHtml.Sys_Xml::_generateHtmlForTreeAllUser('');	?>	
+								</div>
+							</div>		
+						</td>
+					</tr>
+					<tr>
+						<td class="normal_label" align="left">
+							<label>12.&nbsp;Đơn vị sử dụng</label>
+						</td>
+						<td>
+							<?php	
+							global $dspDiv, $readonlyInEditMode, $disabledInEditMode, $formFielName;
+							$this->dspDiv = 1; //Chia lam 2 phan
+							$this->readonlyInEditMode = true; $this->disabledInEditMode = true;
+							$this->formFielName	= "C_OWNER_CODE_LIST";
+							$spRetHtml = "<div style='display:none'><input type='textbox' id='$this->formFielName' name='$this->formFielName' value='' hide='true' readonly optional = true xml_data=false xml_tag_in_db='' message=''></div>";
+							echo $spRetHtml . Sys_Xml::_generateHtmlForMultipleCheckbox($_SESSION['SesGetAllOwner'], 'code','name','','','200px');
+							?>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>	
+	<!--Hien thi nut!-->		
+	<table width='99%'  border='0' cellspacing='0' cellpadding='0' align='center' class='normal_label'>
+		<tr><td style="height:20px;"></td></tr>		
+		<tr>
+			<td align="center" style="padding-bottom:10px;">	
+				<button name="capnhat" id="capnhat" type="button" value="capnhat" class="add_large_button" onClick="btn_save_menu(document.getElementById('hdn_xml_tag_list'),document.getElementById('hdn_xml_value_list'),'');"><?=$arrConst['_CAP_NHAT'] ?></button>
+				<?=$this->formsubmit('button',$arrConst['_QUAY_LAI'],array("onClick"=>"actionUrl('../index/')","class"=>"add_large_button"))?>
+			</td>
+		</tr>			
+	</table>	
+</form>
+<script type="text/javascript">
+document.getElementById('PK_WEB_MENU').disabled = true;
+function disabled_fkmenu(obj){
+	if(obj.value == 0){
+		document.getElementById('PK_WEB_MENU').value = '';
+		document.getElementById('PK_WEB_MENU').disabled = true;
+		document.getElementById('C_POSTISION').disabled = false;
+	}else{
+		document.getElementById('C_POSTISION').value = '';
+		document.getElementById('PK_WEB_MENU').disabled = false;
+		document.getElementById('C_POSTISION').disabled = true;
+	}
+}
+//Ham lay so thu tu tu dong.
+function getParentMenu(objView){
+		var iLevel = document.getElementById('C_LEVEL').value;
+		var key = 'iLevel=' + iLevel;
+		postAJAXHTTPText('<?=$this->UrlAjax;?>' + '/web/generatehtml/webmenu/getMenuParent.php', key, objView, null);	
+	}
+function dsp_view(value){
+	if(value == 'all'){
+		document.getElementById('hdn_option_view').value = 'TAT_CA';
+		document.getElementById('option_view').style.display = 'none';
+		document.getElementsByName('hdn_view_staff').value = '';
+	}
+	if(value == 'other'){
+		document.getElementById('hdn_option_view').value = 'KHAC';
+		document.getElementById('option_view').style.display = 'block';
+	}
+	else{
+		document.getElementById('hdn_option_view').value = 'PHONG_BAN';
+		document.getElementById('option_view').style.display = 'none';
+		document.getElementsByName('hdn_view_staff').value = '';
+	}
+}
+//Ham lay so thu tu tu dong.
+function getOrderNumber(objView){
+		var iPosition = document.getElementById('C_POSTISION').value;
+		var iLevel = document.getElementById('C_LEVEL').value;
+		var sMenuID = document.getElementById('PK_WEB_MENU').value   
+		var key = 'iPosition=' + iPosition + '&iLevel=' + iLevel + '&sMenuID=' + sMenuID;
+		//alert('<?=$this->UrlAjax;?>');
+		postAJAXHTTPText('<?=$this->UrlAjax;?>' + '/web/generatehtml/webmenu/getMenuOrder.php', key, objView, null);	
+	}
+</script>
+<?php } 
+else 
+	echo 'Bạn không có quyền truy cập chức năng này';
+?>

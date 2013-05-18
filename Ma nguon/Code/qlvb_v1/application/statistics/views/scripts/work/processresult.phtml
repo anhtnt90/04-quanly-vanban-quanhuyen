@@ -1,0 +1,83 @@
+<form action="index" method="POST" id="frmSent" enctype="multipart/form-data">
+<div><?php 
+	$urlCalendar = $this->urlCalendar;?>
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+		<tr>
+			<td><?php 
+				//<!--Cac doi tuong hidden tren form-->
+				echo $this->formHidden("hdn_current_page",$this->currentPage,null); 
+				echo $this->formHidden("hdn_object_id_list","",null); 
+				echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); 
+				echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); 
+				echo $this->formHidden("hdn_record_number_page",$this->numRowOnPage,null); 	
+				echo $this->formHidden("hdn_object_id",$this->sentID,null); 
+				echo $this->formHidden("hdn_XmlTagValueList",$this->XmlTagValueList,null);
+				//<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+				echo $this->formHidden("hdn_deleted_new_file_id_list","",null);
+				//<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+				echo $this->formHidden("hdn_deleted_exist_file_id_list","",null); 	
+				//<!--Bien hdnStatus dung de lay trang thai van ban tu menu trai ...-->	
+				echo $this->formHidden("hdn_object_id_result",$this->jobProfileID,null); 
+				//bien luu trang thai menu trai
+				echo $this->formHidden("hdn_function_modul",$this->getModulLeft,null);
+				//bien luu cac tag trong truong 
+				echo $this->formHidden("hdn_xml_tag_list","",null);
+				echo $this->formHidden("hdn_xml_value_list","",null);
+				echo $this->formHidden("hdn_docFK",$this->docFK,null);
+				echo $this->formHidden("hdn_process_id","",null);?>
+				<!--Cac doi tuong hidden tren form-->
+			</td>
+		</tr>
+	</table>
+	<div class="large_title" style="padding-left:9px;text-align:left;padding-top:5px;">		
+		<?=$this->bodyTitle;?>				
+	</div>
+	
+	<div id="ResultGetAll">
+		<table cellpadding="0" cellspacing="0" border="0" width="98%" align="center" class="list_table2">
+			<?php			
+			$delimitor = $this->delimitor;//Lay ky tu phan cach giua cac phan tu
+			//Hien thi cac cot cua bang hien thi du lieu
+			$StrHeader = explode("!~~!",$this->GenerateHeaderTable("5%" . $delimitor . "12%" . $delimitor . "40%" . $delimitor . "18%" . $delimitor . "25%"
+											,"TT" . $delimitor . "Ngày thực hiện" . $delimitor . "Kết quả thực hiện" . $delimitor . "Cán bộ thực hiện" . $delimitor . "Đơn vị"
+											,$delimitor));
+			echo $StrHeader[0];				
+			
+			echo $StrHeader[1]; //Hien thi <col width = 'xx'><...	
+				$v_current_style_name = "round_row";
+				$arrResult = $this->arrResult;
+				for($index = 0;$index < sizeof($arrResult);$index++){	
+				//lay file dinh kem
+				$strFileName 				= $arrResult[$index]['C_FILE_NAME'];
+				$sFile 	= Sys_Library::_getAllFileAttach($strFileName,"@!~!@","!~!",$this->baseUrl . "attach-file/");
+				// Pk cua bang
+				$jobProcessID 				= $arrResult[$index]['PK_PROCESS'];				
+				// Ten ho so
+				$date						= $arrResult[$index]['C_DATE'] .'&nbsp;';			
+				//Tai lieu kem theo ho so
+				if($strFileName == '' || $strFileName == null){
+					$subject				= $arrResult[$index]['C_CONTENT'] .'&nbsp;';
+				}else {
+					$subject				= $arrResult[$index]['C_CONTENT'] . $sFile;
+					$sFile = "";
+				}
+				if ($v_current_style_name == "odd_row"){
+					$v_current_style_name = "round_row";
+				}else{
+					$v_current_style_name = "odd_row";					
+				}?>
+				
+				<tr class="<?=$v_current_style_name?>">	
+					<td align="center" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=($index+1)?></td>
+					<td align="center" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$date?></td>								
+					<!--Hien thi trich yeu!-->					
+					<td style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$subject;?></td>
+					<!--Hien ket qua xu ly!-->	
+					<td align="left" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$arrResult[$index]['C_NAME']?>&nbsp;</td>	
+					<td align="left" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$arrResult[$index]['C_UNIT_NAME']?>&nbsp;</td>
+				</tr><?php
+			}					
+			//Tu dien cac dong trang trong truong hop du lieu tra ve < so row _CONST_NUMBER_OF_ROW_PER_LIST			
+			echo $this->addEmptyRow($this->iCountElement,15-sizeof($arrResult),$v_current_style_name,5);?>			
+		</table>			
+</form>

@@ -1,0 +1,70 @@
+<?php 
+//$arrPermission = $_SESSION['arrStaffPermission'];
+//if($arrPermission['CAP_NHAT_LOAI_DM'] || $arrPermission['CAP_NHAT_DM_DOI_TUONG'] || $arrPermission['CAP_NHAT_QUYEN'])
+//{?>
+<form action="index" method="POST" id="frmAddListType" enctype="multipart/form-data">
+	<table cellpadding="0" cellspacing="0" width="100%" border="0">
+		<!--tao tac hidden!-->
+		<tr>
+			<td>
+			<!--Luu gia tri kiem tra cho cap nhat -->
+			<?php echo $this->formHidden("hdn_update",'',null); ?>						
+			</td>
+		</tr>
+	</table>
+	<table width='98%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<?=$this->bodyTitle;?><br>				
+			</td>
+		</tr>
+	</table><br />
+	<div id="content" style="border-bottom:1px solid #3399FF;padding-bottom:5px;margin-bottom:10px;border-top:1px solid #3399FF;">
+		
+		<div id="body_content">
+			<div>
+				<label class="lbl_title normal_label">Tên file<small class="normal_starmark">*</small></label>
+				<?=$this->formText('txt_fileName',$this->sDatabaseName,array('size'=>50,'class'=>'normal_textbox','optional'=>'','message'=>'Tên file không được để trống!'));?>	
+			</div>
+			<div>
+				<label class="lbl_title normal_label">Đường dẫn	<small class="normal_starmark">*</small></label>
+				<?=$this->formText('txt_path',$this->sPathbackup,array('size'=>90,'class'=>'normal_textbox','disabled'=>'','optional'=>false,'message'=>'Tên loại danh mục không được để trống!','onKeyDown'=>'change_focus(document.forms(0),this)'));?>
+			</div>
+		</div>		
+		<div id = "button" style='margin-top:15px;'>
+			<button name="btn_backup" id="btn_backup" type="button" style="Width:15%" value="Sao lưu dữ liệu" class="add_large_button" onClick="manualbackup_click('<?php echo $this->sDatabaseName?>','<?php echo $this->sPathbackup?>',document.getElementById('txt_fileName').value,'<?php echo $this->urlbackup?>');">Sao lưu dữ liệu</button>											
+		</div>
+	</div>
+</form>
+<div id = "ajax_loader" style = "display:none;">
+	<img src = "<?=$this->baseUrl?>images/ajax-loader1.gif" /><br>
+	<div style = "color:blue;font-weight:bold;text-align:center;width:100%;">Đang sao lưu dữ liệu</div>
+</div>
+<script type="text/javascript">
+	function openmypage(){ 
+		divwin=dhtmlwindow.open("divbox", "div", "somediv", "Sys.COM.VN", "width=450px,height=300px,left=300px,top=100px,resize=1,scrolling=1")
+	}
+	function manualbackup_click(p_databasename,p_path,p_file,p_url){
+		//alert(p_url);
+		if(p_file==''){
+			alert("Nhập tên file");
+			document.getElementById('txt_fileName').focus();
+			return;
+		}
+		$('#ajax_loader').modal({close:false, maxHeight:50, maxWidth:235,autoResize:true});
+		$.ajax({
+			  url: p_url,type: 'POST',dataType: 'html',
+			  data:'database=' + p_databasename
+			  + '&path=' + p_path
+			  + '&fileName=' + p_file,
+			  success: function(data){
+				$.modal.close();
+				alert(data);
+		      }
+		 });
+	}
+</script>
+<?php //} 
+//else 
+//	echo 'Bạn không có quyền truy cập chức năng này';
+?>

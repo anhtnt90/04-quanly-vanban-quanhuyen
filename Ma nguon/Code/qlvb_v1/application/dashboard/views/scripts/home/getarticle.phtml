@@ -1,0 +1,67 @@
+<form action="index" method="POST" id="frmRecord">	
+	<?php echo $this->formHidden("hdn_object_id","",null); ?>
+	<?php echo $this->formHidden("hdn_current_page",$this->currentPage,null); ?>
+	<?php echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); ?>
+	<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+	<table width='100%' border='0' cellspacing='0' cellpadding='0' style="border-right:#000E7B; padding:0 5px;" align="center">
+		<tr>
+			<td  class='title_article_detail' colspan="2" >&nbsp;<?php echo $this->Menuname; ?></td>
+		</tr>
+		<?php 
+		$arrResul = $this->arrResul;				
+		$sStyle = "border-top: solid 1px #999999; height: 1px;";
+		$iStyle = sizeof($arrResul);
+		//echo $iStyle;
+		if($iStyle <= 0){
+			$sStyle='';
+		}
+		//var_dump($arrResul);
+		for($i = 0;$i < sizeof($arrResul);$i++){
+			$sgotoArticle = "javascript:item_onclick('".$arrResul[$i]['PK_ARTICLE']."','../viewarticle/');";
+			$sImageName = $arrResul[$i]['C_IMAGE_NAME'];			
+			if($sImageName !=''){
+			$line_article = 'line_article';
+			}else{
+			$line_article='';	
+			}		
+		?>					
+			<tr class='<? echo $line_article; ?>'>										
+				<?php
+					$sImageName = $arrResul[$i]['C_IMAGE_NAME']; 
+					$sImageUrl = '';
+					if($sImageName != ''){
+						// Tach ten file ra
+						if(strpos($sImageName,"!~!") == 0){
+							$file_name = $sImageName;
+						}else{
+							$arrFilename = explode('!~!',$sImageName);					
+							$file_name = $arrFilename[1];
+							$file_id   = explode("_", $arrFilename[0]);
+						} 
+						$sImageUrl = $this->baseUrl.'attach-file/article/image-upload/'. $file_id[0] . "/" . $file_id[1] . "/" . $file_id[2] . "/" . $sImageName;	
+					} ?>							
+					<td class="content_article" valign="top" >
+						<?php if($sImageUrl!=''){ ?>							
+							<div style='height:110px; width:140px; float:left; margin-bottom:5px; margin-top:2px;'>						
+							<img style="border: solid 2px #CCCCCC; " align="left"  src="<?=$sImageUrl?>" onclick = "<?=$sgotoArticle?>" onload="javaScript:resizeImageWithoutLink(130,100, this)">
+							<br clear="all" />		                                           																												
+						</div>	
+						<?php } ?>	
+						<p class="title_article"><a  href="<?=$sgotoArticle?>"><?=$arrResul[$i]['C_TITLE']?></a></a></p>				
+						<p class="short_content_article" style='margin-top:-15px;'><?=$arrResul[$i]['C_SHORT_CONTENT']?></p>
+					</td>							
+			</tr>
+		<?php }  ?>			
+	</table>
+	<!--Hien thi trang can xem!-->	
+	<table width="100%" cellpadding="0" cellspacing="5" style="<?php //echo $sStyle; ?>">		
+		<tr>
+			<td align="center" >
+				<table width="5%"><?php
+					//Hien thi danh sach so trang
+					echo $this->generateStringNumberPage;?>
+				</table>
+			</td>
+		</tr>
+	</table>
+</form>

@@ -1,0 +1,176 @@
+<?php 
+$arrPermission = $_SESSION['arrStaffPermission'];
+if($arrPermission['CAP_NHAT_VB_DEN_DON_VI'] || $arrPermission['CAP_NHAT_VBDEN_PB'] || $arrPermission['CAP_NHAT_VBDEN_PX'])
+{
+?>
+<form action="index" method="POST" id="frmReceived">
+<div>
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' class="table_title">
+		<tr>
+			<td class="large_title" style="padding-left:7px;text-align:left;">
+				<!--Cac doi tuong hidden tren form-->
+				<?php echo $this->formHidden("hdn_current_page",$this->currentPage,null); ?>
+				<?php echo $this->formHidden("hdn_record_number_page",$this->numRowOnPage,null); ?>
+				<?php echo $this->formHidden("hdn_object_id_list","",null); ?>
+				<?php echo $this->formHidden("hdn_filter_xml_tag_list",$this->filterXmlTagList,null); ?>
+				<?php echo $this->formHidden("hdn_filter_xml_value_list",$this->filterXmlValueList,null); ?>
+				<?php echo $this->formHidden("hdn_object_id",$this->sReceiveDocumentId,null); ?>
+				<?php echo $this->formHidden("hdn_XmlTagValueList",$this->XmlTagValueList,null); ?>
+				<!--Bien hdn_deleted_new_file_id_list dung de luu Id cua nhung doi tuong file dinh kem se xoa-->	
+				<?php echo $this->formHidden("hdn_deleted_new_file_id_list","",null); ?>	
+				<!--Bien hdn_deleted_exist_file_id_list dung de ...-->	
+				<?php echo $this->formHidden("hdn_deleted_exist_file_id_list","",null);?>
+				<?php echo $this->formHidden("hdn_history_back",$this->sUrl,null); ?>
+				<?=$this->bodyTitle;?>	
+				
+			</td>
+		</tr>
+	</table>
+	<?php
+		$arrConst = $this->arrConst; 
+	?>
+	<div class="box container c1">
+		<div class="pad">			
+			<table cellpadding="0" cellspacing="0" width="98%" border="0">
+				<col width="10%"/><col width="40%"/><col width="30%"/><col width="20%"/>
+				<tr>
+					<td class="normal_label" align="left">
+						&nbsp;<?=$arrConst['_TU_NGAY'] ?>
+					</td>
+					<td class="normal_label" align="left">
+						<input class="textbox c3" id ="fromDate" name="fromDate" type="text" isdate="true" value="<?=$this->fromDate?>" option = "false" message="<?php echo "NGAY THANG NAM khong dung dinh dang";?>" onkeyup = "DateOnkeyup('fromDate',this,event)" onKeyDown="change_focus(document.forms[0],this)">						
+						&nbsp;&nbsp;<?=$arrConst['_DEN_NGAY'] ?> &nbsp;&nbsp;
+						<input class="textbox c3" id ="toDate" name="toDate" type="text" isdate="true" value="<?=$this->toDate?>" option = "false" message="<?php echo "NGAY THANG NAM khong dung dinh dang";?>" onkeyup = "DateOnkeyup('toDate',this,event)" onKeyDown="change_focus(document.forms[0],this)">						
+					</td>
+					<td>
+						<input class="textbox c1" id="FullTextSearch" name="FullTextSearch" value="<?=$this->FullTextSearch?>" class="textbox c2">
+					</td>
+					<td rowspan="3" style="padding-left:10px;">
+						<input type="button" value="<?=$arrConst['_TIM_KIEM'] ?>" class="add_large_button" size="100%" onclick="actionUrl('');">
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>		
+	<table cellpadding="0" cellspacing="0" border="0" width="98%" align="center" class="list_table2" id="table1">
+		<?php			
+		$delimitor = $this->delimitor;//Lay ky tu phan cach giua cac phan tu
+		//Hien thi cac cot cua bang hien thi du lieu
+		$StrHeader = explode("!~~!",$this->GenerateHeaderTable("5%" . $delimitor ."10%". $delimitor . "11%" . $delimitor . "13%" . $delimitor . "37%" . $delimitor . "25%" 
+										,'<input type="checkbox" name="chk_all_item_id" value="" onclick="checkbox_all_item_id(document.forms[0].chk_item_id);">' . $delimitor . $arrConst['_SO_DEN'] . $delimitor .$arrConst['_NGAY_DEN']. $delimitor . $arrConst['_SO_KY_HIEU'] . $delimitor . $arrConst['_TRICH_YEU']. $delimitor . $arrConst['_DON_VI_XU_LY']
+										,$delimitor));
+		echo $StrHeader[0];									
+		echo $StrHeader[1];
+			$sUrlView  = "../view/";
+			$v_current_style_name = "round_row";
+			$arrResul = $this->arrResul;
+			$objFunction =	new	Sys_Function_DocFunctions()	;
+			for($index = 0;$index < sizeof($arrResul);$index++){
+				//Lay file dinh kem
+				$strFileName 				= $arrResul[$index]['C_FILE_NAME'];
+				$sFile 	= Sys_Library::_getAllFileAttach($strFileName,"!#~$|*","!~!",$this->baseUrl . "attach-file/");
+				//ID VB
+				$sDocumentId 				= $arrResul[$index]['PK_RECEIVED_DOC'];				
+				// Ngay den
+				$dReceivedDate				= $objFunction->searchCharColor($this->FullTextSearch,$arrResul[$index]['C_RECEIVED_DATE'] ).'&nbsp;';								
+				// So, ky hieu VB
+				$sSymbol					= $objFunction->searchCharColor($this->FullTextSearch,$arrResul[$index]['C_SYMBOL']) .'&nbsp;';	
+				// So den
+				$iNumberDocument			= $objFunction->searchCharColor($this->FullTextSearch,$arrResul[$index]['C_NUM']) .'&nbsp;';								
+				//Trich yeu 
+				if($strFileName == '' || $strFileName == null){
+					$sSubject				= $objFunction->searchStringColor($this->FullTextSearch,$arrResul[$index]['C_SUBJECT']) .'&nbsp;';
+				}else {
+					$sSubject				= $objFunction->searchStringColor($this->FullTextSearch,$arrResul[$index]['C_SUBJECT']) .'<br>'. $sFile;
+					$sFile = "";
+				}
+				//DON VI xu ly
+				$sUnitName 					= $arrResul[$index]['C_PROCESS_UNIT_NAME_LIST'];
+				if($_SESSION['OWNER_ID'] != Sys_Init_Config::_setParentOwnerId()){
+					$arrUnitName				= explode(';',$sUnitName);
+					$sUnitName					= '';
+					for($i = 1; $i < sizeof($arrUnitName) - 2; $i++)
+						if(trim($arrUnitName[$i]) != '' )
+							$sUnitName .= $arrUnitName[$i].'; ';
+					if(trim($arrUnitName[$i]) != '')
+							$sUnitName .= $arrUnitName[$i];
+				}
+				$sUnitName = $objFunction->searchStringColor($this->FullTextSearch,$sUnitName).'&nbsp;';
+				if ($v_current_style_name == "odd_row"){
+					$v_current_style_name = "round_row";
+				}else{
+					$v_current_style_name = "odd_row";					
+				}?>
+				
+				<tr class="<?=$v_current_style_name?>">	
+					<td align="center" style="padding-left:3px;padding-right:3px;" class="normal_label">
+						<?=$this->formCheckbox('chk_item_id',$arrResul[$index]['PK_RECEIVED_DOC'], array('checked' => false,'onclick' =>'selectrow(this)'));?>					
+					</td>
+					<td ondblclick="item_onclick('<?=$sDocumentId?>','<?=$sUrlView?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="center"  style="padding-left:3px;padding-right:3px;" class="normal_label" ><?=$iNumberDocument?></td>													
+					<td ondblclick="item_onclick('<?=$sDocumentId?>','<?=$sUrlView?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="center"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$dReceivedDate;?></td>
+					<td ondblclick="item_onclick('<?=$sDocumentId?>','<?=$sUrlView?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="center"  style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sSymbol;?></td>
+					<td ondblclick="item_onclick('<?=$sDocumentId?>','<?=$sUrlView?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="left" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sSubject?></td>	
+					<td ondblclick="item_onclick('<?=$sDocumentId?>','<?=$sUrlView?>')" onclick="set_hidden(this,document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id'),'<?=$sDocumentId?>');" align="left" style="padding-left:3px;padding-right:3px;" class="normal_label"><?=$sUnitName?></td>	
+				</tr><?php
+				
+			}									
+			if(sizeof($arrResul) < 15){	
+				echo $this->addEmptyRow($this->iCountElement,15 - sizeof($arrResul),$v_current_style_name,6);		
+			}	
+		?>			
+	</table>	
+	<!--Hien thi trang can xem!-->	
+	<table width="100%" cellpadding="0" cellspacing="5" border="0">
+		<tr>
+			<td width="30%" style="padding-left:1%;" class="normal_label">
+				<h1 style="font-size: 17px; color: #047FA5; font-family: Tahoma;  font-weight: normal; "><?=$this->sdocpertotal;?></h1>
+			</td>
+			<td align="center" style="width="50%">
+				<table width="10%"><?php				
+					echo $this->generateStringNumberPage;?>
+				</table>
+			</td>
+			<td width="30%" align="right" style="font-size:13px; padding-right:1%; font:tahoma" class="normal_label"><?php
+				echo $this->generateHtmlSelectBoxPage;?>
+			</td>
+		</tr>
+	</table>	
+	<table width='100%'  border='0' cellspacing='0' cellpadding='0' align="center">
+		<tr>
+			<td style="padding-top: 10px; padding-bottom: 10px;" align="center" valign="middle">
+				<input id="btn_add" name="btn_add" type="button" class="add_large_button" value="Xuất bản XML" onclick="btn_print_transferred_onclick(document.getElementsByName('chk_item_id'),'../rss');">
+				<input id="btn_add" name="btn_add" type="button" class="add_large_button" value="<?=$arrConst['_THEM'] ?>" onclick="actionUrl('../add/');">
+				<input type="button" class="add_large_button" value="<?=$arrConst['_SUA'] ?>" onclick="btn_update_onclick(document.getElementsByName('chk_item_id'),'../edit/');">
+				<input type="button" class="add_large_button" value="<?=$arrConst['_XOA'] ?>" onclick="btn_delete_onclick(document.getElementsByName('chk_item_id'),document.getElementById('hdn_object_id_list'),'../delete/','<?=$this->UrlAjax?>','VB_DEN','T_DOC_RECEIVED_DOCUMENT');">			
+				<!--<input id="btn_print" name="btn_print" type="button" class="add_large_button" value="<?=$arrConst['_IN_PHIEU_XU_LY'] ?>" onclick="btn_print_transferred_onclick(document.getElementsByName('chk_item_id'),'../printtransferred');"> -->			
+				<input type="button" class="add_large_button" value="<?=$arrConst['_PHAN_PHOI_PHAN_CONG'] ?>" onclick="btn_distribution_assign_onclick(document.getElementsByName('chk_item_id'),'../distributionassign/');">
+			</td>	
+		</tr>
+	</table>
+</div>
+</form>
+<?php } 
+else 
+	echo 'Bạn không có quyền truy cập chức năng này';
+?>
+<script type = "text/javascript">
+$(function() {
+	$( "#fromDate" ).datepicker({
+		changeMonth: true,
+		gotoCurrent: true,
+		maxDate: '+1m +1w',
+		minDate: new Date(1945, 1 - 1, 1),
+		changeYear: true
+	});
+	$( "#toDate" ).datepicker({
+		changeMonth: true,
+		gotoCurrent: true,
+		maxDate: '+1m +1w',
+		minDate: new Date(1945, 1 - 1, 1),
+		changeYear: true
+	});
+});
+</script>
+
+
+
